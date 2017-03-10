@@ -1,0 +1,8 @@
+<header xmlns:jsp="http://java.sun.com/JSP/Page"
+        xmlns:tiles="http://tiles.apache.org/tags-tiles">
+    <jsp:directive.page contentType="text/html" pageEncoding="UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/header/header.css" media="screen"/>
+
+</header>
