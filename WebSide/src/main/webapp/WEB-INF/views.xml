@@ -4,6 +4,6 @@
         "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
 <tiles-definitions>
     <definition extends="default" name="main">
-        <put-attribute name="body" value="/servlets/main.jspx"/>
+        <put-attribute name="body" value="/WEB-INF/views/main.jspx"/>
     </definition>
 </tiles-definitions>

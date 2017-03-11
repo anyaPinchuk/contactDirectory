@@ -1,0 +1,12 @@
+<html xmlns:jsp="http://java.sun.com/JSP/Page"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+<head>
+    <title>UnknownCommand</title>
+</head>
+
+<jsp:directive.page contentType="text/html" pageEncoding="UTF-8"/>
+<jsp:output omit-xml-declaration="yes"/>
+<body>
+неизвестно
+</body>
+</html>
