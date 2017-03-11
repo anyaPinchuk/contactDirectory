@@ -33,8 +33,9 @@ public class ContactDAO extends AbstractDAO<Contact>{
                     String webSite = resultSet.getString("webSite");
                     String email = resultSet.getString("email");
                     String job = resultSet.getString("job");
+                    Long address_id = resultSet.getLong("Address_id");
                     contacts.add(new Contact(id, name, surname, thirdName, birthDate, sex, citizenship,
-                            status, webSite, email, job));
+                            status, webSite, email, job, address_id));
                 }
                 return contacts;
             } catch (SQLException e) {
@@ -69,8 +70,9 @@ public class ContactDAO extends AbstractDAO<Contact>{
         String webSite = resultSet.getString("webSite");
         String email = resultSet.getString("email");
         String job = resultSet.getString("job");
+        Long address_id = resultSet.getLong("Address_id");
         return Optional.of(new Contact(id, name, surname, thirdName, birthDate, sex, citizenship,
-                status, webSite, email, job));
+                status, webSite, email, job, address_id));
     }
 
     @Override
@@ -103,6 +105,7 @@ public class ContactDAO extends AbstractDAO<Contact>{
                             + "', webSite = '" + entity.getWebSite()
                             + "', email = '" + entity.getEmail()
                             + "', job = '" + entity.getJob()
+                            + "', Address_id = '" + entity.getAddress_id()
                             + "' WHERE id = " + id);
                 }
                 else{
@@ -117,6 +120,7 @@ public class ContactDAO extends AbstractDAO<Contact>{
                             + "', webSite = '" + entity.getWebSite()
                             + "', email = '" + entity.getEmail()
                             + "', job = '" + entity.getJob()
+                            + "', Address_id = '" + entity.getAddress_id()
                             + "' WHERE id = " + id);
                 }
 
@@ -133,7 +137,7 @@ public class ContactDAO extends AbstractDAO<Contact>{
             try {
                 //LOG.info("insert user starting");
                 int result = statement.executeUpdate("INSERT INTO contacts.contact (name, surname, thirdName," +
-                        " sex, citizenship, maritalStatus, webSite, email, job) VALUES ('"
+                        " sex, citizenship, maritalStatus, webSite, email, job, Address_id) VALUES ('"
                         + entity.getName()
                         + "','" + entity.getSurname()
                         + "','" + entity.getThirdName()
@@ -143,6 +147,7 @@ public class ContactDAO extends AbstractDAO<Contact>{
                         + "','" + entity.getWebSite()
                         + "','" + entity.getEmail()
                         + "','" + entity.getJob()
+                        + "','" + entity.getAddress_id()
                         + "')", Statement.RETURN_GENERATED_KEYS);
                 if (result == 0) {
                     throw new SQLException("Creating contact failed, contact wasn't added");

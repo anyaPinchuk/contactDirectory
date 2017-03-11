@@ -1,8 +1,10 @@
-package entities;
+package dto;
+
+import entities.Address;
 
 import java.util.Date;
 
-public class Contact {
+public class ContactDTO extends DTO{
     private Long id;
     private String name;
     private String surname;
@@ -14,18 +16,10 @@ public class Contact {
     private String webSite;
     private String email;
     private String job;
-    private Long address_id;
+    private AddressDTO address;
 
-    public Contact() {
-    }
-
-    public Contact(String name, String surname) {
-        this.name = name;
-        this.surname = surname;
-    }
-
-    public Contact(Long id, String name, String surname, String thirdName, Date dateOfBirth, String sex,
-                   String citizenship, String maritalStatus, String webSite, String email, String job, Long address_id) {
+    public ContactDTO(Long id, String name, String surname, String thirdName, Date dateOfBirth, String sex,
+                      String citizenship, String maritalStatus, String webSite, String email, String job, AddressDTO address) {
         this.id = id;
         this.name = name;
         this.surname = surname;
@@ -37,7 +31,7 @@ public class Contact {
         this.webSite = webSite;
         this.email = email;
         this.job = job;
-        this.address_id = address_id;
+        this.address = address;
     }
 
     public Long getId() {
@@ -128,28 +122,11 @@ public class Contact {
         this.job = job;
     }
 
-    public Long getAddress_id() {
-        return address_id;
+    public AddressDTO getAddress() {
+        return address;
     }
 
-    public void setAddress_id(Long address_id) {
-        this.address_id = address_id;
-    }
-
-    @Override
-    public String toString() {
-        return "Contact{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", surname='" + surname + '\'' +
-                ", thirdName='" + thirdName + '\'' +
-                ", dateOfBirth=" + dateOfBirth +
-                ", sex='" + sex + '\'' +
-                ", citizenship='" + citizenship + '\'' +
-                ", maritalStatus='" + maritalStatus + '\'' +
-                ", webSite='" + webSite + '\'' +
-                ", email='" + email + '\'' +
-                ", job='" + job + '\'' +
-                '}';
+    public void setAddress(AddressDTO address) {
+        this.address = address;
     }
 }
