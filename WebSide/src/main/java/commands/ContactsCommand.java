@@ -34,7 +34,7 @@ public class ContactsCommand extends FrontCommand {
         try {
             contacts = contactDAO.findAll();
             contacts.forEach(contact ->{
-                if (contact.getAddress_id()!=0 || contact.getAddress_id()!=null){
+                if (contact.getAddress_id()!=0){
                     try {
                         Address address = addressDAO.findById(contact.getAddress_id())
                                 .orElseThrow(()->new GenericDAOException("address was not found"));
@@ -54,7 +54,7 @@ public class ContactsCommand extends FrontCommand {
         catch (GenericDAOException e){
             new MessageError(e.getMessage(), e);
         }
-        if (contacts!=null) {
+        if (contactsDTO!=null) {
             request.setAttribute("contactList", contactsDTO);
             forward("main");
         }

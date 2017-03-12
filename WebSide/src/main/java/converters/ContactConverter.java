@@ -5,9 +5,6 @@ import entities.Contact;
 
 import java.util.Optional;
 
-/**
- * Created by Анна on 11.03.2017.
- */
 public class ContactConverter extends Converter<ContactDTO, Contact>{
     @Override
     public Optional<Contact> toEntity(ContactDTO dto) {
