@@ -2,13 +2,15 @@ package dao;
 
 import db.ConnectionAwareExecutor;
 import exceptions.GenericDAOException;
+import org.apache.log4j.Logger;
 
 import java.util.List;
 import java.util.Optional;
 
+
 public abstract class AbstractDAO<T> {
 
-    //protected static final Logger LOG = LoggerFactory.getLogger("dao");
+    protected static final Logger LOG = Logger.getLogger("dao");
     protected ConnectionAwareExecutor connectionAwareExecutor = new ConnectionAwareExecutor();
 
     public abstract List<T> findAll() throws GenericDAOException;

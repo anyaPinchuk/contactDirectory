@@ -21,7 +21,7 @@ public class AttachmentDAO extends AbstractDAO<Attachment>{
 
     public List<Attachment> findAllById(Long id_contact) throws GenericDAOException {
         return connectionAwareExecutor.submit(statement -> {
-            //LOG.info("findAll Users starting");
+            LOG.info("findAll Attachment starting");
             List<Attachment> attachments = new LinkedList<>();
             try (ResultSet resultSet = statement.executeQuery("SELECT * FROM contacts.attachment" +
                     " WHERE Contact_id = " + id_contact )) {
@@ -34,6 +34,7 @@ public class AttachmentDAO extends AbstractDAO<Attachment>{
                 }
                 return attachments;
             } catch (SQLException e) {
+                LOG.error("Attachments weren't found", e);
                 throw new GenericDAOException(e);
             }
         });
@@ -42,11 +43,12 @@ public class AttachmentDAO extends AbstractDAO<Attachment>{
     @Override
     public Optional<? extends Attachment> findById(Long id) throws GenericDAOException {
         return connectionAwareExecutor.submit(statement -> {
-            //LOG.info("findById User starting");
+            LOG.info("findById Attachment starting");
             try (ResultSet resultSet = statement.executeQuery("SELECT * FROM contacts.attachment WHERE id = " + id + " LIMIT 1")) {
                 if (resultSet.next())
                     return buildEntityFromResult(resultSet);
             } catch (SQLException e) {
+                LOG.error("Attachment wasn't found", e);
                 throw new GenericDAOException(e);
             }
             return Optional.empty();
@@ -72,13 +74,14 @@ public class AttachmentDAO extends AbstractDAO<Attachment>{
         if (entity == null) return 0;
         return connectionAwareExecutor.submit(statement -> {
             try {
-                //LOG.info("updateById user starting");
+                LOG.info("updateById Attachment starting");
                 return statement.executeUpdate("UPDATE contacts.attachment SET " +
                         "dateOfDownload = '" + entity.getDateOfDownload()
                         + "', fileName = '" + entity.getFileName()
                         + "', comment = '" + entity.getComment()
                         + "' WHERE id = " + id);
             } catch (SQLException e) {
+                LOG.error("Attachment wasn't updated", e);
                 throw new GenericDAOException(e);
             }
         });
@@ -89,7 +92,7 @@ public class AttachmentDAO extends AbstractDAO<Attachment>{
         if (entity == null) return 0L;
         return connectionAwareExecutor.submit(statement -> {
             try {
-                //LOG.info("insert user starting");
+                LOG.info("insert Attachment starting");
                 int result = statement.executeUpdate("INSERT INTO contacts.attachment (dateOfDownload, fileName," +
                         " comment, Contact_id) VALUES ('"
                         + entity.getDateOfDownload()
@@ -106,6 +109,7 @@ public class AttachmentDAO extends AbstractDAO<Attachment>{
                     else return 0L;
                 }
             } catch (SQLException e) {
+                LOG.error("Attachment wasn't inserted", e);
                 if (e.getErrorCode() == 1062)
                     throw new UniqueDAOException(e);
                 else throw new GenericDAOException(e);
@@ -117,9 +121,10 @@ public class AttachmentDAO extends AbstractDAO<Attachment>{
     public int deleteById(Long id) throws GenericDAOException {
         return connectionAwareExecutor.submit(statement -> {
             try {
-                //LOG.info("deleteById user starting");
+                LOG.info("deleteById Attachment starting");
                 return statement.executeUpdate("DELETE FROM contacts.attachment WHERE id = '" + id + "'");
             } catch (SQLException e) {
+                LOG.error("Attachment wasn't deleted", e);
                 throw new GenericDAOException(e);
             }
         });

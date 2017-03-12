@@ -1,6 +1,7 @@
 .center{
     display: flex;
-    justify-content: center;
+    flex-direction: row;
+    justify-content: space-around;
 }
 
 p {
@@ -15,5 +16,8 @@ p {
 }
 
 .vertical-group a{
+    margin-right: 10px;
+}
+.vertical-group button{
     margin-right: 10px;
 }

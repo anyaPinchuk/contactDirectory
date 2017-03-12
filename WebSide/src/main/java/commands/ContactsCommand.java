@@ -27,10 +27,9 @@ public class ContactsCommand extends FrontCommand {
 
     @Override
     public void processGet() throws ServletException, IOException {
-        ContactDAO contactDAO = new ContactDAO();
         List<Contact> contacts = null;
-        AddressDAO addressDAO = new AddressDAO();
         List<ContactDTO> contactsDTO = new ArrayList<>();
+        LOG.info("get all contacts starting ");
         try {
             contacts = contactDAO.findAll();
             contacts.forEach(contact ->{
@@ -52,6 +51,7 @@ public class ContactsCommand extends FrontCommand {
             });
         }
         catch (GenericDAOException e){
+            LOG.error("error while processing all contacts from ContactsCommand");
             new MessageError(e.getMessage(), e);
         }
         if (contactsDTO!=null) {

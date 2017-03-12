@@ -1,5 +1,9 @@
 package commands;
 
+import dao.AddressDAO;
+import dao.ContactDAO;
+import org.apache.log4j.Logger;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -11,6 +15,9 @@ public abstract class FrontCommand {
     protected ServletContext context;
     protected HttpServletRequest request;
     protected HttpServletResponse response;
+    protected ContactDAO contactDAO = new ContactDAO();
+    protected AddressDAO addressDAO = new AddressDAO();
+    protected static final Logger LOG = Logger.getLogger("commands");
 
     public void init(
             ServletContext servletContext,
@@ -29,5 +36,6 @@ public abstract class FrontCommand {
         target = String.format("/WEB-INF/views/%s.jspx", target);
         RequestDispatcher dispatcher = context.getRequestDispatcher(target);
         dispatcher.forward(request, response);
+
     }
 }

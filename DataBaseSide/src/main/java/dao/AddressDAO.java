@@ -20,11 +20,12 @@ public class AddressDAO extends AbstractDAO<Address> {
     @Override
     public Optional<? extends Address> findById(Long id) throws GenericDAOException {
         return connectionAwareExecutor.submit(statement -> {
-            //LOG.info("findById User starting");
+            LOG.info("findById Address starting");
             try (ResultSet resultSet = statement.executeQuery("SELECT * FROM contacts.address WHERE id = " + id + " LIMIT 1")) {
                 if (resultSet.next())
                     return buildEntityFromResult(resultSet);
             } catch (SQLException e) {
+                LOG.error("Address wasn't found", e);
                 throw new GenericDAOException(e);
             }
             return Optional.empty();
@@ -50,7 +51,7 @@ public class AddressDAO extends AbstractDAO<Address> {
         if (entity == null) return 0;
         return connectionAwareExecutor.submit(statement -> {
             try {
-                //LOG.info("updateById user starting");
+                LOG.info("updateById Address starting");
                     return statement.executeUpdate("UPDATE contacts.address SET " +
                             "country = '" + entity.getCountry()
                             + "', city = '" + entity.getCity()
@@ -59,6 +60,7 @@ public class AddressDAO extends AbstractDAO<Address> {
                             + "' WHERE id = " + id);
 
             } catch (SQLException e) {
+                LOG.error("Address wasn't updated", e);
                 throw new GenericDAOException(e);
             }
         });
@@ -69,7 +71,7 @@ public class AddressDAO extends AbstractDAO<Address> {
         if (entity == null) return 0L;
         return connectionAwareExecutor.submit(statement -> {
             try {
-                //LOG.info("insert user starting");
+                LOG.info("insert Address starting");
                 int result = statement.executeUpdate("INSERT INTO contacts.address (country, city, streetAddress," +
                         " `index`) VALUES ('"
                         + entity.getCountry()
@@ -86,6 +88,7 @@ public class AddressDAO extends AbstractDAO<Address> {
                     else return 0L;
                 }
             } catch (SQLException e) {
+                LOG.error("Address wasn't inserted", e);
                 if (e.getErrorCode() == 1062)
                     throw new UniqueDAOException(e);
                 else throw new GenericDAOException(e);
@@ -97,9 +100,10 @@ public class AddressDAO extends AbstractDAO<Address> {
     public int deleteById(Long id) throws GenericDAOException {
         return connectionAwareExecutor.submit(statement -> {
             try {
-                //LOG.info("deleteById user starting");
+                LOG.info("deleteById Address starting");
                 return statement.executeUpdate("DELETE FROM contacts.address WHERE id = '" + id + "'");
             } catch (SQLException e) {
+                LOG.error("Address wasn't deleted", e);
                 throw new GenericDAOException(e);
             }
         });

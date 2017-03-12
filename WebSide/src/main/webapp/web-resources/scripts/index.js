@@ -9,3 +9,8 @@ function deleteContact(){
     xhr.send(params);
 }
 
+function addPhone() {
+    console.log("hi");
+    window.open('addPhone.html',"width=800,height=750,resizable=yes,scrollbars=yes");
+}
+

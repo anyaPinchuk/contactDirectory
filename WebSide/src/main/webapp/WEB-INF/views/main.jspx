@@ -13,7 +13,7 @@
     <a href="addContact"><button class="btn btn-primary">Add contact</button></a>
     <a href=""><button class="btn btn-primary">Search contact</button></a>
     <a href=""><button class="btn btn-primary">Send email</button></a>
-    <button onckick="deleteContact()" class="btn btn-primary">Delete chosen contacts</button>
+    <button onclick="deleteContact()" class="btn btn-primary">Delete chosen contacts</button>
 </div>
 <table class="table-bordered table">
     <tbody>
