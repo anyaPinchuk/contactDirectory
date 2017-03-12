@@ -5,7 +5,12 @@ import java.io.IOException;
 
 public class UnknownCommand extends FrontCommand {
     @Override
-    public void process() throws ServletException, IOException {
+    public void processGet() throws ServletException, IOException {
+        forward("unknown");
+    }
+
+    @Override
+    public void processPost() throws ServletException, IOException {
         forward("unknown");
     }
 }

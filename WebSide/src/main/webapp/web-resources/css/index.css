@@ -1,5 +1,19 @@
-body{
+.center{
+    display: flex;
+    justify-content: center;
 }
+
 p {
     white-space: pre;
+}
+
+.vertical-group{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.vertical-group a{
+    margin-right: 10px;
 }

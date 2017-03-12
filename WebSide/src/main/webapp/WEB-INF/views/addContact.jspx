@@ -1,0 +1,59 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" xmlns="http://www.w3.org/1999/xhtml" version="2.0">
+    <jsp:directive.page contentType="text/html" pageEncoding="UTF-8"/>
+    <html>
+    <head>
+        <link href="${pageContext.request.contextPath}/web-resources/css/index.css" rel="stylesheet" type="text/css" media="screen"/>
+        <link href="${pageContext.request.contextPath}/web-resources/bootstrap/css/bootstrap.css" rel="stylesheet" type="text/css" media="screen"/>
+    </head>
+    <body>
+    <div class="center">
+    <form action="addContact" method="post">
+        <div class="form-group">
+            <label for="contactName">Input name </label>
+            <input class="form-control input-lg" required="required" id="contactName" type="text" name="name"/>
+        </div>
+        <div class="form-group">
+            <label for="contactSurname">Input surname </label>
+            <input class="form-control input-lg" required="required" id="contactSurname" type="text" name="surname"/>
+        </div>
+        <div class="form-group">
+            <label for="contactThirdname">Input third name </label>
+            <input class="form-control input-lg" id="contactThirdname" type="text" name="thirdName"/>
+        </div>
+        <div class="form-group">
+            <label for="contactDate">Input dateOfBirth </label>
+            <input class="form-control" id="contactDate" type="date" name="dateOfBirth"/>
+        </div>
+        <div class="form-group">
+            <label for="contactSex">Input sex </label>
+            <select class="form-control" id="contactSex" name="sex">
+                <option value="man">Male</option>
+                <option value="woman">Female</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="contactCitizenship">Input citizenship </label>
+            <input class="form-control input-lg" id="contactCitizenship" type="text" name="citizenship"/>
+        </div>
+        <div class="form-group">
+            <label for="contactStatus">Input marital status </label>
+            <input class="form-control input-lg" id="contactStatus" type="text" name="status"/>
+        </div>
+        <div class="form-group">
+            <label for="contactSite">Input web-site </label>
+            <input class="form-control input-lg" id="contactSite" type="text" name="webSite"/>
+        </div>
+        <div class="form-group">
+            <label for="contactEmail">Input email address </label>
+            <input class="form-control input-lg" id="contactEmail" type="email" required="required" name="email" />
+        </div>
+        <div class="form-group">
+            <label for="contactJob">Input company </label>
+            <input class="form-control input-lg" id="contactJob" type="text" name="job"/>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+    </div>
+    </body>
+    </html>
+</jsp:root>

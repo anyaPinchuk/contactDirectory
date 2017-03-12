@@ -1,6 +1,5 @@
 package controllers;
 
-import commands.ContactsCommand;
 import commands.FrontCommand;
 import commands.UnknownCommand;
 
@@ -18,7 +17,7 @@ public class FrontControllerServlet extends HttpServlet {
                          HttpServletResponse response) throws ServletException, IOException {
         FrontCommand command = getCommand(request);
         command.init(getServletContext(), request, response);
-        command.process();
+        command.processGet();
     }
 
     private FrontCommand getCommand(HttpServletRequest request) {
@@ -35,6 +34,14 @@ public class FrontControllerServlet extends HttpServlet {
             e.printStackTrace();
             return new UnknownCommand();
         }
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request,
+                         HttpServletResponse response) throws ServletException, IOException {
+        FrontCommand command = getCommand(request);
+        command.init(getServletContext(), request, response);
+        command.processPost();
     }
 
 }

@@ -26,7 +26,7 @@ public class ContactsCommand extends FrontCommand {
     }
 
     @Override
-    public void process() throws ServletException, IOException {
+    public void processGet() throws ServletException, IOException {
         ContactDAO contactDAO = new ContactDAO();
         List<Contact> contacts = null;
         AddressDAO addressDAO = new AddressDAO();
@@ -58,5 +58,10 @@ public class ContactsCommand extends FrontCommand {
             request.setAttribute("contactList", contactsDTO);
             forward("main");
         }
+    }
+
+    @Override
+    public void processPost() throws ServletException, IOException {
+
     }
 }

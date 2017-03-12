@@ -21,7 +21,9 @@ public abstract class FrontCommand {
         this.response = servletResponse;
     }
 
-    public abstract void process() throws ServletException, IOException;
+    public abstract void processGet() throws ServletException, IOException;
+
+    public abstract void processPost() throws ServletException, IOException;
 
     protected void forward(String target) throws ServletException, IOException {
         target = String.format("/WEB-INF/views/%s.jspx", target);
