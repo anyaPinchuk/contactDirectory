@@ -15,6 +15,7 @@ public class ContactTest {
 //    public void addContact(){
 //        ContactDAO contactDAO = new ContactDAO();
 //        Contact contact = new Contact("anya", "pinchuk");
+//        contact.setEmail("ffff");
 //        try {
 //            contactDAO.insert(contact);
 //        }

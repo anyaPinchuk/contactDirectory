@@ -1,39 +1,27 @@
-package entities;
+package dto;
+
 
 import java.sql.Blob;
 import java.util.Date;
 
-public class Attachment {
+public class AttachmentDTO extends DTO {
     private Long id;
     private Date dateOfDownload;
     private String fileName;
     private Blob file;
     private String comment;
-    private Long contact_id;
+    private ContactDTO contactDTO;
 
-    public Attachment(Long id, Date dateOfDownload, String fileName, String comment, Long contact_id) {
-        this.id = id;
-        this.dateOfDownload = dateOfDownload;
-        this.fileName = fileName;
-        this.comment = comment;
-        this.contact_id = contact_id;
+    public AttachmentDTO() {
     }
 
-    public Attachment(Long id, Date dateOfDownload, String fileName, Blob file, String comment, Long contact_id) {
+    public AttachmentDTO(Long id, Date dateOfDownload, String fileName, Blob file, String comment, ContactDTO contactDTO) {
         this.id = id;
         this.dateOfDownload = dateOfDownload;
         this.fileName = fileName;
         this.file = file;
         this.comment = comment;
-        this.contact_id = contact_id;
-    }
-
-    public Long getContact_id() {
-        return contact_id;
-    }
-
-    public void setContact_id(Long contact_id) {
-        this.contact_id = contact_id;
+        this.contactDTO = contactDTO;
     }
 
     public Long getId() {
@@ -60,19 +48,27 @@ public class Attachment {
         this.fileName = fileName;
     }
 
-    public String getComment() {
-        return comment;
-    }
-
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
-
     public Blob getFile() {
         return file;
     }
 
     public void setFile(Blob file) {
         this.file = file;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public ContactDTO getContactDTO() {
+        return contactDTO;
+    }
+
+    public void setContactDTO(ContactDTO contactDTO) {
+        this.contactDTO = contactDTO;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 }

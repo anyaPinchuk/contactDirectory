@@ -39,6 +39,9 @@ public class ContactsCommand extends FrontCommand {
                                 .orElseThrow(()->new GenericDAOException("address was not found"));
                         ContactDTO contactDTO = contactConverter.toDTO(Optional.of(contact)).get();
                         contactDTO.setAddress(addressConverter.toDTO(Optional.of(address)).get());
+                        if (contactDTO.getJob().equals("null")){
+                            contactDTO.setJob(null);
+                        }
                         contactsDTO.add(contactDTO);
                     } catch (GenericDAOException e) {
                         e.printStackTrace();
@@ -54,10 +57,8 @@ public class ContactsCommand extends FrontCommand {
             LOG.error("error while processing all contacts from ContactsCommand");
             new MessageError(e.getMessage(), e);
         }
-        if (contactsDTO!=null) {
             request.setAttribute("contactList", contactsDTO);
             forward("main");
-        }
     }
 
     @Override

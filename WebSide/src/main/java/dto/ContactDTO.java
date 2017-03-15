@@ -2,7 +2,9 @@ package dto;
 
 import entities.Address;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class ContactDTO extends DTO{
     private Long id;
@@ -17,6 +19,8 @@ public class ContactDTO extends DTO{
     private String email;
     private String job;
     private AddressDTO address;
+    private List<PhoneDTO> phoneDTOList;
+    private List<AttachmentDTO> attachmentDTOList;
 
     public ContactDTO(Long id, String name, String surname, String thirdName, Date dateOfBirth, String sex,
                       String citizenship, String maritalStatus, String webSite, String email, String job, AddressDTO address) {
@@ -32,6 +36,8 @@ public class ContactDTO extends DTO{
         this.email = email;
         this.job = job;
         this.address = address;
+        this.phoneDTOList = new ArrayList<>();
+        this.attachmentDTOList = new ArrayList<>();
     }
 
     public Long getId() {
@@ -128,5 +134,21 @@ public class ContactDTO extends DTO{
 
     public void setAddress(AddressDTO address) {
         this.address = address;
+    }
+
+    public List<PhoneDTO> getPhoneDTOList() {
+        return phoneDTOList;
+    }
+
+    public void setPhoneDTOList(List<PhoneDTO> phoneDTOList) {
+        this.phoneDTOList = phoneDTOList;
+    }
+
+    public List<AttachmentDTO> getAttachmentDTOS() {
+        return attachmentDTOList;
+    }
+
+    public void setAttachmentDTOS(List<AttachmentDTO> attachmentDTOS) {
+        this.attachmentDTOList = attachmentDTOS;
     }
 }

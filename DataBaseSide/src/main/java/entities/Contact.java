@@ -1,5 +1,6 @@
 package entities;
 
+import java.sql.Blob;
 import java.util.Date;
 
 public class Contact {
@@ -14,6 +15,7 @@ public class Contact {
     private String webSite;
     private String email;
     private String job;
+    private Blob photo;
     private Long address_id;
 
     public Contact() {
@@ -37,6 +39,24 @@ public class Contact {
         this.webSite = webSite;
         this.email = email;
         this.job = job;
+        this.address_id = address_id;
+    }
+
+    public Contact(Long id, String name, String surname, String thirdName, Date dateOfBirth, String sex,
+                   String citizenship, String maritalStatus, String webSite, String email, String job, Blob photo,
+                   Long address_id) {
+        this.id = id;
+        this.name = name;
+        this.surname = surname;
+        this.thirdName = thirdName;
+        this.dateOfBirth = dateOfBirth;
+        this.sex = sex;
+        this.citizenship = citizenship;
+        this.maritalStatus = maritalStatus;
+        this.webSite = webSite;
+        this.email = email;
+        this.job = job;
+        this.photo = photo;
         this.address_id = address_id;
     }
 
@@ -134,6 +154,14 @@ public class Contact {
 
     public void setAddress_id(Long address_id) {
         this.address_id = address_id;
+    }
+
+    public Blob getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(Blob photo) {
+        this.photo = photo;
     }
 
     @Override

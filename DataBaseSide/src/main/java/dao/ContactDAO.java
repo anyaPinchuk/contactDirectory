@@ -137,20 +137,37 @@ public class ContactDAO extends AbstractDAO<Contact> {
         if (entity == null) return 0L;
         return connectionAwareExecutor.submit(statement -> {
             try {
+                int result;
                 LOG.info("insert Contact starting");
-                int result = statement.executeUpdate("INSERT INTO contacts.contact (name, surname, thirdName," +
-                        " sex, citizenship, maritalStatus, webSite, email, job, Address_id) VALUES ('"
-                        + entity.getName()
-                        + "','" + entity.getSurname()
-                        + "','" + entity.getThirdName()
-                        + "','" + entity.getSex()
-                        + "','" + entity.getCitizenship()
-                        + "','" + entity.getMaritalStatus()
-                        + "','" + entity.getWebSite()
-                        + "','" + entity.getEmail()
-                        + "','" + entity.getJob()
-                        + "','" + entity.getAddress_id()
-                        + "')", Statement.RETURN_GENERATED_KEYS);
+                if (entity.getDateOfBirth() == null) {
+                    result = statement.executeUpdate("INSERT INTO contacts.contact (name, surname, thirdName," +
+                            " sex, citizenship, maritalStatus, webSite, email, job) VALUES ('"
+                            + entity.getName()
+                            + "','" + entity.getSurname()
+                            + "','" + entity.getThirdName()
+                            + "','" + entity.getSex()
+                            + "','" + entity.getCitizenship()
+                            + "','" + entity.getMaritalStatus()
+                            + "','" + entity.getWebSite()
+                            + "','" + entity.getEmail()
+                            + "','" + entity.getJob()
+                            + "')", Statement.RETURN_GENERATED_KEYS);
+                }
+                else{
+                    result = statement.executeUpdate("INSERT INTO contacts.contact (name, surname, thirdName," +
+                            " dateOfBirth, sex, citizenship, maritalStatus, webSite, email, job) VALUES ('"
+                            + entity.getName()
+                            + "','" + entity.getSurname()
+                            + "','" + entity.getThirdName()
+                            + "','" + entity.getDateOfBirth()
+                            + "','" + entity.getSex()
+                            + "','" + entity.getCitizenship()
+                            + "','" + entity.getMaritalStatus()
+                            + "','" + entity.getWebSite()
+                            + "','" + entity.getEmail()
+                            + "','" + entity.getJob()
+                            + "')", Statement.RETURN_GENERATED_KEYS);
+                }
                 if (result == 0) {
                     throw new SQLException("Creating contact failed, contact wasn't added");
                 }
@@ -168,6 +185,59 @@ public class ContactDAO extends AbstractDAO<Contact> {
         });
     }
 
+    public Long insertWithAddress(Contact entity) throws GenericDAOException {
+        if (entity == null) return 0L;
+        return connectionAwareExecutor.submit(statement -> {
+            try {
+                int result;
+                LOG.info("insert Contact starting");
+                if (entity.getDateOfBirth() == null) {
+                    result = statement.executeUpdate("INSERT INTO contacts.contact (name, surname, thirdName," +
+                            " sex, citizenship, maritalStatus, webSite, email, job, Address_id) VALUES ('"
+                            + entity.getName()
+                            + "','" + entity.getSurname()
+                            + "','" + entity.getThirdName()
+                            + "','" + entity.getSex()
+                            + "','" + entity.getCitizenship()
+                            + "','" + entity.getMaritalStatus()
+                            + "','" + entity.getWebSite()
+                            + "','" + entity.getEmail()
+                            + "','" + entity.getJob()
+                            + "','" + entity.getAddress_id()
+                            + "')", Statement.RETURN_GENERATED_KEYS);
+                }
+                else{
+                    result = statement.executeUpdate("INSERT INTO contacts.contact (name, surname, thirdName," +
+                            " dateOfBirth, sex, citizenship, maritalStatus, webSite, email, job, Address_id) VALUES ('"
+                            + entity.getName()
+                            + "','" + entity.getSurname()
+                            + "','" + entity.getThirdName()
+                            + "','" + entity.getDateOfBirth()
+                            + "','" + entity.getSex()
+                            + "','" + entity.getCitizenship()
+                            + "','" + entity.getMaritalStatus()
+                            + "','" + entity.getWebSite()
+                            + "','" + entity.getEmail()
+                            + "','" + entity.getJob()
+                            + "','" + entity.getAddress_id()
+                            + "')", Statement.RETURN_GENERATED_KEYS);
+                }
+                if (result == 0) {
+                    throw new SQLException("Creating contact failed, contact wasn't added");
+                }
+                try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                    if (generatedKeys.next())
+                        return generatedKeys.getLong(1);
+                    else return 0L;
+                }
+            } catch (SQLException e) {
+                LOG.error("Contact wasn't inserted", e);
+                if (e.getErrorCode() == 1062)
+                    throw new UniqueDAOException(e);
+                else throw new GenericDAOException(e);
+            }
+        });
+    }
     @Override
     public int deleteById(Long id) throws GenericDAOException {
         return connectionAwareExecutor.submit(statement -> {
