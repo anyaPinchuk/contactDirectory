@@ -27,7 +27,7 @@ public class ContactsCommand extends FrontCommand {
 
     @Override
     public void processGet() throws ServletException, IOException {
-        List<Contact> contacts = null;
+        List<Contact> contacts;
         List<ContactDTO> contactsDTO = new ArrayList<>();
         LOG.info("get all contacts starting ");
         try {
@@ -39,9 +39,6 @@ public class ContactsCommand extends FrontCommand {
                                 .orElseThrow(()->new GenericDAOException("address was not found"));
                         ContactDTO contactDTO = contactConverter.toDTO(Optional.of(contact)).get();
                         contactDTO.setAddress(addressConverter.toDTO(Optional.of(address)).get());
-                        if (contactDTO.getJob().equals("null")){
-                            contactDTO.setJob(null);
-                        }
                         contactsDTO.add(contactDTO);
                     } catch (GenericDAOException e) {
                         e.printStackTrace();
@@ -52,6 +49,7 @@ public class ContactsCommand extends FrontCommand {
                     contactsDTO.add(contactDTO);
                 }
             });
+
         }
         catch (GenericDAOException e){
             LOG.error("error while processing all contacts from ContactsCommand");

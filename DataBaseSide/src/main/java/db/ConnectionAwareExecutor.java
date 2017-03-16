@@ -1,6 +1,7 @@
 package db;
 
 import exceptions.GenericDAOException;
+import org.apache.log4j.Logger;
 
 import java.io.IOException;
 import java.sql.*;
@@ -11,7 +12,7 @@ import static db.ManagerDB.DB_URL;
 
 public class ConnectionAwareExecutor {
 
-    //protected static final Logger LOG = LoggerFactory.getLogger(ConnectionAwareExecutor.class);
+    protected static final Logger LOG = Logger.getLogger(ConnectionAwareExecutor.class);
 
     private Connection connect() throws GenericDAOException {
         try {
@@ -28,7 +29,7 @@ public class ConnectionAwareExecutor {
             Connection connection = DriverManager.getConnection(sqlUrl, user, password);
 
             DatabaseMetaData metaData = connection.getMetaData();
-            //LOG.info("dao Connected to " + metaData.getDatabaseProductName() + " " + metaData.getDatabaseProductVersion());
+            LOG.info("dao Connected to " + metaData.getDatabaseProductName() + " " + metaData.getDatabaseProductVersion());
             return connection;
         } catch (SQLException | IOException e) {
             throw new GenericDAOException(e);
@@ -43,7 +44,7 @@ public class ConnectionAwareExecutor {
         } catch (SQLException e) {
             throw new GenericDAOException(e);
         } finally {
-            //LOG.info("dao Disconnected");
+            LOG.info("dao Disconnected");
         }
     }
 }

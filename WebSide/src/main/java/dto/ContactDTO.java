@@ -11,7 +11,7 @@ public class ContactDTO extends DTO{
     private String name;
     private String surname;
     private String thirdName;
-    private Date dateOfBirth;
+    private String dateOfBirth;
     private String sex;
     private String citizenship;
     private String maritalStatus;
@@ -22,7 +22,7 @@ public class ContactDTO extends DTO{
     private List<PhoneDTO> phoneDTOList;
     private List<AttachmentDTO> attachmentDTOList;
 
-    public ContactDTO(Long id, String name, String surname, String thirdName, Date dateOfBirth, String sex,
+    public ContactDTO(Long id, String name, String surname, String thirdName, String dateOfBirth, String sex,
                       String citizenship, String maritalStatus, String webSite, String email, String job, AddressDTO address) {
         this.id = id;
         this.name = name;
@@ -72,11 +72,11 @@ public class ContactDTO extends DTO{
         this.thirdName = thirdName;
     }
 
-    public Date getDateOfBirth() {
+    public String getDateOfBirth() {
         return dateOfBirth;
     }
 
-    public void setDateOfBirth(Date dateOfBirth) {
+    public void setDateOfBirth(String dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 

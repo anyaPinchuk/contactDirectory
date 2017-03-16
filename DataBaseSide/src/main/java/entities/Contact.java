@@ -8,14 +8,14 @@ public class Contact {
     private String name;
     private String surname;
     private String thirdName;
-    private Date dateOfBirth;
+    private String dateOfBirth;
     private String sex;
     private String citizenship;
     private String maritalStatus;
     private String webSite;
     private String email;
     private String job;
-    private Blob photo;
+    private Long photo_id;
     private Long address_id;
 
     public Contact() {
@@ -26,7 +26,7 @@ public class Contact {
         this.surname = surname;
     }
 
-    public Contact(Long id, String name, String surname, String thirdName, Date dateOfBirth, String sex,
+    public Contact(Long id, String name, String surname, String thirdName, String dateOfBirth, String sex,
                    String citizenship, String maritalStatus, String webSite, String email, String job, Long address_id) {
         this.id = id;
         this.name = name;
@@ -42,8 +42,8 @@ public class Contact {
         this.address_id = address_id;
     }
 
-    public Contact(Long id, String name, String surname, String thirdName, Date dateOfBirth, String sex,
-                   String citizenship, String maritalStatus, String webSite, String email, String job, Blob photo,
+    public Contact(Long id, String name, String surname, String thirdName, String dateOfBirth, String sex,
+                   String citizenship, String maritalStatus, String webSite, String email, String job, Long photo_id,
                    Long address_id) {
         this.id = id;
         this.name = name;
@@ -56,7 +56,7 @@ public class Contact {
         this.webSite = webSite;
         this.email = email;
         this.job = job;
-        this.photo = photo;
+        this.photo_id = photo_id;
         this.address_id = address_id;
     }
 
@@ -92,12 +92,12 @@ public class Contact {
         this.thirdName = thirdName;
     }
 
-    public Date getDateOfBirth() {
-        return dateOfBirth;
+    public void setDateOfBirth(String dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
     }
 
-    public void setDateOfBirth(Date dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
+    public String getDateOfBirth() {
+        return dateOfBirth;
     }
 
     public String getSex() {
@@ -156,12 +156,12 @@ public class Contact {
         this.address_id = address_id;
     }
 
-    public Blob getPhoto() {
-        return photo;
+    public Long getPhoto_id() {
+        return photo_id;
     }
 
-    public void setPhoto(Blob photo) {
-        this.photo = photo;
+    public void setPhoto_id(Long photo_id) {
+        this.photo_id = photo_id;
     }
 
     @Override

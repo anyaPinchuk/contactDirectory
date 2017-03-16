@@ -8,6 +8,7 @@ public class Attachment {
     private Date dateOfDownload;
     private String fileName;
     private Blob file;
+    //change blob file to path to file
     private String comment;
     private Long contact_id;
 

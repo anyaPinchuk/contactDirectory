@@ -1,6 +1,7 @@
 package db;
 
 import exceptions.GenericDAOException;
+import org.apache.log4j.Logger;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -18,7 +19,7 @@ import java.util.stream.Collector;
 
 public class ManagerDB {
 
-    //protected static final Logger LOG = LoggerFactory.getLogger(ManagerDB.class);
+    protected static final Logger LOG = Logger.getLogger(ConnectionAwareExecutor.class);
     public static final String DB_URL = "jdbc:mysql://";
 
     public static Properties getEnvironmentProperties() throws IOException {
@@ -70,7 +71,7 @@ public class ManagerDB {
                 for (String query : scriptList) {
                     statement.executeUpdate(query);
                 }
-                //LOG.info("DataBase '" + dbName + "' created");
+                LOG.info("DataBase '" + dbName + "' created");
             }
         } catch (SQLException | IOException e) {
             throw new GenericDAOException(e);
@@ -93,7 +94,7 @@ public class ManagerDB {
             try (Connection connection = DriverManager.getConnection(sqlUrl, user, password);
                  Statement statement = connection.createStatement()) {
                 statement.executeUpdate("DROP DATABASE " + dbName);
-                //LOG.info("DataBase '" + dbName + "' destroyed");
+                LOG.info("DataBase '" + dbName + "' destroyed");
             }
         } catch (SQLException | IOException e) {
             throw new GenericDAOException(e);

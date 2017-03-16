@@ -27,12 +27,11 @@
     <c:forEach items="${requestScope.contactList}" var="contact">
         <tr>
             <td><input value="${contact.id}" type="checkbox" name="chosenContacts"/></td>
-            <td><a href="editContact?id=${contact.id}"><c:out value="${contact.name}"/><br/>
-                <c:out value="${contact.surname}"/><br/>
-                <c:out value="${contact.thirdName}"/></a></td>
+            <td><a href="editContact?id=${contact.id}" id="editAccountLink">
+                <c:out value="${contact.surname} ${contact.name} ${contact.thirdName}"/></a></td>
             <td><fmt:formatDate value="${contact.dateOfBirth}" pattern="dd-MM-yyyy"/></td>
-            <td><pre><c:out value="${contact.address.country}"/><br/> <c:out value="${contact.address.city}"/><br/>
-                <c:out value="${contact.address.streetAddress}"/><br/><c:out value="${contact.address.index}"/></pre>
+            <td><c:out value="${contact.address.country} ${contact.address.city} ${contact.address.streetAddress}
+             ${contact.address.index}"/>
             </td>
             <td><c:out value="${contact.job}"/></td>
         </tr>

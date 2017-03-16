@@ -26,7 +26,7 @@ public class ContactDAO extends AbstractDAO<Contact> {
                     String name = resultSet.getString("name");
                     String surname = resultSet.getString("surname");
                     String thirdName = resultSet.getString("thirdName");
-                    Date birthDate = resultSet.getDate("dateOfBirth");
+                    String birthDate = resultSet.getString("dateOfBirth");
                     String sex = resultSet.getString("sex");
                     String citizenship = resultSet.getString("citizenship");
                     String status = resultSet.getString("maritalStatus");
@@ -65,7 +65,7 @@ public class ContactDAO extends AbstractDAO<Contact> {
         String name = resultSet.getString("name");
         String surname = resultSet.getString("surname");
         String thirdName = resultSet.getString("thirdName");
-        Date birthDate = resultSet.getDate("dateOfBirth");
+        String birthDate = resultSet.getString("dateOfBirth");
         String sex = resultSet.getString("sex");
         String citizenship = resultSet.getString("citizenship");
         String status = resultSet.getString("maritalStatus");

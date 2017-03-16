@@ -11,235 +11,130 @@
     </head>
     <body>
     <form name='addContact' action="addContact" onsubmit="return validate()" method="post">
-    <div class="center">
-
-        <div>
+        <div class="center">
+            <div>
                 <div class="form-group">
                     <label for="contactName">Enter name* </label>
-                    <input class="form-control input-lg" required="required" id="contactName" type="text" name="name"
+                    <input class="form-control turnOFF" required="required" id="contactName" type="text" name="name"
                            placeholder="Input name"/>
                 </div>
                 <div class="form-group">
                     <label for="contactSurname">Enter surname* </label>
-                    <input class="form-control input-lg" required="required" id="contactSurname" type="text"
+                    <input class="form-control turnOFF" required="required" id="contactSurname" type="text"
                            name="surname" placeholder="Input surname"/>
                 </div>
                 <div class="form-group">
                     <label for="contactThirdname">Enter third name </label>
-                    <input class="form-control input-lg" id="contactThirdname" type="text" name="thirdName"
+                    <input class="form-control turnOFF" id="contactThirdname" type="text" name="thirdName"
                            placeholder="Input third name"/>
                 </div>
                 <div class="form-group">
+                    <label for="contactEmail">Enter email address* </label>
+                    <input class="form-control turnOFF" id="contactEmail" type="email" required="required" name="email"
+                           pattern="^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$" placeholder="Input email"/>
+                </div>
+                <div class="form-group">
                     <label for="contactDate">Enter date of birth </label>
-                    <input class="form-control" id="contactDate" type="date" name="dateOfBirth"/>
+                    <input class="form-control turnOFF" id="contactDate" type="text" placeholder="DD-MM-YYYY"
+                           name="dateOfBirth"/>
                 </div>
                 <div class="form-group">
                     <label for="contactSex">Choose sex </label>
-                    <select class="form-control" id="contactSex" name="sex">
+                    <select class="form-control turnOFF" id="contactSex" name="sex">
                         <option value="man">Male</option>
                         <option value="woman">Female</option>
                     </select>
                 </div>
                 <div class="form-group">
                     <label for="contactCitizenship">Enter citizenship </label>
-                    <input class="form-control input-lg" id="contactCitizenship" type="text" name="citizenship"
+                    <input class="form-control turnOFF" id="contactCitizenship" type="text" name="citizenship"
                            placeholder="Input citizenship"/>
                 </div>
                 <div class="form-group">
                     <label for="contactStatus">Enter marital status </label>
-                    <input class="form-control input-lg" id="contactStatus" type="text" name="status"
+                    <input class="form-control  turnOFF" id="contactStatus" type="text" name="status"
                            placeholder="Input marital status"/>
                 </div>
                 <div class="form-group">
                     <label for="contactSite">Enter web-site </label>
-                    <input class="form-control input-lg" id="contactSite" type="text" name="webSite"
+                    <input class="form-control turnOFF" id="contactSite" type="text" name="webSite"
                            placeholder="Input web-site"/>
                 </div>
-                <div class="form-group">
-                    <label for="contactEmail">Enter email address* </label>
-                    <input class="form-control input-lg" id="contactEmail" type="email" required="required" name="email"
-                           placeholder="Input email"/>
-                </div>
+
                 <div class="form-group">
                     <label for="contactJob">Enter company </label>
-                    <input class="form-control input-lg" id="contactJob" type="text" name="job"
+                    <input class="form-control turnOFF" id="contactJob" type="text" name="job"
                            placeholder="Input company"/>
                 </div>
                 <div class="form-group">
                     <label>Enter address </label>
-                    <input class="form-control input-lg" id="contactCountry" type="text" name="country"
+                    <input class="form-control turnOFF" id="contactCountry" type="text" name="country"
                            placeholder="Input country"/><br/>
-                    <input class="form-control input-lg" id="contactCity" type="text" name="city"
+                    <input class="form-control turnOFF" id="contactCity" type="text" name="city"
                            placeholder="Input city"/><br/>
-                    <input class="form-control input-lg" id="contactAddress" type="text" name="address"
+                    <input class="form-control turnOFF" id="contactAddress" type="text" name="address"
                            placeholder="Input address"/><br/>
-                    <input class="form-control input-lg" id="contactIndex" type="text" name="index"
-                           placeholder="Input index"/><br/>
+                    <input class="form-control turnOFF" id="contactIndex" type="text" name="index" placeholder="Input index"/><br/>
                 </div>
                 <button id="addContact" type="submit" class="btn btn-primary">Add contact</button>
-
-        </div>
-        <div>
-            <div class="vertical-group">
-                <button id="myBtn" type="button" class="btn btn-success padding">Add phone</button>
-                <button type="button" id="deletePhone" class="btn btn-link padding">Delete chosen<br/> phone</button>
             </div>
-            <table class="table-bordered" id="phones">
-                <tbody id="tbody">
-                <tr>
-                    <th>Chosen</th>
-                    <th>Number</th>
-                    <th>Type</th>
-                    <th>Comment</th>
-                </tr>
-                </tbody>
-            </table>
+            <div>
+                <div class="vertical-group">
+                    <button id="myBtn" type="button" class="btn btn-success padding">Add phone</button>
+                    <button type="button" id="deletePhone" class="btn btn-link padding">Delete chosen<br/> phone
+                    </button>
+                </div>
+                <table class="table-bordered" id="phones">
+                    <tbody id="tbody">
+                    <tr>
+                        <th>Chosen</th>
+                        <th>Number</th>
+                        <th>Type</th>
+                        <th>Comment</th>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
-    </div>
 
-    <!-- The Modal -->
+        <!-- The Modal -->
     </form>
-    <div id="myModal" class="modal">
-        <!-- Modal content -->
-        <div class="modal-content">
-            <span class="close">Close</span>
-            <form name="addPhone">
-                <div class="form-group">
-                    <label for="countryCode">Enter coutry code, for example: 375</label>
-                    <input class="form-control" type="number" id="countryCode" required="required"
-                           placeholder="Input country code" name="countryCode"/>
-                </div>
-                <div class="form-group">
-                    <label for="operatorCode">Enter operator code, for example: 29</label>
-                    <input class="form-control" type="number" id="operatorCode" required="required"
-                           placeholder="Input operator code" name="operatorCode"/>
-                </div>
-                <div class="form-group">
-                    <label for="number">Enter coutry code, for example: 1234567</label>
-                    <input class="form-control" type="number" id="number" required="required"
-                           placeholder="Input number" name="number"/>
-                </div>
-                <div class="form-group">
-                    <label for="type">Choose type of number</label>
-                    <select id="type" class="form-control" name="type">
-                        <option value="Mobile">Mobile</option>
-                        <option value="Home">Home</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="comment">Enter comment</label>
-                    <input class="form-control" type="text" id="comment" placeholder="Input comment" name="comment"/>
-                </div>
-            </form>
-            <button type="button" class="btn btn-primary" id="addPhone">Add phone</button>
-        </div>
+    <div id="myModal" class="modal-content">
+        <span class="close">Close</span>
+        <form name="addPhone">
+            <div class="form-group">
+                <label for="countryCode">Enter coutry code, for example: 375</label>
+                <input class="form-control" type="number" id="countryCode" required="required"
+                       placeholder="Input country code" name="countryCode"/>
+            </div>
+            <div class="form-group">
+                <label for="operatorCode">Enter operator code, for example: 29</label>
+                <input class="form-control" type="number" id="operatorCode" required="required"
+                       placeholder="Input operator code" name="operatorCode"/>
+            </div>
+            <div class="form-group">
+                <label for="number">Enter coutry code, for example: 1234567</label>
+                <input class="form-control" type="number" id="number" required="required"
+                       placeholder="Input number" name="number"/>
+            </div>
+            <div class="form-group">
+                <label for="type">Choose type of number</label>
+                <select id="type" class="form-control" name="type">
+                    <option value="Mobile">Mobile</option>
+                    <option value="Home">Home</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="comment">Enter comment</label>
+                <input class="form-control" type="text" id="comment" placeholder="Input comment" name="comment"/>
+            </div>
+        </form>
+        <button type="button" class="btn btn-primary" id="addPhone">Add phone</button>
     </div>
-    <!--<script type="text/javascript" src="${pageContext.request.contextPath}/web-resources/scripts/index.js">-->
-    <!--//hiii-->
-    <!--</script>-->
+    <script type="text/javascript" src="${pageContext.request.contextPath}/web-resources/scripts/index.js">
+        //hiii
+    </script>
     <script>
-        function validate() {
-            var form = document.forms.addContact;
-            var name = form.name;
-            var surname = form.surname;
-            form.submit();
-        }
-        //--------pop Up window----------//
-        var modal = document.getElementById('myModal');
-        var btn = document.getElementById("myBtn");
-        var span = document.getElementsByClassName("close")[0];
-        btn.onclick = function () {
-            modal.style.display = "block";
-        };
-        span.onclick = function () {
-            modal.style.display = "none";
-        };
-        window.onclick = function (event) {
-            if (event.target == modal) {
-                modal.style.display = "none";
-            }
-        };
-
-        ///------ phones --------///
-        var phones = new Array();
-        var i = 0;
-        var object = {};
-        function addPhone() {
-            var form = document.forms.addPhone;
-            object.countryCode = form.countryCode.value;
-            object.operatorCode = form.operatorCode.value;
-            object.number = form.number.value;
-            object.type = form.type.value;
-            object.comment = form.comment.value;
-            phones.push(object);
-            addPhoneInTable(object, i++);
-        }
-        var table = document.getElementById('phones');
-        table.style.visibility = "hidden";
-
-        function addPhoneInTable(object, i) {
-            table.style.visibility = "visible";
-            var tbody = document.getElementById('tbody');
-            var tr = document.createElement('tr');
-            tr.id = "row" + i;
-            var input2 = document.createElement('input');
-            input2.className = "form-control";
-            input2.type = "checkbox";
-            input2.value = i;
-            input2.name = "i";
-            var tr2 = document.createElement('tr');
-            var td2 = document.createElement('td');
-            td2.appendChild(input2);
-            tr.appendChild(td2);
-            var input1 = document.createElement('input');
-            input1.className = "form-control";
-            input1.disabled = "true";
-            input1.name = "phones";
-            var td1 = document.createElement('td');
-            input1.value = "+" + object.countryCode + " " + object.operatorCode + " " + object.number;
-            td1.appendChild(input1);
-            tr.appendChild(td1);
-            var input4 = document.createElement('input');
-            input4.className = "form-control";
-            input4.disabled = "true";
-            input4.value = object.type;
-            input4.name = "types";
-            var td4 = document.createElement('td');
-            td4.appendChild(input4);
-            tr.appendChild(td4);
-            var input5 = document.createElement('input');
-            input5.className = "form-control";
-            input5.disabled = "true";
-            input5.value = object.comment ;
-            input5.name = "comments";
-            var td5 = document.createElement('td');
-            td5.appendChild(input5);
-            tr.appendChild(td5);
-            tbody.appendChild(tr);
-            span.click();
-        }
-
-        function deletePhone() {
-            var tbody = document.getElementById('tbody');
-            var rows = tbody.children;
-            for (var i = 1, j = 0; ; i++) {
-                if (i == rows.length) {
-                    break;
-                }
-                if (rows[i].children[0].children[0].checked) {
-                    rows[i].remove();
-                }
-            }
-            if (tbody.children.length == 1) {
-                table.style.visibility = "hidden";
-            }
-        }
-
-        //-------------Handlers--------//
-        var addPhoneButton = document.getElementById("addPhone");
-        addPhoneButton.addEventListener("click", addPhone);
-        var deletePhoneBtn = document.getElementById("deletePhone");
-        deletePhoneBtn.addEventListener("click", deletePhone);
     </script>
     </body>
     </html>

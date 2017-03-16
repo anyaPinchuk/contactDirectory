@@ -2,6 +2,7 @@ package commands;
 
 import dao.AddressDAO;
 import dao.ContactDAO;
+import dao.PhoneDAO;
 import org.apache.log4j.Logger;
 
 import javax.servlet.RequestDispatcher;
@@ -17,6 +18,7 @@ public abstract class FrontCommand {
     protected HttpServletResponse response;
     protected ContactDAO contactDAO = new ContactDAO();
     protected AddressDAO addressDAO = new AddressDAO();
+    protected PhoneDAO phoneDAO = new PhoneDAO();
     protected static final Logger LOG = Logger.getLogger("commands");
 
     public void init(
