@@ -8,6 +8,7 @@ function validate() {
 var modal = document.getElementById('myModal');
 var btn = document.getElementById("myBtn");
 var span = document.getElementsByClassName("close")[0];
+span.innerHTML = "&times; Cancel";
 btn.onclick = function () {
     modal.style.display = "block";
 };
@@ -99,6 +100,7 @@ function deletePhone() {
         table.style.visibility = "hidden";
     }
 }
+
 
 //-------------Handlers--------//
 var addPhoneButton = document.getElementById("addPhone");

@@ -96,7 +96,7 @@ public class ContactDAO extends AbstractDAO<Contact> {
         return connectionAwareExecutor.submit(statement -> {
             try {
                 LOG.info("updateById Contact starting");
-                if (entity.getDateOfBirth() == null) {
+                if (entity.getDateOfBirth().equals("")) {
                     return statement.executeUpdate("UPDATE contacts.contact SET " +
                             "name = '" + entity.getName()
                             + "', surname = '" + entity.getSurname()
@@ -139,7 +139,7 @@ public class ContactDAO extends AbstractDAO<Contact> {
             try {
                 int result;
                 LOG.info("insert Contact starting");
-                if (entity.getDateOfBirth() == null) {
+                if (entity.getDateOfBirth().equals("")) {
                     result = statement.executeUpdate("INSERT INTO contacts.contact (name, surname, thirdName," +
                             " sex, citizenship, maritalStatus, webSite, email, job) VALUES ('"
                             + entity.getName()
@@ -191,7 +191,7 @@ public class ContactDAO extends AbstractDAO<Contact> {
             try {
                 int result;
                 LOG.info("insert Contact starting");
-                if (entity.getDateOfBirth() == null) {
+                if (entity.getDateOfBirth().equals("")) {
                     result = statement.executeUpdate("INSERT INTO contacts.contact (name, surname, thirdName," +
                             " sex, citizenship, maritalStatus, webSite, email, job, Address_id) VALUES ('"
                             + entity.getName()

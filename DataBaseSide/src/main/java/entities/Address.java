@@ -7,6 +7,9 @@ public class Address {
     private String streetAddress;
     private String index;
 
+    public Address() {
+    }
+
     public Address(Long id, String country, String city, String streetAddress, String index) {
         this.id = id;
         this.country = country;

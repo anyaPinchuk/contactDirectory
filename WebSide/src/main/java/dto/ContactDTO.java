@@ -18,6 +18,7 @@ public class ContactDTO extends DTO{
     private String webSite;
     private String email;
     private String job;
+    private PhotoDTO photo;
     private AddressDTO address;
     private List<PhoneDTO> phoneDTOList;
     private List<AttachmentDTO> attachmentDTOList;
@@ -150,5 +151,13 @@ public class ContactDTO extends DTO{
 
     public void setAttachmentDTOS(List<AttachmentDTO> attachmentDTOS) {
         this.attachmentDTOList = attachmentDTOS;
+    }
+
+    public PhotoDTO getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(PhotoDTO photo) {
+        this.photo = photo;
     }
 }

@@ -11,8 +11,14 @@ import entities.Contact;
 import entities.PhoneNumber;
 import exceptions.GenericDAOException;
 import exceptions.MessageError;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import utilities.FileUploadDocuments;
 
 import javax.servlet.ServletException;
+import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -41,13 +47,13 @@ public class EditContactCommand extends FrontCommand {
             Contact contact = contactDAO.findById(id).get();
             address_id = contact.getAddress_id();
             contactDTO = contactConverter.toDTO(Optional.of(contact)).get();
-            if (address_id!=0){
+            if (address_id != 0) {
                 Address address = addressDAO.findById(address_id).get();
                 contactDTO.setAddress(addressConverter.toDTO(Optional.of(address)).get());
             }
             List<PhoneNumber> numberList = phoneDAO.findAllById(contactDTO.getId());
             List<PhoneDTO> phoneDTOList = new ArrayList<>();
-            numberList.forEach(obj->{
+            numberList.forEach(obj -> {
                 phoneDTOList.add(phoneConverter.toDTO(Optional.of(obj)).get());
             });
             contactDTO.setPhoneDTOList(phoneDTOList);
@@ -64,57 +70,131 @@ public class EditContactCommand extends FrontCommand {
     @Override
     public void processPost() throws ServletException, IOException {
         LOG.info("update contact starting ");
-        Long id = Long.valueOf(request.getParameter("id"));
-        Long address_id = Long.valueOf(request.getParameter("address_id"));
-        String name = request.getParameter("name");
-        String surname = request.getParameter("surname");
-        String thirdName = request.getParameter("thirdName");
-        String date = request.getParameter("dateOfBirth");
-        String sex = request.getParameter("sex");
-        String citizenship = request.getParameter("citizenship");
-        String status = request.getParameter("status");
-        String webSite = request.getParameter("webSite");
-        String email = request.getParameter("email");
-        String company = request.getParameter("company");
-        String country = request.getParameter("country");
-        String city = request.getParameter("city");
-        String contactAddress = request.getParameter("address");
-        String index = request.getParameter("index");
-        DateFormat format = new SimpleDateFormat("yyyy-MM-DD");
-        Date dateOfBirth = null;
-        Contact contact;
-        Address address;
+        DiskFileItemFactory factory = new DiskFileItemFactory();
+        factory.setRepository(new File(System.getProperty("java.io.tmpdir")));
+        ServletFileUpload upload = new ServletFileUpload(factory);
+        List<FileItem> formItems = null;
+        Contact contact = new Contact();
+        Address address = new Address();
         try {
-            dateOfBirth = format.parse(date);
-            date = format.format(dateOfBirth);
+            formItems = upload.parseRequest(request);
+            if (formItems != null && formItems.size() > 0) {
+                String field, fieldName;
+                // iterates over form's fields
+                for (FileItem item : formItems) {
+                    if (item.isFormField()) {
+                        field = item.getString();
+                        fieldName = item.getFieldName();
+                        switch (fieldName) {
+                            case "id": {
+                                contact.setId(Long.parseLong(field));
+                                break;
+                            }
+                            case "address_id": {
+                                contact.setAddress_id(Long.parseLong(field));
+                                address.setId(contact.getAddress_id());
+                                break;
+                            }
+                            case "name": {
+                                contact.setName(field);
+                                break;
+                            }
+                            case "surname": {
+                                contact.setSurname(field);
+                                break;
+                            }
+                            case "thirdName": {
+                                contact.setThirdName(field);
+                                break;
+                            }
+                            case "dateOfBirth": {
+                                contact.setDateOfBirth(field);
+                                break;
+                            }
+                            case "sex": {
+                                contact.setSex(field);
+                                break;
+                            }
+                            case "citizenship": {
+                                contact.setCitizenship(field);
+                                break;
+                            }
+                            case "status": {
+                                contact.setMaritalStatus(field);
+                                break;
+                            }
+                            case "webSite": {
+                                contact.setWebSite(field);
+                                break;
+                            }
+                            case "email": {
+                                contact.setEmail(field);
+                                break;
+                            }
+                            case "job": {
+                                contact.setJob(field);
+                                break;
+                            }
+                            case "country": {
+                                address.setCountry(field);
+                                break;
+                            }
+                            case "city": {
+                                address.setCity(field);
+                                break;
+                            }
+                            case "address": {
+                                address.setStreetAddress(field);
+                                break;
+                            }case "index": {
+                                address.setIndex(field);
+                                break;
+                            }
+                        }
+                    } else {
+                        //TODO save photo in db
+                        FileUploadDocuments.saveFile(request, item);
+                    }
+                }
+            }
+        } catch (FileUploadException e1) {
+            e1.printStackTrace();
+        }
+        ////////////////////////////////////////////////////////
+        updateContact(contact, address);
+        response.sendRedirect("Contacts");
+    }
+
+    public void updateContact(Contact contact, Address address) {
+        Date dateOfBirth;
+        DateFormat format = new SimpleDateFormat("yyyy-MM-DD");
+        try {
+            dateOfBirth = format.parse(contact.getDateOfBirth());
+            contact.setDateOfBirth(format.format(dateOfBirth));
         } catch (ParseException e) {
+            LOG.error(e.getMessage());
             e.printStackTrace();
         }
+        Long address_id = address.getId();
         try {
-            if (country.equals("") && city.equals("") && contactAddress.equals("") && index.equals("")) {
-                contact = new Contact(id, name, surname, thirdName, date, sex, citizenship, status,
-                        webSite, email, company, null);
-                contactDAO.updateById(id, contact);
+            if (address.getCountry().equals("") && address.getCity().equals("") && address.getStreetAddress().equals("")
+                    && address.getIndex().equals("")) {
+                contact.setAddress_id(null);
+                contactDAO.updateById(contact.getId(), contact);
             } else {
-                address = new Address(id, country, city, contactAddress, index);
                 if (address_id == 0) {
                     Long addressID = addressDAO.insert(address);
-                    contact = new Contact(id, name, surname, thirdName, date, sex, citizenship, status,
-                            webSite, email, company, addressID);
+                    contact.setAddress_id(addressID);
                 } else {
                     addressDAO.updateById(address_id, address);
-                    contact = new Contact(id, name, surname, thirdName, date, sex, citizenship, status,
-                            webSite, email, company, address_id);
+                    contact.setAddress_id(address_id);
                 }
-                contactDAO.updateById(id, contact);
+                contactDAO.updateById(contact.getId(), contact);
             }
         } catch (GenericDAOException e) {
             LOG.error("error while processing update Contact in editContactCommand");
             e.printStackTrace();
         }
-        ContactsCommand contactsCommand = new ContactsCommand();
-        contactsCommand.init(context, request, response);
-        contactsCommand.processGet();
 
     }
 }

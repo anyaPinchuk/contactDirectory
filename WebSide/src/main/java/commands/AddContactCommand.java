@@ -45,11 +45,13 @@ public class AddContactCommand extends FrontCommand {
         DateFormat format = new SimpleDateFormat("yyyy-MM-DD");
         String[] inputs = request.getParameterValues("hiddens");
         List<PhoneNumber> numbers = new ArrayList<>();
-        Arrays.stream(inputs).forEach(obj -> {
-            String[] objects = obj.split(";");
-            String comment = objects.length == 4 ? null : objects[4];
-            numbers.add(new PhoneNumber(null, objects[0], objects[1], objects[2], objects[3], comment, null));
-        });
+        if (inputs != null){
+            Arrays.stream(inputs).forEach(obj -> {
+                String[] objects = obj.split(";");
+                String comment = objects.length == 4 ? null : objects[4];
+                numbers.add(new PhoneNumber(null, objects[0], objects[1], objects[2], objects[3], comment, null));
+            });
+        }
         Date dateOfBirth = null;
         Contact contact;
         Address address;
@@ -88,9 +90,6 @@ public class AddContactCommand extends FrontCommand {
             LOG.error("error while processing insert Contact in AddContactCommand");
             e.printStackTrace();
         }
-//        ContactsCommand contactsCommand = new ContactsCommand();
-//        contactsCommand.init(context, request, response);
-//        contactsCommand.processGet();
-        response.sendRedirect("app/Contacts");
+        response.sendRedirect("Contacts");
     }
 }

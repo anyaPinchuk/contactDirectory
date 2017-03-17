@@ -1,5 +1,0 @@
-<footer xmlns:jsp="http://java.sun.com/JSP/Page">
-    <jsp:directive.page contentType="text/html" pageEncoding="UTF-8"/>
-    <jsp:output omit-xml-declaration="yes"/>
-
-</footer>

@@ -19,7 +19,7 @@ import java.util.stream.Collector;
 
 public class ManagerDB {
 
-    protected static final Logger LOG = Logger.getLogger(ConnectionAwareExecutor.class);
+    protected static final Logger LOG = Logger.getLogger(ManagerDB.class);
     public static final String DB_URL = "jdbc:mysql://";
 
     public static Properties getEnvironmentProperties() throws IOException {
