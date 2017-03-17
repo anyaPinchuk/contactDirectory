@@ -4,11 +4,14 @@ import converters.AddressConverter;
 import converters.ContactConverter;
 import converters.PhoneConverter;
 import dao.PhoneDAO;
+import dao.PhotoDAO;
 import dto.ContactDTO;
 import dto.PhoneDTO;
+import dto.PhotoDTO;
 import entities.Address;
 import entities.Contact;
 import entities.PhoneNumber;
+import entities.Photo;
 import exceptions.GenericDAOException;
 import exceptions.MessageError;
 import org.apache.commons.fileupload.FileItem;
@@ -29,6 +32,7 @@ public class EditContactCommand extends FrontCommand {
     private ContactConverter contactConverter;
     private AddressConverter addressConverter;
     private PhoneConverter phoneConverter;
+    private PhotoDAO photoDAO = new PhotoDAO();
 
     public EditContactCommand() {
         contactConverter = new ContactConverter();
@@ -57,6 +61,14 @@ public class EditContactCommand extends FrontCommand {
                 phoneDTOList.add(phoneConverter.toDTO(Optional.of(obj)).get());
             });
             contactDTO.setPhoneDTOList(phoneDTOList);
+            Photo photo = photoDAO.findById(contact.getPhoto_id()).isPresent()
+                    ? photoDAO.findById(contact.getPhoto_id()).get()
+                    : null;
+            PhotoDTO photoDTO = null;
+            if (photo!=null){
+                photoDTO = new PhotoDTO(photo.getId(), photo.getName(), photo.getPathToFile());
+                contactDTO.setPhoto(photoDTO);
+            }
         } catch (GenericDAOException e) {
             LOG.error("error while processing find contact from EditContactCommand");
             new MessageError(e.getMessage(), e);
@@ -146,20 +158,28 @@ public class EditContactCommand extends FrontCommand {
                             case "address": {
                                 address.setStreetAddress(field);
                                 break;
-                            }case "index": {
+                            }
+                            case "index": {
                                 address.setIndex(field);
                                 break;
                             }
                         }
                     } else {
-                        //TODO save photo in db
-                        FileUploadDocuments.saveFile(request, item);
+                        //проверка на то чтобы фотография уже добавлена к профилю и не изменилась
+                        Photo photo = photoDAO.findById(contact.getPhoto_id()).get();
+                        if (!(photo.getName().equals(item.getName()))){
+                            Long photo_id = photoDAO.insert(new Photo(item.getName(), FileUploadDocuments.getFileDirectory()));
+                            contact.setPhoto_id(photo_id);
+                            FileUploadDocuments.saveFile(request, item);
+                        }
                     }
                 }
             }
-        } catch (FileUploadException e1) {
-            e1.printStackTrace();
+        } catch (FileUploadException | GenericDAOException e) {
+            LOG.error(e.getMessage());
+            e.printStackTrace();
         }
+
         ////////////////////////////////////////////////////////
         updateContact(contact, address);
         response.sendRedirect("Contacts");

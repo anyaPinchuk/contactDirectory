@@ -48,7 +48,7 @@ public class AddContactCommand extends FrontCommand {
         if (inputs != null){
             Arrays.stream(inputs).forEach(obj -> {
                 String[] objects = obj.split(";");
-                String comment = objects.length == 4 ? null : objects[4];
+                String comment = objects.length == 4 ? "" : objects[4];
                 numbers.add(new PhoneNumber(null, objects[0], objects[1], objects[2], objects[3], comment, null));
             });
         }

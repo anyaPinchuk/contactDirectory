@@ -1,16 +1,14 @@
-package dto;
+package entities;
 
-public class PhotoDTO extends DTO{
+public class Photo {
     private Long id;
     private String name;
     private String pathToFile;
-    private byte[] content;
 
-    public PhotoDTO() {
+    public Photo() {
     }
 
-    public PhotoDTO(Long id, String name, String pathToFile) {
-        this.id = id;
+    public Photo(String name, String pathToFile) {
         this.name = name;
         this.pathToFile = pathToFile;
     }
@@ -37,13 +35,5 @@ public class PhotoDTO extends DTO{
 
     public void setPathToFile(String pathToFile) {
         this.pathToFile = pathToFile;
-    }
-
-    public byte[] getContent() {
-        return content;
-    }
-
-    public void setContent(byte[] content) {
-        this.content = content;
     }
 }

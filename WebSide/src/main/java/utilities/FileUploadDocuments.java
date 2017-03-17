@@ -1,7 +1,7 @@
 package utilities;
 
+import dto.PhotoDTO;
 import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.log4j.Logger;
 
@@ -9,8 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintWriter;
-import java.util.List;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Properties;
 
 public class FileUploadDocuments {
@@ -41,7 +41,18 @@ public class FileUploadDocuments {
         return prop.getProperty("upload.location.photo");
     }
 
-    public static void readFile() {
+    public static byte[] readFile(String fileName) {
+        String uploadPath = getFileDirectory();
+        byte[] array = null;
+        try {
+            if (fileName.equals("")) {
+                array = Files.readAllBytes(Paths.get(uploadPath+ File.separator + "no_avatar.png"));
+            }
+            else array = Files.readAllBytes(Paths.get(uploadPath+ File.separator + fileName));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return array;
 
     }
 
@@ -71,7 +82,6 @@ public class FileUploadDocuments {
         String filePath = null;
         try {
             // parses the request's content to extract file data
-
             String fileName = new File(item.getName()).getName();
             filePath = uploadPath + File.separator + fileName;
             File storeFile = new File(filePath);

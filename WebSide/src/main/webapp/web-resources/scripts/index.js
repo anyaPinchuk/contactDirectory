@@ -8,7 +8,6 @@ function validate() {
 var modal = document.getElementById('myModal');
 var btn = document.getElementById("myBtn");
 var span = document.getElementsByClassName("close")[0];
-span.innerHTML = "&times; Cancel";
 btn.onclick = function () {
     modal.style.display = "block";
 };
@@ -27,9 +26,12 @@ function addPhone() {
     object.number = form.number.value;
     object.type = form.type.value;
     object.comment = form.comment.value;
-    phones.push(object);
-    addPhoneInTable(object, i++);
+    if (object.countryCode!="" || object.operatorCode !="" || object.number !=""){
+        phones.push(object);
+        addPhoneInTable(object, i++);
+    }
 }
+
 var table = document.getElementById('phones');
 table.style.visibility = "hidden";
 
@@ -48,31 +50,25 @@ function addPhoneInTable(object, i) {
     var hiddenTR = document.createElement('tr');
     td3.appendChild(input3);
     hiddenTR.appendChild(input3);
-    var input2 = document.createElement('input');
+    var input2 = document.createElement('p');
     input2.className = "form-control";
     input2.type = "checkbox";
     input2.value = i;
     var td2 = document.createElement('td');
     td2.appendChild(input2);
     tr.appendChild(td2);
-    var input1 = document.createElement('input');
-    input1.className = "form-control";
-    input1.disabled = "true";
+    var input1 = document.createElement('p');
     var td1 = document.createElement('td');
-    input1.value = "+" + object.countryCode + " " + object.operatorCode + " " + object.number;
+    input1.innerHTML = "+" + object.countryCode + " " + object.operatorCode + " " + object.number;
     td1.appendChild(input1);
     tr.appendChild(td1);
-    var input4 = document.createElement('input');
-    input4.className = "form-control";
-    input4.disabled = "true";
-    input4.value = object.type;
+    var input4 = document.createElement('p');
+    input4.innerHTML = object.type;
     var td4 = document.createElement('td');
     td4.appendChild(input4);
     tr.appendChild(td4);
-    var input5 = document.createElement('input');
-    input5.className = "form-control";
-    input5.disabled = "true";
-    input5.value = object.comment;
+    var input5 = document.createElement('p');
+    input5.innerHTML = object.comment;
     var td5 = document.createElement('td');
     td5.appendChild(input5);
     tr.appendChild(td5);

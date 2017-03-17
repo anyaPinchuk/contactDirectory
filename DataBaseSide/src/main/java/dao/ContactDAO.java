@@ -34,8 +34,9 @@ public class ContactDAO extends AbstractDAO<Contact> {
                     String email = resultSet.getString("email");
                     String job = resultSet.getString("job");
                     Long address_id = resultSet.getLong("Address_id");
+                    Long photo_id = resultSet.getLong("photo_id");
                     contacts.add(new Contact(id, name, surname, thirdName, birthDate, sex, citizenship,
-                            status, webSite, email, job, address_id));
+                            status, webSite, email, job, photo_id, address_id));
                 }
                 return contacts;
             } catch (SQLException e) {
@@ -73,14 +74,16 @@ public class ContactDAO extends AbstractDAO<Contact> {
         String email = resultSet.getString("email");
         String job = resultSet.getString("job");
         Long address_id = resultSet.getLong("Address_id");
+        Long photo_id = resultSet.getLong("photo_id");
         return Optional.of(new Contact(id, name, surname, thirdName, birthDate, sex, citizenship,
-                status, webSite, email, job, address_id));
+                status, webSite, email, job, photo_id, address_id));
     }
 
     @Override
     public Optional<? extends Contact> findByField(Object field) throws GenericDAOException {
         return connectionAwareExecutor.submit(statement -> {
-            try (ResultSet resultSet = statement.executeQuery("SELECT * FROM contacts.contact WHERE email = '" + field + "' LIMIT 1")) {
+            try (ResultSet resultSet = statement.executeQuery("SELECT * FROM contacts.contact WHERE email = '"
+                    + field + "' LIMIT 1")) {
                 if (resultSet.next())
                     return buildEntityFromResult(resultSet);
             } catch (SQLException e) {
@@ -108,6 +111,7 @@ public class ContactDAO extends AbstractDAO<Contact> {
                             + "', email = '" + entity.getEmail()
                             + "', job = '" + entity.getJob()
                             + "', Address_id = '" + entity.getAddress_id()
+                            + "', photo_id = '" + entity.getPhoto_id()
                             + "' WHERE id = " + id);
                 } else {
                     return statement.executeUpdate("UPDATE contacts.contact SET " +
@@ -122,6 +126,7 @@ public class ContactDAO extends AbstractDAO<Contact> {
                             + "', email = '" + entity.getEmail()
                             + "', job = '" + entity.getJob()
                             + "', Address_id = '" + entity.getAddress_id()
+                            + "', photo_id = '" + entity.getPhoto_id()
                             + "' WHERE id = " + id);
                 }
 

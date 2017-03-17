@@ -10,13 +10,14 @@
         <c:set var="contact" value="${requestScope.contact}"/>
     </head>
     <body>
-    <form name='editContact' enctype="multipart/form-data" action="editContact" onsubmit="return validate()" method="post">
+    <form name='editContact' enctype="multipart/form-data" action="editContact" onsubmit="return validate()"
+          method="post">
         <div class="center">
             <input type="hidden" value="${contact.address.id}" name="address_id"/>
             <input type="hidden" value="${contact.id}" name="id"/>
             <div>
                 <div class="form-group">
-                    <img id='photo' src="${pageContext.request.contextPath}image/${contact.photo.name}"
+                    <img id='photo' src="image?name=${contact.photo.name}"
                          width="200px" height="200px"/>
                 </div>
                 <div class="form-group">
@@ -37,7 +38,8 @@
                 <div class="form-group">
                     <label for="contactEmail">Enter email address* </label>
                     <input class="form-control input-lg" id="contactEmail" type="email" required="required" name="email"
-                           pattern="^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$" value="${contact.email}" placeholder="Input email"/>
+                           pattern="^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$" value="${contact.email}"
+                           placeholder="Input email"/>
                 </div>
                 <div class="form-group">
                     <label for="contactDate">Enter date of birth </label>
@@ -47,8 +49,16 @@
                 <div class="form-group">
                     <label for="contactSex">Choose sex </label>
                     <select class="form-control" id="contactSex" name="sex">
-                        <option value="man">Male</option>
-                        <option value="woman">Female</option>
+                        <c:choose>
+                            <c:when test="${contact.sex == 'man'}">
+                                <option value="man" selected="selected">Male</option>
+                                <option value="woman">Female</option>
+                            </c:when>
+                            <c:when test="${contact.sex == 'woman'}">
+                                <option value="man">Male</option>
+                                <option selected="selected" value="woman">Female</option>
+                            </c:when>
+                        </c:choose>
                     </select>
                 </div>
                 <div class="form-group">
@@ -88,7 +98,7 @@
             <div>
                 <div class="vertical-group">
                     <button id="myBtn" type="button" class="btn btn-success padding">Add phone</button>
-                    <button type="button" id="deletePhone" class="btn btn-link padding">Delete chosen<br/> phone
+                    <button type="button" id="deletePhone" class="btn btn-link padding">Delete chosen<br/> phones
                     </button>
                 </div>
                 <table class="table-bordered" id="phones">
@@ -99,6 +109,21 @@
                         <th>Type</th>
                         <th>Comment</th>
                     </tr>
+                    <c:forEach items="${contact.phoneDTOList}" var="phone">
+                        <tr class="rows" id="row${phone.id}">
+                            <td><input value="${phone.id}" type="checkbox"/></td>
+                            <td>
+                                <p onclick="editPhone(hiddensForUpdate)">+${phone.countryCode} ${phone.operatorCode} ${phone.number}</p>
+                            </td>
+                            <td><p>${phone.numberType}</p></td>
+                            <td><p> ${phone.comment}</p></td>
+                        </tr>
+                        <tr>
+                            <td><input type="hidden" id="hidden${phone.id}" class="hiddens"
+                                       value="${phone.countryCode};${phone.operatorCode};${phone.number};${phone.numberType};${phone.comment}"
+                                       name="hiddensForUpdate"/></td>
+                        </tr>
+                    </c:forEach>
                     </tbody>
                 </table>
             </div>
@@ -111,6 +136,39 @@
                        type="file" name="photo"/>
             </div>
             <button id="savePhotoBtn" type="button" class="btn btn-success" onclick="savePhoto(photo)">Save</button>
+        </div>
+        <div id="myModal" class="modal-content">
+            <span class="close">Cancel</span>
+            <div class="form-group">
+                <label for="countryCode">Enter coutry code, for example: 375</label>
+                <input class="form-control" type="number" id="countryCode"
+                       placeholder="Input country code" name="countryCode"/>
+            </div>
+            <div class="form-group">
+                <label for="operatorCode">Enter operator code, for example: 29</label>
+                <input class="form-control" type="number" id="operatorCode"
+                       placeholder="Input operator code" name="operatorCode"/>
+            </div>
+            <div class="form-group">
+                <label for="number">Enter coutry code, for example: 1234567</label>
+                <input class="form-control" type="number" id="number"
+                       placeholder="Input number" name="number"/>
+            </div>
+            <div class="form-group">
+                <label for="type">Choose type of number</label>
+                <select id="type" class="form-control" name="type">
+                    <option value="Mobile">Mobile</option>
+                    <option value="Home">Home</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="comment">Enter comment</label>
+                <textarea class="form-control" id="comment" placeholder="Input comment" name="comment"/>
+            </div>
+            <button type="button" class="btn btn-primary" id="addPhone">Add phone</button>
+            <button type="button" class="btn btn-primary" id="savePhone"
+                    onclick="saveChanges(countryCode, operatorCode, number, type, comment)">Save phone
+            </button>
         </div>
     </form>
     <script type="text/javascript" src="${pageContext.request.contextPath}/web-resources/scripts/editContact.js">
