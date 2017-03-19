@@ -55,12 +55,18 @@ public class EditContactCommand extends FrontCommand {
                 Address address = addressDAO.findById(address_id).get();
                 contactDTO.setAddress(addressConverter.toDTO(Optional.of(address)).get());
             }
+
+            ///////////////////////////////////////////////////////////////////////
+
             List<PhoneNumber> numberList = phoneDAO.findAllById(contactDTO.getId());
             List<PhoneDTO> phoneDTOList = new ArrayList<>();
             numberList.forEach(obj -> {
                 phoneDTOList.add(phoneConverter.toDTO(Optional.of(obj)).get());
             });
             contactDTO.setPhoneDTOList(phoneDTOList);
+
+            ///////////////////////////////////////////////////
+
             Photo photo = photoDAO.findById(contact.getPhoto_id()).isPresent()
                     ? photoDAO.findById(contact.getPhoto_id()).get()
                     : null;
@@ -69,6 +75,11 @@ public class EditContactCommand extends FrontCommand {
                 photoDTO = new PhotoDTO(photo.getId(), photo.getName(), photo.getPathToFile());
                 contactDTO.setPhoto(photoDTO);
             }
+
+            /////////////////////////////////////////////
+
+
+
         } catch (GenericDAOException e) {
             LOG.error("error while processing find contact from EditContactCommand");
             new MessageError(e.getMessage(), e);
@@ -163,7 +174,7 @@ public class EditContactCommand extends FrontCommand {
                                 address.setStreetAddress(field);
                                 break;
                             }
-                            case "index": {
+                            case "indexOfFile": {
                                 address.setIndex(field);
                                 break;
                             }
@@ -206,9 +217,9 @@ public class EditContactCommand extends FrontCommand {
             numbersForUpdate.forEach(obj -> {
                 obj.setContact_id(contact.getId());
             });
-            updatePhone(contact.getId(), numbersForUpdate);
-        }
 
+        }
+        updatePhone(contact.getId(), numbersForUpdate);
         if (numbersForInsert.size() != 0) {
             numbersForInsert.forEach(obj -> {
                 obj.setContact_id(contact.getId());

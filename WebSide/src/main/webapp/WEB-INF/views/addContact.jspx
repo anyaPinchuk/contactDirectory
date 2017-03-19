@@ -74,26 +74,47 @@
                            placeholder="Input city"/><br/>
                     <input class="form-control turnOFF" id="contactAddress" type="text" name="address"
                            placeholder="Input address"/><br/>
-                    <input class="form-control turnOFF" id="contactIndex" type="text" name="index" placeholder="Input index"/><br/>
+                    <input class="form-control turnOFF" id="contactIndex" type="text" name="index"
+                           placeholder="Input index"/><br/>
                 </div>
                 <button id="addContact" type="submit" class="btn btn-primary">Add contact</button>
             </div>
-            <div>
-                <div class="vertical-group">
-                    <button id="myBtn" type="button" class="btn btn-success padding">Add phone</button>
-                    <button type="button" id="deletePhone" class="btn btn-link padding">Delete chosen<br/> phone
-                    </button>
+            <div class="tables">
+                <div>
+                    <div class="vertical-group">
+                        <button id="myBtn" type="button" class="btn btn-success padding">Add phone</button>
+                        <button type="button" id="deletePhone" class="btn btn-link padding">Delete chosen<br/> phone
+                        </button>
+                    </div>
+                    <table class="table-bordered" id="phones">
+                        <tbody id="tbody">
+                        <tr>
+                            <th>Chosen</th>
+                            <th>Number</th>
+                            <th>Type</th>
+                            <th>Comment</th>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
-                <table class="table-bordered" id="phones">
-                    <tbody id="tbody">
-                    <tr>
-                        <th>Chosen</th>
-                        <th>Number</th>
-                        <th>Type</th>
-                        <th>Comment</th>
-                    </tr>
-                    </tbody>
-                </table>
+                <div>
+                    <div class="vertical-group">
+                        <button id="attachmentBtn" type="button" class="btn btn-success padding">Add attachment</button>
+                        <button type="button" id="attachmentDelete" class="btn btn-link padding">Delete chosen<br/> attachments
+                        </button>
+                    </div>
+                    <table class="table-bordered" id="attachments">
+                        <tbody id="tbodyAttach">
+                        <tr>
+                            <th>Chosen</th>
+                            <th>File name</th>
+                            <th>Date of upload</th>
+                            <th>Comment</th>
+                        </tr>
+                        </tbody>
+                    </table><br/>
+                    <div style="visibility:hidden;" id="forHiddenFiles"></div>
+                </div>
             </div>
         </div>
     </form>
@@ -128,6 +149,19 @@
             </div>
         </form>
         <button type="button" class="btn btn-primary" id="addPhone">Add phone</button>
+    </div>
+    <div id="myModalAttachment" class="modal-content">
+        <span class="close">Cancel</span>
+        <div class="form-group">
+            <label id="labelFile">Choose file </label>
+            <input accept="application/msword, text/plain, application/pdf, application/xml, .docx" class="form-control"
+                   type="file"  id="attachment0"/>
+        </div>
+        <div class="form-group">
+            <label>Input comment</label>
+            <input type="text" class="form-control" id="commentFile" placeholder="Input comment" name="commentFile"/>
+        </div>
+        <button id="addAttachmentBtn" type="button" class="btn btn-success" onclick="addAttachment()">Add</button>
     </div>
     <script src="${pageContext.request.contextPath}/web-resources/scripts/addContact.js">//hi</script>
     </body>

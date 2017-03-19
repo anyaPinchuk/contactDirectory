@@ -98,38 +98,77 @@
                 <button id="addContact" type="submit" class="btn btn-primary">Save contact</button>
 
             </div>
-            <div>
-                <div class="vertical-group">
-                    <button id="myBtn" type="button" class="btn btn-success padding">Add phone</button>
-                    <button type="button" id="deletePhone" class="btn btn-link padding">Delete chosen<br/> phones
-                    </button>
-                </div>
-                <table class="table-bordered" id="phones">
-                    <tbody id="tbody">
-                    <tr>
-                        <th>Chosen</th>
-                        <th>Number</th>
-                        <th>Type</th>
-                        <th>Comment</th>
-                    </tr>
-                    <c:forEach items="${contact.phoneDTOList}" var="phone">
-                        <tr class="rows" id="row${phone.id}">
-                            <td><button type="button" class="btn btn-link" onclick="editPhone(${phone.id})" >Edit</button>
-                                <input value="${phone.id}" type="checkbox" /></td>
-                            <td>
-                                <p>+${phone.countryCode} ${phone.operatorCode} ${phone.number}</p>
-                            </td>
-                            <td><p>${phone.numberType}</p></td>
-                            <td><p> ${phone.comment}</p></td>
-                        </tr>
+            <div class="tables">
+                <div>
+                    <div class="vertical-group">
+                        <button id="myBtn" type="button" class="btn btn-success padding">Add phone</button>
+                        <button type="button" id="deletePhone" class="btn btn-link padding">Delete chosen<br/> phones
+                        </button>
+                    </div>
+                    <table class="table-bordered" id="phones">
+                        <tbody id="tbody">
                         <tr>
-                            <td><input type="hidden" id="hidden${phone.id}" class="hiddens"
-                                       value="${phone.id};${phone.countryCode};${phone.operatorCode};${phone.number};${phone.numberType};${phone.comment}"
-                                       name="hiddensForUpdate"/></td>
+                            <th>Chosen</th>
+                            <th>Number</th>
+                            <th>Type</th>
+                            <th>Comment</th>
                         </tr>
-                    </c:forEach>
-                    </tbody>
-                </table>
+                        <c:forEach items="${contact.phoneDTOList}" var="phone">
+                            <tr class="rows" id="row${phone.id}">
+                                <td>
+                                    <button type="button" class="btn btn-link" onclick="editPhone(${phone.id})">Edit
+                                    </button>
+                                    <input value="${phone.id}" type="checkbox"/></td>
+                                <td>
+                                    <p>+${phone.countryCode} ${phone.operatorCode} ${phone.number}</p>
+                                </td>
+                                <td><p>${phone.numberType}</p></td>
+                                <td><p> ${phone.comment}</p></td>
+                            </tr>
+                            <tr id="hiddenRow${phone.id}">
+                                <td><input type="hidden"  class="hiddens"
+                                           value="${phone.id};${phone.countryCode};${phone.operatorCode};${phone.number};${phone.numberType};${phone.comment}"
+                                           id="hidden${phone.id}" name="hiddensForUpdate"/></td>
+                            </tr>
+                        </c:forEach>
+                        </tbody>
+                    </table>
+                </div>
+                <div>
+                    <div class="vertical-group">
+                        <button id="attachmentBtn" type="button" class="btn btn-success padding">Add attachment</button>
+                        <button type="button" id="attachmentDelete" class="btn btn-link padding">Delete chosen<br/> attachments
+                        </button>
+                    </div>
+                    <table class="table-bordered" id="attachments">
+                        <tbody id="tbodyAttach">
+                        <tr>
+                            <th>Chosen</th>
+                            <th>File name</th>
+                            <th>Date of upload</th>
+                            <th>Comment</th>
+                        </tr>
+                        <c:forEach items="${contact.attachmentDTOList}" var="attachment">
+                            <tr class="fileRows" id="row${attachment.id}">
+                                <td>
+                                    <button type="button" class="btn btn-link" onclick="editAttachment(${attachment.id})">Edit
+                                    </button>
+                                    <input value="${attachment.id}" type="checkbox"/></td>
+                                <td>
+                                    <a href="file?name=${attachment.fileName}">${attachment.fileName}</a>
+                                </td>
+                                <td><p>${attachment.dateOfDownload}</p></td>
+                                <td><p> ${attachment.comment}</p></td>
+                            </tr>
+                            <tr id="hiddenFileInfoRow${attachment.id}" style="visibility: hidden">
+                                <td><input type="hidden"   name="hiddenInfoForUpdate" id="hiddenFileInfo${attachment.id}"
+                                           value="${attachment.id};${attachment.fileName};${attachment.dateOfDownload};${attachment.comment}"/></td>
+                            </tr>
+                        </c:forEach>
+                        </tbody>
+                    </table><br/>
+                    <div style="visibility:hidden;" id="forHiddenFiles"></div>
+                </div>
             </div>
         </div>
         <div id="myModalPhoto" class="modal-content">
@@ -172,6 +211,19 @@
             <button type="button" class="btn btn-primary" id="addPhone">Add phone</button>
             <button type="button" class="btn btn-primary" id="savePhone">Save phone
             </button>
+        </div>
+        <div id="myModalAttachment" class="modal-content">
+            <span class="close">Cancel</span>
+            <div class="form-group">
+                <label id="labelFile">Choose file </label>
+                <input accept="application/msword, text/plain, application/pdf, application/xml, .docx" class="form-control"
+                       type="file" name="attachment" id="attachment0"/>
+            </div>
+            <div class="form-group">
+                <label>Input comment</label>
+                <input type="text" class="form-control" id="commentFile" placeholder="Input comment" name="commentFile"/>
+            </div>
+            <button id="addAttachmentBtn" type="button" class="btn btn-success" onclick="addAttachment()">Add</button>
         </div>
 
     </form>

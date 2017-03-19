@@ -41,7 +41,7 @@ public class AddContactCommand extends FrontCommand {
         String country = request.getParameter("country");
         String city = request.getParameter("city");
         String contactAddress = request.getParameter("address");
-        String index = request.getParameter("index");
+        String index = request.getParameter("indexOfFile");
         DateFormat format = new SimpleDateFormat("yyyy-MM-DD");
         String[] inputs = request.getParameterValues("hiddens");
         List<PhoneNumber> numbers = new ArrayList<>();

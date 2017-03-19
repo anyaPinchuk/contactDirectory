@@ -8,18 +8,16 @@ public class AttachmentDTO extends DTO {
     private Long id;
     private Date dateOfDownload;
     private String fileName;
-    private Blob file;
     private String comment;
     private ContactDTO contactDTO;
 
     public AttachmentDTO() {
     }
 
-    public AttachmentDTO(Long id, Date dateOfDownload, String fileName, Blob file, String comment, ContactDTO contactDTO) {
+    public AttachmentDTO(Long id, Date dateOfDownload, String fileName, String comment, ContactDTO contactDTO) {
         this.id = id;
         this.dateOfDownload = dateOfDownload;
         this.fileName = fileName;
-        this.file = file;
         this.comment = comment;
         this.contactDTO = contactDTO;
     }
@@ -46,14 +44,6 @@ public class AttachmentDTO extends DTO {
 
     public void setFileName(String fileName) {
         this.fileName = fileName;
-    }
-
-    public Blob getFile() {
-        return file;
-    }
-
-    public void setFile(Blob file) {
-        this.file = file;
     }
 
     public String getComment() {
