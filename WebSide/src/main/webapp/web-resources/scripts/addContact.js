@@ -1,4 +1,3 @@
-window.onload = function () {
 
     var modal = document.getElementById('myModal');
     var btn = document.getElementById("myBtn");
@@ -53,7 +52,7 @@ window.onload = function () {
         var hiddenTR = document.createElement('tr');
         td3.appendChild(input3);
         hiddenTR.appendChild(input3);
-        var input2 = document.createElement('p');
+        var input2 = document.createElement('input');
         input2.className = "form-control";
         input2.type = "checkbox";
         input2.value = i;
@@ -95,11 +94,10 @@ window.onload = function () {
                 rows[i].remove();
             }
         }
-        if (tbody.children.length == 1) {
+        if (document.querySelectorAll(".rows").length == 0) {
             table.style.visibility = "hidden";
         }
     }
 
 
 //-------------Handlers--------//
-};

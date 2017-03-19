@@ -7,6 +7,9 @@
               media="screen"/>
         <link href="${pageContext.request.contextPath}/web-resources/bootstrap/css/bootstrap.css" rel="stylesheet"
               type="text/css" media="screen"/>
+        <script type="text/javascript" src="${pageContext.request.contextPath}/web-resources/scripts/handlers.js">
+            //hiii
+        </script>
         <c:set var="contact" value="${requestScope.contact}"/>
     </head>
     <body>
@@ -111,16 +114,17 @@
                     </tr>
                     <c:forEach items="${contact.phoneDTOList}" var="phone">
                         <tr class="rows" id="row${phone.id}">
-                            <td><input value="${phone.id}" type="checkbox"/></td>
+                            <td><button type="button" class="btn btn-link" onclick="editPhone(${phone.id})" >Edit</button>
+                                <input value="${phone.id}" type="checkbox" /></td>
                             <td>
-                                <p onclick="editPhone(hiddensForUpdate)">+${phone.countryCode} ${phone.operatorCode} ${phone.number}</p>
+                                <p>+${phone.countryCode} ${phone.operatorCode} ${phone.number}</p>
                             </td>
                             <td><p>${phone.numberType}</p></td>
                             <td><p> ${phone.comment}</p></td>
                         </tr>
                         <tr>
                             <td><input type="hidden" id="hidden${phone.id}" class="hiddens"
-                                       value="${phone.countryCode};${phone.operatorCode};${phone.number};${phone.numberType};${phone.comment}"
+                                       value="${phone.id};${phone.countryCode};${phone.operatorCode};${phone.number};${phone.numberType};${phone.comment}"
                                        name="hiddensForUpdate"/></td>
                         </tr>
                     </c:forEach>
@@ -163,17 +167,18 @@
             </div>
             <div class="form-group">
                 <label for="comment">Enter comment</label>
-                <textarea class="form-control" id="comment" placeholder="Input comment" name="comment"/>
+                <input type="text" class="form-control" id="comment" placeholder="Input comment" name="comment"/>
             </div>
             <button type="button" class="btn btn-primary" id="addPhone">Add phone</button>
-            <button type="button" class="btn btn-primary" id="savePhone"
-                    onclick="saveChanges(countryCode, operatorCode, number, type, comment)">Save phone
+            <button type="button" class="btn btn-primary" id="savePhone">Save phone
             </button>
         </div>
+
     </form>
     <script type="text/javascript" src="${pageContext.request.contextPath}/web-resources/scripts/editContact.js">
         //hiii
     </script>
     </body>
+
     </html>
 </jsp:root>

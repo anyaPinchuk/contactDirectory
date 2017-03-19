@@ -33,6 +33,7 @@ public class EditContactCommand extends FrontCommand {
     private AddressConverter addressConverter;
     private PhoneConverter phoneConverter;
     private PhotoDAO photoDAO = new PhotoDAO();
+    private PhoneDAO phoneDAO = new PhoneDAO();
 
     public EditContactCommand() {
         contactConverter = new ContactConverter();
@@ -44,7 +45,6 @@ public class EditContactCommand extends FrontCommand {
     public void processGet() throws ServletException, IOException {
         LOG.info("get contact by id starting ");
         ContactDTO contactDTO = null;
-        PhoneDAO phoneDAO = new PhoneDAO();
         Long id = Long.valueOf(request.getParameter("id"));
         Long address_id;
         try {
@@ -65,7 +65,7 @@ public class EditContactCommand extends FrontCommand {
                     ? photoDAO.findById(contact.getPhoto_id()).get()
                     : null;
             PhotoDTO photoDTO = null;
-            if (photo!=null){
+            if (photo != null) {
                 photoDTO = new PhotoDTO(photo.getId(), photo.getName(), photo.getPathToFile());
                 contactDTO.setPhoto(photoDTO);
             }
@@ -87,6 +87,8 @@ public class EditContactCommand extends FrontCommand {
         ServletFileUpload upload = new ServletFileUpload(factory);
         List<FileItem> formItems = null;
         Contact contact = new Contact();
+        List<PhoneNumber> numbersForUpdate = new ArrayList<>();
+        List<PhoneNumber> numbersForInsert = new ArrayList<>();
         Address address = new Address();
         try {
             formItems = upload.parseRequest(request);
@@ -103,8 +105,10 @@ public class EditContactCommand extends FrontCommand {
                                 break;
                             }
                             case "address_id": {
-                                contact.setAddress_id(Long.parseLong(field));
-                                address.setId(contact.getAddress_id());
+                                if (!field.equals("")) {
+                                    contact.setAddress_id(Long.parseLong(field));
+                                    address.setId(contact.getAddress_id());
+                                }
                                 break;
                             }
                             case "name": {
@@ -163,15 +167,33 @@ public class EditContactCommand extends FrontCommand {
                                 address.setIndex(field);
                                 break;
                             }
+                            case "hiddens": {
+                                String[] objects = field.split(";");
+                                String comment = objects.length == 4 ? "" : objects[4];
+                                numbersForInsert.add(new PhoneNumber(null, objects[0], objects[1], objects[2], objects[3], comment, null));
+                                break;
+                            }
+                            case "hiddensForUpdate": {
+                                String[] objects = field.split(";");
+                                String comment = objects.length == 5 ? "" : objects[5];
+                                Long id = Long.parseLong(objects[0]);
+                                numbersForUpdate.add(new PhoneNumber(id, objects[1], objects[2], objects[3], objects[4], comment, null));
+                                break;
+                            }
                         }
                     } else {
                         //проверка на то чтобы фотография уже добавлена к профилю и не изменилась
-                        Photo photo = photoDAO.findById(contact.getPhoto_id()).get();
-                        if (!(photo.getName().equals(item.getName()))){
-                            Long photo_id = photoDAO.insert(new Photo(item.getName(), FileUploadDocuments.getFileDirectory()));
-                            contact.setPhoto_id(photo_id);
-                            FileUploadDocuments.saveFile(request, item);
+                        if (!item.getName().equals("")) {
+                            String fileName = item.getName();
+                            if (!(photoDAO.findByField(fileName).isPresent())) {
+                                Long photo_id = photoDAO.insert(new Photo(item.getName(), FileUploadDocuments.getFileDirectory()));
+                                contact.setPhoto_id(photo_id);
+                                FileUploadDocuments.saveFile(request, item);
+                            } else {
+                                Photo photo = photoDAO.findByField(fileName).get();
+                            }
                         }
+
                     }
                 }
             }
@@ -180,21 +202,48 @@ public class EditContactCommand extends FrontCommand {
             e.printStackTrace();
         }
 
+        if (numbersForUpdate.size() != 0) {
+            numbersForUpdate.forEach(obj -> {
+                obj.setContact_id(contact.getId());
+            });
+            updatePhone(contact.getId(), numbersForUpdate);
+        }
+
+        if (numbersForInsert.size() != 0) {
+            numbersForInsert.forEach(obj -> {
+                obj.setContact_id(contact.getId());
+            });
+            insertPhone(numbersForInsert);
+        }
         ////////////////////////////////////////////////////////
         updateContact(contact, address);
         response.sendRedirect("Contacts");
     }
 
+    private void insertPhone(List<PhoneNumber> numbersForInsert) {
+        numbersForInsert.forEach(obj -> {
+            try {
+                phoneDAO.insert(obj);
+            } catch (GenericDAOException e) {
+                LOG.error("error while processing insert phone in editContactCommand");
+                e.printStackTrace();
+            }
+        });
+    }
+
     public void updateContact(Contact contact, Address address) {
         Date dateOfBirth;
         DateFormat format = new SimpleDateFormat("yyyy-MM-DD");
-        try {
-            dateOfBirth = format.parse(contact.getDateOfBirth());
-            contact.setDateOfBirth(format.format(dateOfBirth));
-        } catch (ParseException e) {
-            LOG.error(e.getMessage());
-            e.printStackTrace();
+        if (!contact.getDateOfBirth().equals("")) {
+            try {
+                dateOfBirth = format.parse(contact.getDateOfBirth());
+                contact.setDateOfBirth(format.format(dateOfBirth));
+            } catch (ParseException e) {
+                LOG.error(e.getMessage());
+                e.printStackTrace();
+            }
         }
+
         Long address_id = address.getId();
         try {
             if (address.getCountry().equals("") && address.getCity().equals("") && address.getStreetAddress().equals("")
@@ -216,5 +265,33 @@ public class EditContactCommand extends FrontCommand {
             e.printStackTrace();
         }
 
+    }
+
+    public void updatePhone(Long contact_id, List<PhoneNumber> phoneNumbersForUpdate) {
+        try {
+            List<PhoneNumber> numbers = phoneDAO.findAllById(contact_id);
+            phoneNumbersForUpdate.forEach(obj -> {
+                try {
+                    if (numbers.contains(obj)) {
+                        phoneDAO.updateById(obj.getId(), obj);
+                        numbers.remove(obj);
+                    }
+                } catch (GenericDAOException e) {
+                    LOG.error("error while processing update phone by id in editContactCommand");
+                    e.printStackTrace();
+                }
+            });
+            numbers.forEach(obj -> {
+                try {
+                    phoneDAO.deleteById(obj.getId());
+                } catch (GenericDAOException e) {
+                    LOG.error("error while processing update phone by id in editContactCommand");
+                    e.printStackTrace();
+                }
+            });
+        } catch (GenericDAOException e) {
+            LOG.error("error while processing find all phones by id in editContactCommand");
+            e.printStackTrace();
+        }
     }
 }

@@ -2,7 +2,7 @@
 -- -----------------------------------------------------
 -- Schema contacts
 -- -----------------------------------------------------
-CREATE DATABASE IF NOT EXISTS `contacts` DEFAULT CHARACTER SET utf8 ;
+CREATE SCHEMA IF NOT EXISTS `contacts` DEFAULT CHARACTER SET utf8 ;
 USE `contacts` ;
 
 -- -----------------------------------------------------
@@ -16,7 +16,6 @@ CREATE TABLE IF NOT EXISTS `contacts`.`address` (
   `index` VARCHAR(45) NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC))
-  AUTO_INCREMENT = 4
   DEFAULT CHARACTER SET = utf8;
 
 
@@ -24,11 +23,13 @@ CREATE TABLE IF NOT EXISTS `contacts`.`address` (
 -- Table `contacts`.`photo`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `contacts`.`photo` (
-  `id` INT NOT NULL AUTO_INCREMENT,
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NOT NULL,
   `pathToFile` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC));
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC),
+  UNIQUE INDEX `photo_name_uindex` (`name` ASC))
+  DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
@@ -47,7 +48,7 @@ CREATE TABLE IF NOT EXISTS `contacts`.`contact` (
   `email` VARCHAR(45) NOT NULL,
   `job` VARCHAR(45) NULL DEFAULT NULL,
   `Address_id` INT(11) NULL DEFAULT NULL,
-  `photo_id` INT NOT NULL,
+  `photo_id` INT(11) NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC),
   INDEX `fk_Contact_Address_idx` (`Address_id` ASC),
@@ -62,7 +63,6 @@ CREATE TABLE IF NOT EXISTS `contacts`.`contact` (
   REFERENCES `contacts`.`photo` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
-  AUTO_INCREMENT = 4
   DEFAULT CHARACTER SET = utf8;
 
 
@@ -71,11 +71,10 @@ CREATE TABLE IF NOT EXISTS `contacts`.`contact` (
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `contacts`.`attachment` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
-  `dateOfDownload` DATETIME NOT NULL,
+  `dateOfDownload` DATETIME NULL DEFAULT NULL,
   `fileName` VARCHAR(45) NOT NULL,
   `comment` VARCHAR(45) NULL DEFAULT NULL,
   `Contact_id` INT(11) NOT NULL,
-  `pathToFile` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC),
   INDEX `fk_Attachment_Contact1_idx` (`Contact_id` ASC),
@@ -105,6 +104,4 @@ CREATE TABLE IF NOT EXISTS `contacts`.`phonenumber` (
   REFERENCES `contacts`.`contact` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
-  AUTO_INCREMENT = 3
   DEFAULT CHARACTER SET = utf8;
-

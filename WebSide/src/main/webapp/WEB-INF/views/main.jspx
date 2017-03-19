@@ -1,44 +1,54 @@
-<html xmlns:jsp="http://java.sun.com/JSP/Page"
-      xmlns:c="http://java.sun.com/jsp/jstl/core"
-      xmlns:fmt="http://java.sun.com/jsp/jstl/fmt">
-<link href="${pageContext.request.contextPath}/web-resources/css/index.css" rel="stylesheet" type="text/css"
-      media="screen"/>
-<link href="${pageContext.request.contextPath}/web-resources/bootstrap/css/bootstrap.css" rel="stylesheet"
-      type="text/css" media="screen"/>
-<jsp:directive.page contentType="text/html" pageEncoding="UTF-8"/>
-<jsp:output omit-xml-declaration="yes"/>
-<body>
-<h1>Contact Directory</h1>
-<div class="vertical-group">
-    <a href="addContact"><button class="btn btn-primary">Add contact</button></a>
-    <a href=""><button class="btn btn-primary">Search contact</button></a>
-    <a href=""><button class="btn btn-primary">Send email</button></a>
-    <button onclick="deleteContact()" class="btn btn-primary">Delete chosen contacts</button>
-</div>
-<table class="table-bordered table">
-    <tbody>
-    <tr>
-        <th> </th>
-        <th>FIO</th>
-        <th>Date of Birth</th>
-        <th>Address</th>
-        <th>Company</th>
-    </tr>
-    <c:forEach items="${requestScope.contactList}" var="contact">
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" xmlns="http://www.w3.org/1999/xhtml" version="2.0"
+          xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:fmt="http://java.sun.com/jsp/jstl/fmt">
+    <jsp:directive.page contentType="text/html" pageEncoding="UTF-8"/>
+    <html>
+    <head>
+        <link href="${pageContext.request.contextPath}/web-resources/css/index.css" rel="stylesheet" type="text/css"
+              media="screen"/>
+        <link href="${pageContext.request.contextPath}/web-resources/bootstrap/css/bootstrap.css" rel="stylesheet"
+              type="text/css" media="screen"/>
+
+    </head>
+    <body>
+
+    <h1>Contact Directory</h1>
+    <div class="vertical-group">
+        <a href="addContact">
+            <button class="btn btn-primary">Add contact</button>
+        </a>
+        <a href="">
+            <button class="btn btn-primary">Search contact</button>
+        </a>
+        <a href="">
+            <button class="btn btn-primary">Send email</button>
+        </a>
+        <button onclick="deleteContact()" class="btn btn-primary">Delete chosen contacts</button>
+    </div>
+    <table class="table-bordered table" id="tableMu">
+        <tbody>
         <tr>
-            <td><input value="${contact.id}" type="checkbox" name="chosenContacts"/></td>
-            <td><a href="editContact?id=${contact.id}" id="editAccountLink">
-                <c:out value="${contact.surname} ${contact.name} ${contact.thirdName}"/></a></td>
-            <td><fmt:formatDate value="${contact.dateOfBirth}" pattern="dd-MM-yyyy"/></td>
-            <td><c:out value="${contact.address.country} ${contact.address.city} ${contact.address.streetAddress}
-             ${contact.address.index}"/>
-            </td>
-            <td><c:out value="${contact.job}"/></td>
+            <th></th>
+            <th>FIO</th>
+            <th>Date of Birth</th>
+            <th>Address</th>
+            <th>Company</th>
         </tr>
-    </c:forEach>
-    <p><c:out value="${requestScope.contactName}"/></p>
-    </tbody>
-</table>
-<script src="${pageContext.request.contextPath}/web-resources/scripts/index.js"></script>
-</body>
-</html>
+        <c:forEach items="${requestScope.contactList}" var="contact">
+            <tr>
+                <td><input value="${contact.id}" type="checkbox" name="chosenContacts"/></td>
+                <td><a href="editContact?id=${contact.id}" id="editAccountLink">
+                    <c:out value="${contact.surname} ${contact.name} ${contact.thirdName}"/></a></td>
+                <td><fmt:formatDate value="${contact.dateOfBirth}" pattern="dd-MM-yyyy"/></td>
+                <td><c:out value="${contact.address.country} ${contact.address.city} ${contact.address.streetAddress}
+             ${contact.address.index}"/>
+                </td>
+                <td><c:out value="${contact.job}"/></td>
+            </tr>
+        </c:forEach>
+        </tbody>
+    </table>
+
+    <script src="${pageContext.request.contextPath}/web-resources/scripts/index.js">//hhh</script>
+    </body>
+    </html>
+</jsp:root>

@@ -1,6 +1,7 @@
 package dao;
 
 import entities.Address;
+import entities.Contact;
 import entities.Photo;
 import exceptions.GenericDAOException;
 import exceptions.UniqueDAOException;
@@ -42,7 +43,16 @@ public class PhotoDAO extends AbstractDAO<Photo>{
 
     @Override
     public Optional<? extends Photo> findByField(Object field) throws GenericDAOException {
-        return null;
+            return connectionAwareExecutor.submit(statement -> {
+                try (ResultSet resultSet = statement.executeQuery("SELECT * FROM contacts.photo WHERE name = '"
+                        + field + "' LIMIT 1")) {
+                    if (resultSet.next())
+                        return buildEntityFromResult(resultSet);
+                } catch (SQLException e) {
+                    throw new GenericDAOException(e);
+                }
+                return Optional.empty();
+            });
     }
 
     @Override

@@ -56,12 +56,15 @@ public class AddContactCommand extends FrontCommand {
         Contact contact;
         Address address;
         Long contact_id;
-        try {
-            dateOfBirth = format.parse(date);
-            date = format.format(dateOfBirth);
-        } catch (ParseException e) {
-            e.printStackTrace();
+        if (!date.equals("")){
+            try {
+                dateOfBirth = format.parse(date);
+                date = format.format(dateOfBirth);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
+
         try {
             if (country.equals("") && city.equals("") && contactAddress.equals("") && index.equals("")) {
                 contact = new Contact(null, name, surname, thirdName, date, sex, citizenship, status,

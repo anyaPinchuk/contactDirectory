@@ -1,3 +1,8 @@
+var editInput;
+var form;
+var addPhoneButton;
+var savePhoneButton;
+//--------pop Up window photo----------//
 var modalPhoto = document.getElementById('myModalPhoto');
 var btnPhoto = document.getElementById("photo");
 var span = document.getElementsByClassName("close")[0];
@@ -10,8 +15,9 @@ span.onclick = function () {
     modalPhoto.style.display = "none";
 };
 
-var addPhoneButton = document.getElementById("addPhone");
-var savePhoneButton = document.getElementById("savePhone");
+addPhoneButton = document.getElementById("addPhone");
+savePhoneButton = document.getElementById("savePhone");
+showEditFormBtn = document.getElementById("showEditFormBtn");
 
 //--------pop Up window phone----------//
 
@@ -21,6 +27,13 @@ var spanPhone = document.getElementsByClassName("close")[1];
 
 btn.onclick = function () {
     modal.style.display = "block";
+    form.countryCode.value = "";
+    form.operatorCode.value = "";
+    form.number.value = "";
+    form.type.options[0].selected = "true";
+    form.comment.value = "";
+    addPhoneButton.style.visibility = "visible";
+    savePhoneButton.style.visibility = "hidden";
 };
 
 spanPhone.onclick = function () {
@@ -31,10 +44,9 @@ spanPhone.onclick = function () {
 var phones = new Array();
 var i = 0;
 var object = {};
-var form = document.forms[0];
+form = document.forms[0];
 
 function addPhone() {
-
     object.countryCode = form.countryCode.value;
     object.operatorCode = form.operatorCode.value;
     object.number = form.number.value;
@@ -45,39 +57,42 @@ function addPhone() {
         addPhoneInTable(object, i++);
     }
 }
-var editInput;
-function editPhone(input) {
-    btn.click();
+var inputID;
+function editPhone(input_id) {
+    inputID = input_id;
+    modal.style.display = "block";
+    editInput = document.getElementById("hidden" + input_id);
     addPhoneButton.style.visibility = "hidden";
     savePhoneButton.style.visibility = "visible";
-    var strings = input.value.split(";");
-    form.countryCode.value = strings[0];
-    form.operatorCode.value = strings[1];
-    form.number.value = strings[2];
-    form.number.type = strings[3];
-    form.comment.value = strings[4];
-    editInput = input;
-}
+    var strings;
+    if (editInput.name == "hiddensForUpdate"){
+        strings = editInput.value.split(";");
+        form.countryCode.value = strings[1];
+        form.operatorCode.value = strings[2];
+        form.number.value = strings[3];
+        form.type.value = strings[4];
+        form.comment.value = strings[5];
+    }
+    else{
+        strings = editInput.value.split(";");
+        form.countryCode.value = strings[0];
+        form.operatorCode.value = strings[1];
+        form.number.value = strings[2];
+        form.type.value = strings[3];
+        form.comment.value = strings[4];
+    }
 
-function saveChanges(country, operator, number, type, comment) {
-    editInput.value = country + ";" + operator + ";" + number + ";" + type + ";" + comment;
-    form.countryCode.value = "";
-    form.operatorCode.value = "";
-    form.number.value = "";
-    form.type.value = "";
-    form.comment.value = "";
-    var tr = document.getElementById("row" + editInput.id);
-    tr.childNodes[1].childNodes[0].innerHTML = "+" + country + " " + operator + " " + number;
-    tr.childNodes[2].childNodes[0].innerHTML = type;
-    tr.childNodes[3].childNodes[0].innerHTML = comment;
 }
-
+savePhoneButton.onclick =  function () {
+    saveChanges(inputID, form.countryCode.value, form.operatorCode.value, form.number.value, form.type.value, form.comment.value);
+};
 function addPhoneInTable(object, i) {
     var tbody = document.getElementById('tbody');
     var tr = document.createElement('tr');
     tr.className = "rows";
     var input3 = document.createElement('input');
     input3.type = "hidden";
+    var button = document.createElement('button');
     var allHiddenInputs = document.getElementsByClassName("hiddens");
     //проверка на совпадение id
     for (var k = 0; k < allHiddenInputs.length; k++) {
@@ -99,6 +114,13 @@ function addPhoneInTable(object, i) {
     input2.type = "checkbox";
     input2.value = i;
     var td2 = document.createElement('td');
+    button.type = "button";
+    button.className = "btn btn-link";
+    button.innerHTML = "Edit";
+    button.addEventListener("click", function () {
+        editPhone(i);
+    });
+    td2.appendChild(button);
     td2.appendChild(input2);
     tr.appendChild(td2);
     var input1 = document.createElement('p');
@@ -123,6 +145,8 @@ function addPhoneInTable(object, i) {
     spanPhone.click();
 }
 
+var table = document.getElementById('phones');
+
 function deletePhone() {
     var tbody = document.getElementById('tbody');
     var rows = document.querySelectorAll(".rows");
@@ -130,7 +154,7 @@ function deletePhone() {
         if (i == rows.length) {
             break;
         }
-        var checkbox = rows[i].childNodes[0].childNodes[0];
+        var checkbox = rows[i].childNodes[0].childNodes[1];
         if (checkbox.checked) {
             var value = checkbox.value;
             var input = document.querySelector("#hidden" + value);
@@ -138,12 +162,20 @@ function deletePhone() {
             rows[i].remove();
         }
     }
-    if (tbody.children.length == 1) {
+    if (document.querySelectorAll(".rows").length == 0) {
         table.style.visibility = "hidden";
     }
 }
-////-------------photo------------///
 
+
+//-------------Handlers--------//
+
+addPhoneButton.addEventListener("click", addPhone);
+var deletePhoneBtn = document.getElementById("deletePhone");
+deletePhoneBtn.addEventListener("click", deletePhone);
+
+
+////-------------photo------------///
 function savePhoto(input) {
     if (input.files && input.files[0]) {
         var reader = new FileReader();
@@ -152,12 +184,19 @@ function savePhoto(input) {
         };
         reader.readAsDataURL(input.files[0]);
     }
+    var span = document.getElementsByClassName("close")[0];
     span.click();
 }
+/////----------------Edit phone-----------------////
 
-//-------------Handlers--------//
 
-addPhoneButton.addEventListener("click", addPhone);
-var deletePhoneBtn = document.getElementById("deletePhone");
-deletePhoneBtn.addEventListener("click", deletePhone);
-savePhoneButton.addEventListener("click", saveChanges);
+function saveChanges(id, country, operator, number, type, comment) {
+    editInput.value = id + ";" + country + ";" + operator + ";" + number + ";" + type + ";" + comment;
+    var tr = document.getElementById("row" + id);
+    tr.childNodes[1].childNodes[0].innerHTML = "+" + country + " " + operator + " " + number;
+    tr.childNodes[2].childNodes[0].innerHTML = type;
+    tr.childNodes[3].childNodes[0].innerHTML = comment;
+    savePhoneButton.style.visibility = "hidden";
+    addPhoneButton.style.visibility = "visible";
+    spanPhone.click();
+}

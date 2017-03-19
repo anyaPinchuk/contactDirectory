@@ -88,10 +88,7 @@ public class FileUploadDocuments {
             // saves the file on disk
             item.write(storeFile);
 
-        } catch (
-                Exception ex)
-
-        {
+        } catch (Exception ex) {
             LOG.error(ex.getMessage());
         }
         return filePath;

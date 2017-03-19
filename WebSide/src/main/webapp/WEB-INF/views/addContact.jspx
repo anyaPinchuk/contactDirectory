@@ -10,7 +10,7 @@
 
     </head>
     <body>
-    <form name='addContact' action="addContact" onsubmit="return validate()" method="post">
+    <form name='addContact' action="addContact" onsubmit="" method="post">
         <div class="center">
             <div>
                 <div class="form-group">
@@ -96,7 +96,6 @@
                 </table>
             </div>
         </div>
-
     </form>
     <div id="myModal" class="modal-content">
         <span class="close">Cancel</span>
@@ -125,16 +124,12 @@
             </div>
             <div class="form-group">
                 <label for="comment">Enter comment</label>
-                <textarea class="form-control" id="comment" placeholder="Input comment" name="comment"/>
+                <input type="text" class="form-control" id="comment" placeholder="Input comment" name="comment"/>
             </div>
         </form>
         <button type="button" class="btn btn-primary" id="addPhone">Add phone</button>
     </div>
-    <script type="text/javascript" src="${pageContext.request.contextPath}/web-resources/scripts/index.js">
-        //hiii
-    </script>
-    <script>
-    </script>
+    <script src="${pageContext.request.contextPath}/web-resources/scripts/addContact.js">//hi</script>
     </body>
     </html>
 </jsp:root>
