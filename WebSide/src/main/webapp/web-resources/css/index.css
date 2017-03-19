@@ -78,9 +78,6 @@ input{
     flex-direction: column;
 }
 
-#attachments{
-    visibility: hidden;
-}
 
 #attachments td{
     width: auto;

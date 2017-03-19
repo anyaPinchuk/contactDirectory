@@ -1,9 +1,6 @@
 package dto;
 
-import entities.Address;
-
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class ContactDTO extends DTO{
@@ -21,7 +18,7 @@ public class ContactDTO extends DTO{
     private PhotoDTO photo;
     private AddressDTO address;
     private List<PhoneDTO> phoneDTOList;
-    private List<AttachmentDTO> attachmentDTOList;
+    private List<AttachmentDTO> attachments;
 
     public ContactDTO(Long id, String name, String surname, String thirdName, String dateOfBirth, String sex,
                       String citizenship, String maritalStatus, String webSite, String email, String job, AddressDTO address) {
@@ -38,7 +35,7 @@ public class ContactDTO extends DTO{
         this.job = job;
         this.address = address;
         this.phoneDTOList = new ArrayList<>();
-        this.attachmentDTOList = new ArrayList<>();
+        this.attachments = new ArrayList<>();
     }
 
     public Long getId() {
@@ -146,11 +143,11 @@ public class ContactDTO extends DTO{
     }
 
     public List<AttachmentDTO> getAttachmentDTOS() {
-        return attachmentDTOList;
+        return attachments;
     }
 
     public void setAttachmentDTOS(List<AttachmentDTO> attachmentDTOS) {
-        this.attachmentDTOList = attachmentDTOS;
+        this.attachments = attachmentDTOS;
     }
 
     public PhotoDTO getPhoto() {

@@ -148,14 +148,14 @@
                             <th>Date of upload</th>
                             <th>Comment</th>
                         </tr>
-                        <c:forEach items="${contact.attachmentDTOList}" var="attachment">
+                        <c:forEach items="${requestScope.attachments}" var="attachment">
                             <tr class="fileRows" id="row${attachment.id}">
                                 <td>
                                     <button type="button" class="btn btn-link" onclick="editAttachment(${attachment.id})">Edit
                                     </button>
                                     <input value="${attachment.id}" type="checkbox"/></td>
                                 <td>
-                                    <a href="file?name=${attachment.fileName}">${attachment.fileName}</a>
+                                    <a href="document?name=${attachment.fileName};${contact.id}">${attachment.fileName}</a>
                                 </td>
                                 <td><p>${attachment.dateOfDownload}</p></td>
                                 <td><p> ${attachment.comment}</p></td>
@@ -217,7 +217,7 @@
             <div class="form-group">
                 <label id="labelFile">Choose file </label>
                 <input accept="application/msword, text/plain, application/pdf, application/xml, .docx" class="form-control"
-                       type="file" name="attachment" id="attachment0"/>
+                       type="file" name="attachment-0" id="attachment0"/>
             </div>
             <div class="form-group">
                 <label>Input comment</label>

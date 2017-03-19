@@ -5,26 +5,15 @@ import java.util.Date;
 
 public class Attachment {
     private Long id;
-    private Date dateOfDownload;
+    private String dateOfDownload;
     private String fileName;
-    private Blob file;
-    //change blob file to path to file
     private String comment;
     private Long contact_id;
 
-    public Attachment(Long id, Date dateOfDownload, String fileName, String comment, Long contact_id) {
+    public Attachment(Long id, String dateOfDownload, String fileName, String comment, Long contact_id) {
         this.id = id;
         this.dateOfDownload = dateOfDownload;
         this.fileName = fileName;
-        this.comment = comment;
-        this.contact_id = contact_id;
-    }
-
-    public Attachment(Long id, Date dateOfDownload, String fileName, Blob file, String comment, Long contact_id) {
-        this.id = id;
-        this.dateOfDownload = dateOfDownload;
-        this.fileName = fileName;
-        this.file = file;
         this.comment = comment;
         this.contact_id = contact_id;
     }
@@ -45,11 +34,11 @@ public class Attachment {
         this.id = id;
     }
 
-    public Date getDateOfDownload() {
+    public String getDateOfDownload() {
         return dateOfDownload;
     }
 
-    public void setDateOfDownload(Date dateOfDownload) {
+    public void setDateOfDownload(String dateOfDownload) {
         this.dateOfDownload = dateOfDownload;
     }
 
@@ -69,11 +58,4 @@ public class Attachment {
         this.comment = comment;
     }
 
-    public Blob getFile() {
-        return file;
-    }
-
-    public void setFile(Blob file) {
-        this.file = file;
-    }
 }

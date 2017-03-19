@@ -182,8 +182,6 @@ function deletePhone() {
         table.style.visibility = "hidden";
     }
 }
-
-
 //-------------Handlers--------//
 
 addPhoneButton.addEventListener("click", addPhone);
@@ -279,7 +277,7 @@ function addFileInfoInTable(i, fileName, date, comment) {
     td4.appendChild(p3);
     tr.appendChild(td4);
     var hiddenTR = document.createElement('tr');
-    hiddenTR.id = "hiddenFileInfo" + i;
+    hiddenTR.id = "hiddenFileInfoRow" + i;
     var td = document.createElement("td");
     var hiddenInput = document.createElement('input');
     hiddenInput.type = "hidden";
@@ -312,7 +310,13 @@ function deleteChosenAttachments() {
         tableAttach.style.visibility = "hidden";
     }
 }
+if (document.querySelectorAll(".fileRows").length == 0) {
+    tableAttach.style.visibility = "hidden";
+}
 
+if (document.querySelectorAll(".rows").length == 0) {
+    table.style.visibility = "hidden";
+}
 function editAttachment(id) {
 
 }

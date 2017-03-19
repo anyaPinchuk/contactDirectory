@@ -62,6 +62,7 @@ function addPhoneInTable(object, i) {
     input3.name = "hiddens";
     var td3 = document.createElement('td');
     var hiddenTR = document.createElement('tr');
+    hiddenTR.id = "hiddenRow" + i;
     td3.appendChild(input3);
     hiddenTR.appendChild(input3);
     var input2 = document.createElement('input');
@@ -101,7 +102,7 @@ function deletePhone() {
         var checkbox = rows[i].childNodes[0].childNodes[0];
         if (checkbox.checked) {
             var value = checkbox.value;
-            var input = document.querySelector("#hidden" + value);
+            var input = document.querySelector("#hiddenRow" + value);
             input.remove();
             rows[i].remove();
         }
@@ -124,9 +125,10 @@ function addAttachment() {
     var br = document.createElement('br');
     div.appendChild(br);
     document.getElementById("labelFile").insertAdjacentHTML('afterend', "<input accept='application/msword, text/plain," +
-        " application/pdf, application/xml, .docx' class='form-control' type='file'  id='attachment" + ++indexOfFile + "'/>");
+        " application/pdf, application/xml, .docx' class='form-control' type='file'  name='attachment-"
+        + ++indexOfFile + "0'  id='attachment" + indexOfFile + "'/>");
     var comment = document.getElementById("commentFile").value;
-   addFileInfoInTable(indexOfFile - 1, attachment.files[0].name, new Date(), comment);
+    addFileInfoInTable(indexOfFile - 1, attachment.files[0].name, new Date(), comment);
     document.getElementById("myModalAttachment").style.display = "none";
 }
 
@@ -158,13 +160,23 @@ function addFileInfoInTable(i, fileName, date, comment) {
     td4.appendChild(p3);
     tr.appendChild(td4);
     var hiddenTR = document.createElement('tr');
+    hiddenTR.id = "hiddenFileInfoRow" + i;
     var td = document.createElement("td");
     var hiddenInput = document.createElement('input');
     hiddenInput.type = "hidden";
     hiddenInput.id = "hiddenFileInfo" + i;
     hiddenInput.name = "hiddenInfoForInsert";
-    hiddenInput.value = i + ";" + fileName + ";" + date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate()
-        + ";" + comment;
+    hiddenInput.value = i + ";" + fileName + ";" + date.getFullYear() + "-";
+    if (Number(date.getMonth() + 1) < 10) {
+        hiddenInput.value += "0" + (date.getMonth() + 1) + "-";
+    } else {
+        hiddenInput.value += (date.getMonth() + 1) + "-";
+    }
+    if (Number(date.getDate()) < 10) {
+        hiddenInput.value += "0" + date.getDate() + ";" + comment;
+    } else {
+        hiddenInput.value += date.getDate() + ";" + comment;
+    }
     tbody.appendChild(tr);
     hiddenTR.appendChild(hiddenInput);
     tbody.appendChild(hiddenTR);
@@ -180,7 +192,7 @@ function deleteChosenAttachments() {
         var checkbox = rows[i].childNodes[0].childNodes[0];
         if (checkbox.checked) {
             var value = checkbox.value;
-            var input = document.querySelector("#hiddenFileInfo" + value);
+            var input = document.querySelector("#hiddenFileInfoRow" + value);
             var attachment = document.getElementById("attachment" + value);
             attachment.remove();
             input.remove();

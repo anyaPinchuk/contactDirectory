@@ -10,7 +10,7 @@
 
     </head>
     <body>
-    <form name='addContact' action="addContact" onsubmit="" method="post">
+    <form name='addContact' enctype="multipart/form-data" action="addContact" onsubmit="" method="post">
         <div class="center">
             <div>
                 <div class="form-group">
@@ -155,7 +155,7 @@
         <div class="form-group">
             <label id="labelFile">Choose file </label>
             <input accept="application/msword, text/plain, application/pdf, application/xml, .docx" class="form-control"
-                   type="file"  id="attachment0"/>
+                   type="file"  name="attachment-0" id="attachment0"/>
         </div>
         <div class="form-group">
             <label>Input comment</label>

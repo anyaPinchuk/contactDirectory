@@ -2,13 +2,18 @@ package commands;
 
 import converters.AddressConverter;
 import converters.ContactConverter;
+import dto.AttachmentDTO;
 import dto.PhoneDTO;
-import entities.Address;
-import entities.Contact;
-import entities.PhoneNumber;
+import entities.*;
 import exceptions.GenericDAOException;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import utilities.FileUploadDocuments;
 
 import javax.servlet.ServletException;
+import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -28,71 +33,169 @@ public class AddContactCommand extends FrontCommand {
     @Override
     public void processPost() throws ServletException, IOException {
         LOG.info("insert contact starting ");
-        String name = request.getParameter("name");
-        String surname = request.getParameter("surname");
-        String thirdName = request.getParameter("thirdName");
-        String date = request.getParameter("dateOfBirth");
-        String sex = request.getParameter("sex");
-        String citizenship = request.getParameter("citizenship");
-        String status = request.getParameter("status");
-        String webSite = request.getParameter("webSite");
-        String email = request.getParameter("email");
-        String company = request.getParameter("job");
-        String country = request.getParameter("country");
-        String city = request.getParameter("city");
-        String contactAddress = request.getParameter("address");
-        String index = request.getParameter("indexOfFile");
-        DateFormat format = new SimpleDateFormat("yyyy-MM-DD");
-        String[] inputs = request.getParameterValues("hiddens");
-        List<PhoneNumber> numbers = new ArrayList<>();
-        if (inputs != null){
-            Arrays.stream(inputs).forEach(obj -> {
-                String[] objects = obj.split(";");
-                String comment = objects.length == 4 ? "" : objects[4];
-                numbers.add(new PhoneNumber(null, objects[0], objects[1], objects[2], objects[3], comment, null));
-            });
+        DiskFileItemFactory factory = new DiskFileItemFactory();
+        factory.setRepository(new File(System.getProperty("java.io.tmpdir")));
+        ServletFileUpload upload = new ServletFileUpload(factory);
+        List<FileItem> formItems = null;
+        List<FileItem> documents = new ArrayList<>();
+        List<PhoneNumber> numbersForInsert = new ArrayList<>();
+        Contact contact = new Contact();
+        Address address = new Address();
+        List<Attachment> attachments = new ArrayList<>();
+        try {
+            formItems = upload.parseRequest(request);
+            if (formItems != null && formItems.size() > 0) {
+                String field, fieldName;
+                // iterates over form's fields
+                for (FileItem item : formItems) {
+                    if (item.isFormField()) {
+                        field = item.getString();
+                        fieldName = item.getFieldName();
+                        switch (fieldName) {
+                            case "name": {
+                                contact.setName(field);
+                                break;
+                            }
+                            case "surname": {
+                                contact.setSurname(field);
+                                break;
+                            }
+                            case "thirdName": {
+                                contact.setThirdName(field);
+                                break;
+                            }
+                            case "dateOfBirth": {
+                                contact.setDateOfBirth(field);
+                                break;
+                            }
+                            case "sex": {
+                                contact.setSex(field);
+                                break;
+                            }
+                            case "citizenship": {
+                                contact.setCitizenship(field);
+                                break;
+                            }
+                            case "status": {
+                                contact.setMaritalStatus(field);
+                                break;
+                            }
+                            case "webSite": {
+                                contact.setWebSite(field);
+                                break;
+                            }
+                            case "email": {
+                                contact.setEmail(field);
+                                break;
+                            }
+                            case "job": {
+                                contact.setJob(field);
+                                break;
+                            }
+                            case "country": {
+                                address.setCountry(field);
+                                break;
+                            }
+                            case "city": {
+                                address.setCity(field);
+                                break;
+                            }
+                            case "address": {
+                                address.setStreetAddress(field);
+                                break;
+                            }
+                            case "index": {
+                                address.setIndex(field);
+                                break;
+                            }
+                            case "hiddenInfoForInsert": {
+                                String[] objects = field.split(";");
+                                String comment = objects.length == 3 ? "" : objects[3];
+                                attachments.add(new Attachment(null, objects[2], objects[1], comment, null));
+                                break;
+                            }
+                            case "hiddens": {
+                                String[] objects = field.split(";");
+                                String comment = objects.length == 4 ? "" : objects[4];
+                                numbersForInsert.add(new PhoneNumber(null, objects[0], objects[1], objects[2], objects[3], comment, null));
+                                break;
+                            }
+                        }
+                    } else {
+                        documents.add(item);
+                    }
+                }
+            }
+        } catch (FileUploadException e) {
+            LOG.error(e.getMessage());
+            e.printStackTrace();
         }
+
+        DateFormat format = new SimpleDateFormat("yyyy-MM-DD");
         Date dateOfBirth = null;
-        Contact contact;
-        Address address;
-        Long contact_id;
-        if (!date.equals("")){
+        if (!contact.getDateOfBirth().equals("")) {
             try {
-                dateOfBirth = format.parse(date);
-                date = format.format(dateOfBirth);
+                dateOfBirth = format.parse(contact.getDateOfBirth());
+                contact.setDateOfBirth(format.format(dateOfBirth));
             } catch (ParseException e) {
+                LOG.debug(e.getMessage());
                 e.printStackTrace();
             }
         }
 
+        Long contact_id = insertContact(contact, address);
+        numbersForInsert.forEach(obj -> {
+            obj.setContact_id(contact_id);
+            try {
+                phoneDAO.insert(obj);
+            } catch (GenericDAOException e) {
+                LOG.error("error while processing insert Phone in AddContactCommand");
+                e.printStackTrace();
+            }
+        });
+
+        if (documents.size() != 0){
+            documents.forEach(obj -> {
+                if (!obj.getName().equals("")){
+                    FileUploadDocuments.saveDocument(request, obj, contact_id, false);
+                }
+            });
+        }
+        if (attachments.size() != 0) {
+            insertAttachments(attachments, contact_id);
+        }
+        response.sendRedirect("Contacts");
+    }
+
+    private void insertAttachments(List<Attachment> attachments, Long contact_id) {
+        attachments.forEach(obj -> {
+            try {
+                obj.setContact_id(contact_id);
+                attachmentDAO.insert(obj);
+            } catch (GenericDAOException e) {
+                LOG.error("error while processing insert attachment in AddContactCommand");
+                e.printStackTrace();
+            }
+        });
+    }
+
+    public Long insertContact(Contact contact, Address address) {
         try {
-            if (country.equals("") && city.equals("") && contactAddress.equals("") && index.equals("")) {
-                contact = new Contact(null, name, surname, thirdName, date, sex, citizenship, status,
-                        webSite, email, company, null);
-                contact_id = contactDAO.insert(contact);
+            if (address.getCountry().equals("") && address.getCity().equals("") && address.getStreetAddress().equals("")
+                    && address.getIndex().equals("")) {
+                return contactDAO.insert(contact);
             } else {
-                address = new Address(null, country, city, contactAddress, index);
                 Long address_id = addressDAO.insert(address);
-                contact = new Contact(null, name, surname, thirdName, date, sex, citizenship, status,
-                        webSite, email, company, null);
                 if (address_id != 0) {
                     contact.setAddress_id(address_id);
                 }
-                contact_id = contactDAO.insertWithAddress(contact);
+                return contactDAO.insertWithAddress(contact);
             }
-            numbers.forEach(obj -> {
-                obj.setContact_id(contact_id);
-                try {
-                    phoneDAO.insert(obj);
-                } catch (GenericDAOException e) {
-                    LOG.error("error while processing insert Phone in AddContactCommand");
-                    e.printStackTrace();
-                }
-            });
+
         } catch (GenericDAOException e) {
             LOG.error("error while processing insert Contact in AddContactCommand");
             e.printStackTrace();
         }
-        response.sendRedirect("Contacts");
+        return null;
     }
 }

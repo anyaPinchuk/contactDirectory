@@ -1,17 +1,16 @@
 package commands;
 
 import converters.AddressConverter;
+import converters.AttachmentConverter;
 import converters.ContactConverter;
 import converters.PhoneConverter;
 import dao.PhoneDAO;
 import dao.PhotoDAO;
+import dto.AttachmentDTO;
 import dto.ContactDTO;
 import dto.PhoneDTO;
 import dto.PhotoDTO;
-import entities.Address;
-import entities.Contact;
-import entities.PhoneNumber;
-import entities.Photo;
+import entities.*;
 import exceptions.GenericDAOException;
 import exceptions.MessageError;
 import org.apache.commons.fileupload.FileItem;
@@ -32,6 +31,7 @@ public class EditContactCommand extends FrontCommand {
     private ContactConverter contactConverter;
     private AddressConverter addressConverter;
     private PhoneConverter phoneConverter;
+    private AttachmentConverter attachmentConverter;
     private PhotoDAO photoDAO = new PhotoDAO();
     private PhoneDAO phoneDAO = new PhoneDAO();
 
@@ -39,6 +39,7 @@ public class EditContactCommand extends FrontCommand {
         contactConverter = new ContactConverter();
         addressConverter = new AddressConverter();
         phoneConverter = new PhoneConverter();
+        attachmentConverter = new AttachmentConverter();
     }
 
     @Override
@@ -77,8 +78,14 @@ public class EditContactCommand extends FrontCommand {
             }
 
             /////////////////////////////////////////////
-
-
+            List<AttachmentDTO> attachmentsDTO = new ArrayList<>();
+            List<Attachment> attachments = attachmentDAO.findAllById(contactDTO.getId());
+            if (attachments != null){
+                attachments.forEach(obj ->{
+                    attachmentsDTO.add(attachmentConverter.toDTO(Optional.of(obj)).get());
+                });
+                request.setAttribute("attachments", attachments);
+            }
 
         } catch (GenericDAOException e) {
             LOG.error("error while processing find contact from EditContactCommand");
@@ -86,6 +93,7 @@ public class EditContactCommand extends FrontCommand {
         }
         if (contactDTO != null) {
             request.setAttribute("contact", contactDTO);
+
         }
         forward("editContact");
     }
@@ -174,7 +182,7 @@ public class EditContactCommand extends FrontCommand {
                                 address.setStreetAddress(field);
                                 break;
                             }
-                            case "indexOfFile": {
+                            case "index": {
                                 address.setIndex(field);
                                 break;
                             }
@@ -197,11 +205,9 @@ public class EditContactCommand extends FrontCommand {
                         if (!item.getName().equals("")) {
                             String fileName = item.getName();
                             if (!(photoDAO.findByField(fileName).isPresent())) {
-                                Long photo_id = photoDAO.insert(new Photo(item.getName(), FileUploadDocuments.getFileDirectory()));
+                                Long photo_id = photoDAO.insert(new Photo(item.getName(), FileUploadDocuments.getFileDirectory(true)));
                                 contact.setPhoto_id(photo_id);
-                                FileUploadDocuments.saveFile(request, item);
-                            } else {
-                                Photo photo = photoDAO.findByField(fileName).get();
+                                FileUploadDocuments.saveDocument(request, item, null, true);
                             }
                         }
 
