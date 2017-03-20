@@ -3,14 +3,16 @@ package converters;
 import dto.ContactDTO;
 import entities.Contact;
 
+import java.sql.Date;
 import java.util.Optional;
 
 public class ContactConverter extends Converter<ContactDTO, Contact>{
     @Override
     public Optional<Contact> toEntity(ContactDTO dto) {
         if(dto == null) return Optional.empty();
+        Date date = new Date(dto.getDateOfBirth().getTime());
         return Optional.of(new Contact(dto.getId(),dto.getName(), dto.getSurname(), dto.getThirdName(),
-                dto.getDateOfBirth(), dto.getSex(), dto.getCitizenship(), dto.getMaritalStatus(), dto.getWebSite(),
+                date, dto.getSex(), dto.getCitizenship(), dto.getMaritalStatus(), dto.getWebSite(),
                 dto.getEmail(), dto.getJob(), dto.getAddress().getId()));
     }
 

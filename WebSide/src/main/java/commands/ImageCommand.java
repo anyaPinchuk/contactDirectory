@@ -10,13 +10,6 @@ public class ImageCommand extends FrontCommand{
     @Override
     public void processGet() throws ServletException, IOException {
         byte[] bytes = FileUploadDocuments.readDocument(request.getParameter("name"), true, null);
-        if (bytes == null){
-            try(InputStream inputStream = ImageCommand.class.getResourceAsStream("no_avatar.png")){
-                bytes = IOUtils.toByteArray(inputStream);
-            } catch (Exception e){
-                LOG.error(e.getMessage());
-            }
-        }
         response.getOutputStream().write(bytes);
     }
 

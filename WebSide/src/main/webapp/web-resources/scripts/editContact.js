@@ -17,17 +17,21 @@ span.onclick = function () {
 //////////////////////////////////
 var attachmentDelete = document.getElementById("attachmentDelete");
 attachmentDelete.addEventListener("click", deleteChosenAttachments);
+var addAttachmentBtn = document.getElementById("addAttachmentBtn");
 var attachmentBtn = document.getElementById("attachmentBtn");
 attachmentBtn.addEventListener("click", function () {
-    document.getElementById("myModalAttachment").style.display = "block";
+    var myModalAttachment = document.getElementById("myModalAttachment");
+    myModalAttachment.childNodes[2].style.display = "none";
+    document.getElementById("myModalAttachment").childNodes[1].style.display = "block";
+    myModalAttachment.style.display = "block";
     form.nameFile.value = "";
     form.commentFile.value = "";
-    attachmentBtn.style.visibility = "visible";
-    saveAttachmentBtn.style.visibility = "hidden";
+    addAttachmentBtn.style.display = "block";
+    saveAttachmentBtn.style.display = "none";
 });
 var saveAttachmentBtn = document.getElementById("saveAttachmentBtn");
 saveAttachmentBtn.onclick = function () {
-    saveAttachment(form.namefile.value, form.commentFile.value);
+    saveAttachment(form.nameFile.value, form.commentFile.value);
 };
 document.getElementsByClassName("close")[2].addEventListener("click", function () {
     document.getElementById("myModalAttachment").style.display = "none";
@@ -51,8 +55,8 @@ btn.onclick = function () {
     form.number.value = "";
     form.type.options[0].selected = "true";
     form.comment.value = "";
-    addPhoneButton.style.visibility = "visible";
-    savePhoneButton.style.visibility = "hidden";
+    addPhoneButton.style.display = "block";
+    savePhoneButton.style.display = "none";
 };
 
 spanPhone.onclick = function () {
@@ -67,7 +71,7 @@ form = document.forms[0];
 
 function addPhone() {
     if (document.querySelectorAll(".rows").length == 0) {
-        table.style.visibility = "visible";
+        table.style.display = "block";
     }
     object.countryCode = form.countryCode.value;
     object.operatorCode = form.operatorCode.value;
@@ -84,8 +88,8 @@ function editPhone(input_id) {
     inputPhoneID = input_id;
     modal.style.display = "block";
     editInput = document.getElementById("hidden" + input_id);
-    addPhoneButton.style.visibility = "hidden";
-    savePhoneButton.style.visibility = "visible";
+    addPhoneButton.style.display = "none";
+    savePhoneButton.style.display = "block";
     console.log(editInput);
     var strings;
     if (editInput.name == "hiddensForUpdate") {
@@ -187,7 +191,7 @@ function deletePhone() {
         }
     }
     if (document.querySelectorAll(".rows").length == 0) {
-        table.style.visibility = "hidden";
+        table.style.display = "none";
     }
 }
 //-------------Handlers--------//
@@ -218,8 +222,8 @@ function saveChanges(id, country, operator, number, type, comment) {
     tr.childNodes[1].childNodes[0].innerHTML = "+" + country + " " + operator + " " + number;
     tr.childNodes[2].childNodes[0].innerHTML = type;
     tr.childNodes[3].childNodes[0].innerHTML = comment;
-    savePhoneButton.style.visibility = "hidden";
-    addPhoneButton.style.visibility = "visible";
+    savePhoneButton.style.display = "none";
+    addPhoneButton.style.display = "block";
     spanPhone.click();
 }
 //////////////////////////
@@ -228,7 +232,7 @@ var tableAttach = document.getElementById("attachments");
 
 function addAttachment() {
     if (document.querySelectorAll(".fileRows").length == 0) {
-        table.style.visibility = "visible";
+        table.style.display = "block";
     }
     var allHiddenInputs = document.getElementsByName("hiddensForUpdate");
     //проверка на совпадение id
@@ -256,6 +260,7 @@ function addFileInfoInTable(i, fileName, date, comment) {
     var tbody = document.getElementById("tbodyAttach");
     var tr = document.createElement("tr");
     tr.className = "fileRows";
+    tr.id = "fileRow" + i;
     var td1 = document.createElement("td");
     var input = document.createElement('input');
     var button = document.createElement('button');
@@ -292,6 +297,7 @@ function addFileInfoInTable(i, fileName, date, comment) {
     var hiddenInput = document.createElement('input');
     hiddenInput.type = "hidden";
     hiddenInput.name = "hiddenInfoForInsert";
+    hiddenInput.id = "hiddenFileInfo" + i;
     hiddenInput.value = i + ";" + fileName + ";" + date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate()
         + ";" + comment;
     tbody.appendChild(tr);
@@ -306,26 +312,28 @@ function deleteChosenAttachments() {
         if (i == rows.length) {
             break;
         }
-        var checkbox = rows[i].childNodes[0].childNodes[0];
+        var checkbox = rows[i].childNodes[0].childNodes[1];
         if (checkbox.checked) {
             var value = checkbox.value;
             var row = document.querySelector("#hiddenFileInfoRow" + value);
             var attachment = document.getElementById("attachment" + value);
-            attachment.remove();
+            if (attachment != null) {
+                attachment.remove();
+            }
             row.remove();
             rows[i].remove();
         }
     }
     if (document.querySelectorAll(".fileRows").length == 0) {
-        tableAttach.style.visibility = "hidden";
+        tableAttach.style.display = "none";
     }
 }
 if (document.querySelectorAll(".fileRows").length == 0) {
-    tableAttach.style.visibility = "hidden";
+    tableAttach.style.display = "none";
 }
 
 if (document.querySelectorAll(".rows").length == 0) {
-    table.style.visibility = "hidden";
+    table.style.display = "none";
 }
 
 var editDocInput;
@@ -333,14 +341,17 @@ function editAttachment(id) {
     var inputDocumentID = id;
     var myModalAttachment = document.getElementById("myModalAttachment");
     myModalAttachment.style.display = "block";
-    myModalAttachment.childNodes[2].style.visibility = "visible";
     editDocInput = document.getElementById("hiddenFileInfo" + id);
-    attachmentBtn.style.visibility = "hidden";
-    saveAttachmentBtn.style.visibility = "visible";
+    myModalAttachment.childNodes[1].style.display = "none";
+    if (editDocInput.name != "hiddenInfoForInsert") {
+        myModalAttachment.childNodes[2].style.display = "block";
+    }
+    addAttachmentBtn.style.display = "none";
+    saveAttachmentBtn.style.display = "block";
     console.log(editDocInput);
     var strings = editDocInput.value.split(";");
     form.nameFile.value = strings[1];
-    form.commentFile.value = strings[2];
+    form.commentFile.value = strings[3];
 }
 
 function validateForm() {
@@ -356,12 +367,17 @@ function validateForm() {
 function saveAttachment(fileName, comment) {
     var oldValue = editDocInput.value;
     var strings = oldValue.split(";");
-    editDocInput.value = strings[0] + ";" + fileName + ";" + strings[2] + ";" + comment;
     var tr = document.getElementById("fileRow" + strings[0]);
-    tr.childNodes[1].childNodes[0].innerHTML = fileName;
+    if (editDocInput.name == "hiddenInfoForInsert") {
+        editDocInput.value = strings[0] + ";" + strings[1] + ";" + strings[2] + ";" + comment;
+    }
+    else {
+        editDocInput.value = strings[0] + ";" + fileName + ";" + strings[2] + ";" + comment;
+        tr.childNodes[1].childNodes[0].innerHTML = fileName;
+    }
     tr.childNodes[3].childNodes[0].innerHTML = comment;
-    saveAttachmentBtn.style.visibility = "hidden";
-    attachmentBtn.style.visibility = "visible";
+    saveAttachmentBtn.style.display = "none";
+    addAttachmentBtn.style.display = "block";
     var myModalAttachment = document.getElementById("myModalAttachment");
     myModalAttachment.style.display = "none";
 }

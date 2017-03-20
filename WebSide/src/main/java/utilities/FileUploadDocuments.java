@@ -1,8 +1,10 @@
 package utilities;
 
+import commands.ImageCommand;
 import dto.PhotoDTO;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -57,6 +59,11 @@ public class FileUploadDocuments {
             }
 
         } catch (IOException e) {
+            try(InputStream inputStream = ImageCommand.class.getResourceAsStream("no_avatar.png")){
+                array = IOUtils.toByteArray(inputStream);
+            } catch (Exception ex){
+                LOG.error(ex.getMessage());
+            }
             LOG.error(e.getMessage());
             e.printStackTrace();
         }
@@ -64,7 +71,14 @@ public class FileUploadDocuments {
 
     }
 
-    public static void deleteDocument(String fileName, boolean isImage, Long contact_id){
+    public static boolean renameDocument(String fileName, String newFileName, Long contact_id){
+        String uploadPath = getFileDirectory(false);
+        File file = new File(uploadPath + File.separator + "contact" + contact_id +
+                File.separator + fileName);
+        return file.renameTo(new File(file.getParentFile(), newFileName));
+    }
+
+    public static boolean deleteDocument(String fileName, boolean isImage, Long contact_id){
         String uploadPath = getFileDirectory(isImage);
         try {
             if (isImage){
@@ -76,14 +90,16 @@ public class FileUploadDocuments {
 
         } catch (IOException e) {
             e.printStackTrace();
+            return false;
         }
+        return true;
     }
 
-    public static String saveDocument(HttpServletRequest request, FileItem item, Long contact_id, boolean isImage) {
+    public static boolean saveDocument(HttpServletRequest request, FileItem item, Long contact_id, boolean isImage) {
 
         if (!ServletFileUpload.isMultipartContent(request)) {
             LOG.error("Error: Form must has enctype=multipart/form-data.");
-            return null;
+            return false;
         }
         String uploadPath = getFileDirectory(isImage);
         File uploadDir;
@@ -99,7 +115,7 @@ public class FileUploadDocuments {
 
         } else {
             LOG.error("Directory property is null");
-            return null;
+            return false;
         }
         if (!uploadDir.exists()) {
             uploadDir.mkdir();
@@ -113,8 +129,9 @@ public class FileUploadDocuments {
 
         } catch (Exception ex) {
             LOG.error(ex.getMessage());
+            return false;
         }
-        return filePath;
+        return true;
     }
 
 }

@@ -8,7 +8,7 @@ public class Contact {
     private String name;
     private String surname;
     private String thirdName;
-    private String dateOfBirth;
+    private java.sql.Date dateOfBirth;
     private String sex;
     private String citizenship;
     private String maritalStatus;
@@ -26,7 +26,7 @@ public class Contact {
         this.surname = surname;
     }
 
-    public Contact(Long id, String name, String surname, String thirdName, String dateOfBirth, String sex,
+    public Contact(Long id, String name, String surname, String thirdName, java.sql.Date dateOfBirth, String sex,
                    String citizenship, String maritalStatus, String webSite, String email, String job, Long address_id) {
         this.id = id;
         this.name = name;
@@ -42,7 +42,7 @@ public class Contact {
         this.address_id = address_id;
     }
 
-    public Contact(Long id, String name, String surname, String thirdName, String dateOfBirth, String sex,
+    public Contact(Long id, String name, String surname, String thirdName, java.sql.Date dateOfBirth, String sex,
                    String citizenship, String maritalStatus, String webSite, String email, String job, Long photo_id,
                    Long address_id) {
         this.id = id;
@@ -92,11 +92,11 @@ public class Contact {
         this.thirdName = thirdName;
     }
 
-    public void setDateOfBirth(String dateOfBirth) {
+    public void setDateOfBirth(java.sql.Date dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 
-    public String getDateOfBirth() {
+    public java.sql.Date getDateOfBirth() {
         return dateOfBirth;
     }
 

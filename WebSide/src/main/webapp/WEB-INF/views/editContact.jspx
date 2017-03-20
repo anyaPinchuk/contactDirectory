@@ -167,7 +167,7 @@
                         </c:forEach>
                         </tbody>
                     </table><br/>
-                    <div style="visibility:hidden;" id="forHiddenFiles"></div>
+                    <div style="display:none;" id="forHiddenFiles"></div>
                 </div>
             </div>
         </div>
@@ -219,7 +219,7 @@
                 <input accept="application/msword, text/plain, application/pdf, application/xml, .docx" class="form-control"
                        type="file" name="attachment-0" id="attachment0"/>
             </div>
-            <div class="form-group" style="visibility:hidden;">
+            <div class="form-group" style="display:none;">
                 <label>Input file name</label>
                 <input type="text" class="form-control" id="nameFile" placeholder="Input file name" name="nameFile"/>
             </div>

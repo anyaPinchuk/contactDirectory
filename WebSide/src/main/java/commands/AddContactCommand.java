@@ -65,7 +65,7 @@ public class AddContactCommand extends FrontCommand {
                                 break;
                             }
                             case "dateOfBirth": {
-                                contact.setDateOfBirth(field);
+                                contact.setDateOfBirth(java.sql.Date.valueOf(field));
                                 break;
                             }
                             case "sex": {
@@ -130,18 +130,6 @@ public class AddContactCommand extends FrontCommand {
         } catch (FileUploadException e) {
             LOG.error(e.getMessage());
             e.printStackTrace();
-        }
-
-        DateFormat format = new SimpleDateFormat("yyyy-MM-DD");
-        Date dateOfBirth = null;
-        if (!contact.getDateOfBirth().equals("")) {
-            try {
-                dateOfBirth = format.parse(contact.getDateOfBirth());
-                contact.setDateOfBirth(format.format(dateOfBirth));
-            } catch (ParseException e) {
-                LOG.debug(e.getMessage());
-                e.printStackTrace();
-            }
         }
 
         Long contact_id = insertContact(contact, address);

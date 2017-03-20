@@ -26,7 +26,7 @@ public class ContactDAO extends AbstractDAO<Contact> {
                     String name = resultSet.getString("name");
                     String surname = resultSet.getString("surname");
                     String thirdName = resultSet.getString("thirdName");
-                    String birthDate = resultSet.getString("dateOfBirth");
+                    java.sql.Date birthDate = resultSet.getDate("dateOfBirth");
                     String sex = resultSet.getString("sex");
                     String citizenship = resultSet.getString("citizenship");
                     String status = resultSet.getString("maritalStatus");
@@ -66,7 +66,7 @@ public class ContactDAO extends AbstractDAO<Contact> {
         String name = resultSet.getString("name");
         String surname = resultSet.getString("surname");
         String thirdName = resultSet.getString("thirdName");
-        String birthDate = resultSet.getString("dateOfBirth");
+        Date birthDate = resultSet.getDate("dateOfBirth");
         String sex = resultSet.getString("sex");
         String citizenship = resultSet.getString("citizenship");
         String status = resultSet.getString("maritalStatus");
@@ -98,7 +98,7 @@ public class ContactDAO extends AbstractDAO<Contact> {
         if (entity == null) return 0;
         return connectionAwareExecutor.submit(statement -> {
             try {
-                String query = buildQueryForUpdate(entity.getDateOfBirth().equals(""), entity.getAddress_id() == null,
+                String query = buildQueryForUpdate(entity.getDateOfBirth() == null, entity.getAddress_id() == null,
                         entity.getPhoto_id() == null, entity);
                 LOG.info("updateById Contact starting");
                 return statement.executeUpdate(query);
@@ -137,7 +137,7 @@ public class ContactDAO extends AbstractDAO<Contact> {
             try {
                 int result;
                 LOG.info("insert Contact starting");
-                if (entity.getDateOfBirth().equals("")) {
+                if (entity.getDateOfBirth() == null) {
                     result = statement.executeUpdate("INSERT INTO contacts.contact (name, surname, thirdName," +
                             " sex, citizenship, maritalStatus, webSite, email, job) VALUES ('"
                             + entity.getName()
@@ -188,7 +188,7 @@ public class ContactDAO extends AbstractDAO<Contact> {
             try {
                 int result;
                 LOG.info("insert Contact starting");
-                if (entity.getDateOfBirth().equals("")) {
+                if (entity.getDateOfBirth() == null) {
                     result = statement.executeUpdate("INSERT INTO contacts.contact (name, surname, thirdName," +
                             " sex, citizenship, maritalStatus, webSite, email, job, Address_id) VALUES ('"
                             + entity.getName()

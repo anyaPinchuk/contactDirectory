@@ -1,6 +1,7 @@
 package dto;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class ContactDTO extends DTO{
@@ -8,7 +9,7 @@ public class ContactDTO extends DTO{
     private String name;
     private String surname;
     private String thirdName;
-    private String dateOfBirth;
+    private Date dateOfBirth;
     private String sex;
     private String citizenship;
     private String maritalStatus;
@@ -18,9 +19,8 @@ public class ContactDTO extends DTO{
     private PhotoDTO photo;
     private AddressDTO address;
     private List<PhoneDTO> phoneDTOList;
-    private List<AttachmentDTO> attachments;
 
-    public ContactDTO(Long id, String name, String surname, String thirdName, String dateOfBirth, String sex,
+    public ContactDTO(Long id, String name, String surname, String thirdName, Date dateOfBirth, String sex,
                       String citizenship, String maritalStatus, String webSite, String email, String job, AddressDTO address) {
         this.id = id;
         this.name = name;
@@ -35,7 +35,6 @@ public class ContactDTO extends DTO{
         this.job = job;
         this.address = address;
         this.phoneDTOList = new ArrayList<>();
-        this.attachments = new ArrayList<>();
     }
 
     public Long getId() {
@@ -70,11 +69,11 @@ public class ContactDTO extends DTO{
         this.thirdName = thirdName;
     }
 
-    public String getDateOfBirth() {
+    public Date getDateOfBirth() {
         return dateOfBirth;
     }
 
-    public void setDateOfBirth(String dateOfBirth) {
+    public void setDateOfBirth(Date dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 
@@ -140,14 +139,6 @@ public class ContactDTO extends DTO{
 
     public void setPhoneDTOList(List<PhoneDTO> phoneDTOList) {
         this.phoneDTOList = phoneDTOList;
-    }
-
-    public List<AttachmentDTO> getAttachmentDTOS() {
-        return attachments;
-    }
-
-    public void setAttachmentDTOS(List<AttachmentDTO> attachmentDTOS) {
-        this.attachments = attachmentDTOS;
     }
 
     public PhotoDTO getPhoto() {
