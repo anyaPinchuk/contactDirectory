@@ -27,7 +27,7 @@ public class AttachmentDAO extends AbstractDAO<Attachment>{
                     " WHERE Contact_id = " + id_contact )) {
                 while (resultSet.next()) {
                     Long id = resultSet.getLong("id");
-                    String dateOfDownload = resultSet.getString("dateOfDownload");
+                    java.sql.Date dateOfDownload = resultSet.getDate("dateOfDownload");
                     String fileName = resultSet.getString("fileName");
                     String comment = resultSet.getString("comment");
                     attachments.add(new Attachment(id, dateOfDownload, fileName, comment, id_contact));
@@ -57,7 +57,7 @@ public class AttachmentDAO extends AbstractDAO<Attachment>{
 
     private Optional<Attachment> buildEntityFromResult(ResultSet resultSet) throws SQLException {
         Long id = resultSet.getLong("id");
-        String dateOfDownload = resultSet.getString("dateOfDownload");
+        java.sql.Date dateOfDownload = resultSet.getDate("dateOfDownload");
         String fileName = resultSet.getString("fileName");
         String comment = resultSet.getString("comment");
         Long contact_id = resultSet.getLong("Contact_id");

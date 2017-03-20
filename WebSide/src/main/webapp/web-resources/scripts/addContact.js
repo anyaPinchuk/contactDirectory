@@ -204,3 +204,11 @@ function deleteChosenAttachments() {
     }
 }
 
+if (document.querySelectorAll(".fileRows").length == 0) {
+    tableAttach.style.visibility = "hidden";
+}
+
+if (document.querySelectorAll(".rows").length == 0) {
+    table.style.visibility = "hidden";
+}
+

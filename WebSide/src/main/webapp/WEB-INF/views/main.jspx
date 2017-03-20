@@ -22,7 +22,7 @@
         <a href="">
             <button class="btn btn-primary">Send email</button>
         </a>
-        <button onclick="deleteContact()" class="btn btn-primary">Delete chosen contacts</button>
+        <button onclick="deleteContacts()" class="btn btn-primary">Delete chosen contacts</button>
     </div>
     <table class="table-bordered table" id="tableMu">
         <tbody>

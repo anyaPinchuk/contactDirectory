@@ -64,7 +64,7 @@ public class FileUploadDocuments {
 
     }
 
-    public void deleteDocument(String fileName, boolean isImage, Long contact_id){
+    public static void deleteDocument(String fileName, boolean isImage, Long contact_id){
         String uploadPath = getFileDirectory(isImage);
         try {
             if (isImage){

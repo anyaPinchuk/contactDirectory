@@ -5,12 +5,12 @@ import java.util.Date;
 
 public class Attachment {
     private Long id;
-    private String dateOfDownload;
+    private java.sql.Date dateOfDownload;
     private String fileName;
     private String comment;
     private Long contact_id;
 
-    public Attachment(Long id, String dateOfDownload, String fileName, String comment, Long contact_id) {
+    public Attachment(Long id, java.sql.Date dateOfDownload, String fileName, String comment, Long contact_id) {
         this.id = id;
         this.dateOfDownload = dateOfDownload;
         this.fileName = fileName;
@@ -34,11 +34,11 @@ public class Attachment {
         this.id = id;
     }
 
-    public String getDateOfDownload() {
+    public java.sql.Date getDateOfDownload() {
         return dateOfDownload;
     }
 
-    public void setDateOfDownload(String dateOfDownload) {
+    public void setDateOfDownload(java.sql.Date dateOfDownload) {
         this.dateOfDownload = dateOfDownload;
     }
 
@@ -58,4 +58,18 @@ public class Attachment {
         this.comment = comment;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Attachment that = (Attachment) o;
+
+        return id != null ? id.equals(that.id) : that.id == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
+    }
 }

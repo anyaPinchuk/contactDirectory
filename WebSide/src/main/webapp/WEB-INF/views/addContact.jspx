@@ -36,7 +36,7 @@
                 <div class="form-group">
                     <label for="contactDate">Enter date of birth </label>
                     <input class="form-control turnOFF" id="contactDate" type="text" placeholder="DD-MM-YYYY"
-                           name="dateOfBirth"/>
+                            name="dateOfBirth"/>
                 </div>
                 <div class="form-group">
                     <label for="contactSex">Choose sex </label>

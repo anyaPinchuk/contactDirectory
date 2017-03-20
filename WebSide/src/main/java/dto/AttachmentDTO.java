@@ -6,14 +6,14 @@ import java.util.Date;
 
 public class AttachmentDTO extends DTO {
     private Long id;
-    private String dateOfDownload;
+    private Date dateOfDownload;
     private String fileName;
     private String comment;
 
     public AttachmentDTO() {
     }
 
-    public AttachmentDTO(Long id, String dateOfDownload, String fileName, String comment) {
+    public AttachmentDTO(Long id, Date dateOfDownload, String fileName, String comment) {
         this.id = id;
         this.dateOfDownload = dateOfDownload;
         this.fileName = fileName;
@@ -28,11 +28,11 @@ public class AttachmentDTO extends DTO {
         this.id = id;
     }
 
-    public String getDateOfDownload() {
+    public Date getDateOfDownload() {
         return dateOfDownload;
     }
 
-    public void setDateOfDownload(String dateOfDownload) {
+    public void setDateOfDownload(Date dateOfDownload) {
         this.dateOfDownload = dateOfDownload;
     }
 

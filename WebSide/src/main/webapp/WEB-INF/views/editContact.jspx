@@ -1,6 +1,6 @@
 <jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" xmlns="http://www.w3.org/1999/xhtml" version="2.0"
           xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:fmt="http://java.sun.com/jsp/jstl/fmt">
-    <jsp:directive.page contentType="text/html" pageEncoding="UTF-8"/>
+    <jsp:directive.page contentType="text/html" pageEncoding="UTF-8" />
     <html>
     <head>
         <link href="${pageContext.request.contextPath}/web-resources/css/index.css" rel="stylesheet" type="text/css"
@@ -13,7 +13,7 @@
         <c:set var="contact" value="${requestScope.contact}"/>
     </head>
     <body>
-    <form name='editContact' enctype="multipart/form-data" action="editContact" onsubmit="return validate()"
+    <form name='editContact' enctype="multipart/form-data" action="editContact" onsubmit="return validateForm()"
           method="post">
         <div class="center">
             <input type="hidden" value="${contact.address.id}" name="address_id"/>
@@ -149,7 +149,7 @@
                             <th>Comment</th>
                         </tr>
                         <c:forEach items="${requestScope.attachments}" var="attachment">
-                            <tr class="fileRows" id="row${attachment.id}">
+                            <tr class="fileRows" id="fileRow${attachment.id}">
                                 <td>
                                     <button type="button" class="btn btn-link" onclick="editAttachment(${attachment.id})">Edit
                                     </button>
@@ -157,11 +157,11 @@
                                 <td>
                                     <a href="document?name=${attachment.fileName};${contact.id}">${attachment.fileName}</a>
                                 </td>
-                                <td><p>${attachment.dateOfDownload}</p></td>
+                                <td><p><fmt:formatDate value="${attachment.dateOfDownload}" pattern="dd.MM.yyyy"/></p></td>
                                 <td><p> ${attachment.comment}</p></td>
                             </tr>
                             <tr id="hiddenFileInfoRow${attachment.id}" style="visibility: hidden">
-                                <td><input type="hidden"   name="hiddenInfoForUpdate" id="hiddenFileInfo${attachment.id}"
+                                <td><input type="hidden" name="hiddenInfoForUpdate" id="hiddenFileInfo${attachment.id}"
                                            value="${attachment.id};${attachment.fileName};${attachment.dateOfDownload};${attachment.comment}"/></td>
                             </tr>
                         </c:forEach>
@@ -219,11 +219,16 @@
                 <input accept="application/msword, text/plain, application/pdf, application/xml, .docx" class="form-control"
                        type="file" name="attachment-0" id="attachment0"/>
             </div>
+            <div class="form-group" style="visibility:hidden;">
+                <label>Input file name</label>
+                <input type="text" class="form-control" id="nameFile" placeholder="Input file name" name="nameFile"/>
+            </div>
             <div class="form-group">
                 <label>Input comment</label>
                 <input type="text" class="form-control" id="commentFile" placeholder="Input comment" name="commentFile"/>
             </div>
             <button id="addAttachmentBtn" type="button" class="btn btn-success" onclick="addAttachment()">Add</button>
+            <button id="saveAttachmentBtn" type="button" class="btn btn-success">Save</button>
         </div>
 
     </form>

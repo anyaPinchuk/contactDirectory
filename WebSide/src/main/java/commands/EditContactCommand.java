@@ -20,6 +20,7 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import utilities.FileUploadDocuments;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
@@ -78,22 +79,17 @@ public class EditContactCommand extends FrontCommand {
             }
 
             /////////////////////////////////////////////
-            List<AttachmentDTO> attachmentsDTO = new ArrayList<>();
+
             List<Attachment> attachments = attachmentDAO.findAllById(contactDTO.getId());
-            if (attachments != null){
-                attachments.forEach(obj ->{
-                    attachmentsDTO.add(attachmentConverter.toDTO(Optional.of(obj)).get());
-                });
+            if (attachments != null) {
                 request.setAttribute("attachments", attachments);
             }
-
         } catch (GenericDAOException e) {
             LOG.error("error while processing find contact from EditContactCommand");
             new MessageError(e.getMessage(), e);
         }
         if (contactDTO != null) {
             request.setAttribute("contact", contactDTO);
-
         }
         forward("editContact");
     }
@@ -105,9 +101,13 @@ public class EditContactCommand extends FrontCommand {
         factory.setRepository(new File(System.getProperty("java.io.tmpdir")));
         ServletFileUpload upload = new ServletFileUpload(factory);
         List<FileItem> formItems = null;
+        List<FileItem> documents = new ArrayList<>();
         Contact contact = new Contact();
         List<PhoneNumber> numbersForUpdate = new ArrayList<>();
         List<PhoneNumber> numbersForInsert = new ArrayList<>();
+        List<Attachment> attachmentsForInsert = new ArrayList<>();
+        List<Attachment> attachmentsForUpdate = new ArrayList<>();
+
         Address address = new Address();
         try {
             formItems = upload.parseRequest(request);
@@ -199,6 +199,21 @@ public class EditContactCommand extends FrontCommand {
                                 numbersForUpdate.add(new PhoneNumber(id, objects[1], objects[2], objects[3], objects[4], comment, null));
                                 break;
                             }
+                            case "hiddenInfoForInsert": {
+                                String[] objects = field.split(";");
+                                String comment = objects.length == 3 ? "" : objects[3];
+                                java.sql.Date date = java.sql.Date.valueOf(objects[2]);
+                                attachmentsForInsert.add(new Attachment(null, date, objects[1], comment, null));
+                                break;
+                            }
+                            case "hiddenInfoForUpdate": {
+                                String[] objects = field.split(";");
+                                String comment = objects.length == 3 ? "" : objects[3];
+                                java.sql.Date date = java.sql.Date.valueOf(objects[2]);
+                                Long id = Long.parseLong(objects[0]);
+                                attachmentsForUpdate.add(new Attachment(id, date, objects[1], comment, null));
+                                break;
+                            }
                         }
                     } else {
                         //проверка на то чтобы фотография уже добавлена к профилю и не изменилась
@@ -209,8 +224,9 @@ public class EditContactCommand extends FrontCommand {
                                 contact.setPhoto_id(photo_id);
                                 FileUploadDocuments.saveDocument(request, item, null, true);
                             }
+                        } else if (item.getFieldName().contains("attachment")) {
+                            documents.add(item);
                         }
-
                     }
                 }
             }
@@ -232,9 +248,68 @@ public class EditContactCommand extends FrontCommand {
             });
             insertPhone(numbersForInsert);
         }
+
+        ///////////////////////////////
+
+        if (attachmentsForUpdate.size() != 0) {
+            updateAttachments(attachmentsForUpdate, contact.getId(), request);
+        }
+
+        //////////////////////////////
+        if (documents.size() != 0) {
+            documents.forEach(obj -> {
+                if (!obj.getName().equals("")) {
+                    FileUploadDocuments.saveDocument(request, obj, contact.getId(), false);
+                }
+            });
+        }
+        if (attachmentsForInsert.size() != 0) {
+            insertAttachments(attachmentsForInsert, contact.getId());
+        }
         ////////////////////////////////////////////////////////
         updateContact(contact, address);
         response.sendRedirect("Contacts");
+    }
+
+    private void updateAttachments(List<Attachment> attachmentsForUpdate, Long contact_id, HttpServletRequest request) {
+        try {
+            List<Attachment> attachments = attachmentDAO.findAllById(contact_id);
+            attachmentsForUpdate.forEach(obj -> {
+                try {
+                    if (attachments.contains(obj)) {
+                        attachmentDAO.updateById(obj.getId(), obj);
+                        attachments.remove(obj);
+                        FileUploadDocuments.deleteDocument(obj.getFileName(), false, contact_id);
+                    }
+                } catch (GenericDAOException e) {
+                    LOG.error("error while processing update attachment by id in editContactCommand");
+                    e.printStackTrace();
+                }
+            });
+            attachments.forEach(object -> {
+                try {
+                    attachmentDAO.deleteById(object.getId());
+                } catch (GenericDAOException e) {
+                    LOG.error("error while processing update attachment by id in editContactCommand");
+                    e.printStackTrace();
+                }
+            });
+        } catch (GenericDAOException e) {
+            LOG.error("error while processing find all attachments in EditContactCommand");
+            e.printStackTrace();
+        }
+    }
+
+    private void insertAttachments(List<Attachment> attachmentsForInsert, Long id) {
+        attachmentsForInsert.forEach(obj -> {
+            try {
+                obj.setContact_id(id);
+                attachmentDAO.insert(obj);
+            } catch (GenericDAOException e) {
+                LOG.error("error while processing insert attachment in EditContactCommand");
+                e.printStackTrace();
+            }
+        });
     }
 
     private void insertPhone(List<PhoneNumber> numbersForInsert) {

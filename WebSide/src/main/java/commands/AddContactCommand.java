@@ -111,7 +111,8 @@ public class AddContactCommand extends FrontCommand {
                             case "hiddenInfoForInsert": {
                                 String[] objects = field.split(";");
                                 String comment = objects.length == 3 ? "" : objects[3];
-                                attachments.add(new Attachment(null, objects[2], objects[1], comment, null));
+                                java.sql.Date date = java.sql.Date.valueOf(objects[2]);
+                                attachments.add(new Attachment(null, date, objects[1], comment, null));
                                 break;
                             }
                             case "hiddens": {
