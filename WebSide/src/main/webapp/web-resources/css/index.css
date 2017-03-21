@@ -51,9 +51,6 @@ tr p{
     text-align: center;
     padding-top: 5px;
 }
-#savePhone{
-    visibility: hidden;
-}
 
 tr th{
   border-bottom: 1px solid grey;

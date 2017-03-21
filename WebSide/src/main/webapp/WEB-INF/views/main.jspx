@@ -7,16 +7,19 @@
               media="screen"/>
         <link href="${pageContext.request.contextPath}/web-resources/bootstrap/css/bootstrap.css" rel="stylesheet"
               type="text/css" media="screen"/>
-
+        <c:set var="contact" value="${requestScope.contact}"/>
     </head>
     <body>
 
     <h1>Contact Directory</h1>
     <div class="vertical-group">
+        <a href="showContact?id=${contact.id}">
+            <button class="btn btn-primary">Show contact</button>
+        </a>
         <a href="addContact">
             <button class="btn btn-primary">Add contact</button>
         </a>
-        <a href="">
+        <a href="searchContact">
             <button class="btn btn-primary">Search contact</button>
         </a>
         <a href="">
@@ -24,7 +27,7 @@
         </a>
         <button onclick="deleteContacts()" class="btn btn-primary">Delete chosen contacts</button>
     </div>
-    <table class="table-bordered table" id="tableMu">
+    <table class="table-bordered table">
         <tbody>
         <tr>
             <th></th>
@@ -33,7 +36,7 @@
             <th>Address</th>
             <th>Company</th>
         </tr>
-        <c:forEach items="${requestScope.contactList}" var="contact">
+        <c:forEach items="${contact.contactList}">
             <tr>
                 <td><input value="${contact.id}" type="checkbox" name="chosenContacts"/></td>
                 <td><a href="editContact?id=${contact.id}" id="editAccountLink">

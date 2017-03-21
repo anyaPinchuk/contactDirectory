@@ -1,0 +1,120 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" xmlns="http://www.w3.org/1999/xhtml" version="2.0"
+          xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:fmt="http://java.sun.com/jsp/jstl/fmt">
+    <jsp:directive.page contentType="text/html" pageEncoding="UTF-8"/>
+    <html>
+    <head>
+        <link href="${pageContext.request.contextPath}/web-resources/css/index.css" rel="stylesheet" type="text/css"
+              media="screen"/>
+        <link href="${pageContext.request.contextPath}/web-resources/bootstrap/css/bootstrap.css" rel="stylesheet"
+              type="text/css" media="screen"/>
+        <script type="text/javascript" src="${pageContext.request.contextPath}/web-resources/scripts/handlers.js">
+            //hiii
+        </script>
+        <c:set var="contact" value="${requestScope.contact}"/>
+    </head>
+    <body>
+    <div class="center">
+        <div>
+            <div class="form-group">
+                <img id='photo' src="image?name=${contact.photo.name}"
+                     width="200px" height="200px"/>
+            </div>
+            <div>
+                <label>Name: </label>
+                <p>${contact.name}</p>
+            </div>
+            <div>
+                <label>Surname: </label>
+                <p>${contact.surname}</p>
+            </div>
+            <div>
+                <label>Third name: </label>
+                <p>${contact.thirdName}</p>
+            </div>
+            <div>
+                <label>Third name: </label>
+                <p>${contact.surname}</p>
+            </div>
+            <div>
+                <label>Email: </label>
+                <p>${contact.email}</p>
+            </div>
+            <div>
+                <label>Email: </label>
+                <p>${contact.email}</p>
+            </div>
+            <div>
+                <p><fmt:formatDate value="${contact.dateOfBirth}" pattern="dd-MM-yyyy"/></p>
+            </div>
+            <div>
+                <label>Citizenship: </label>
+                <p>${contact.citizenship}</p>
+            </div>
+            <div>
+                <label>Status: </label>
+                <p>${contact.status}</p>
+            </div>
+            <div>
+                <label>Web-site: </label>
+                <p>${contact.webSite}</p>
+            </div>
+            <div>
+                <label>Job: </label>
+                <p>${contact.job}</p>
+            </div>
+            <div>
+                <label>Address: </label>
+                <p>${contact.address.country} ${contact.address.city} ${contact.address.streetAddress}
+                    ${contact.address.index}</p>
+            </div>
+        </div>
+        <div>
+            <table class="table-bordered" id="phones">
+                <tbody>
+                <tr>
+                    <th>Chosen</th>
+                    <th>Number</th>
+                    <th>Type</th>
+                    <th>Comment</th>
+                </tr>
+                <c:forEach items="${contact.phoneDTOList}" var="phone">
+                    <tr class="rows" id="row${phone.id}">
+                        <td>
+                            <p>+${phone.countryCode} ${phone.operatorCode} ${phone.number}</p>
+                        </td>
+                        <td><p>${phone.numberType}</p></td>
+                        <td><p> ${phone.comment}</p></td>
+                    </tr>
+                </c:forEach>
+                </tbody>
+            </table>
+        </div>
+        <div>
+            <table class="table-bordered" id="attachments">
+                <tbody>
+                <tr>
+                    <th>Chosen</th>
+                    <th>File name</th>
+                    <th>Date of upload</th>
+                    <th>Comment</th>
+                </tr>
+                <c:forEach items="${requestScope.attachments}" var="attachment">
+                    <tr >
+                        <td>
+                            <a href="document?name=${attachment.fileName};${contact.id}">${attachment.fileName}</a>
+                        </td>
+                        <td><p><fmt:formatDate value="${attachment.dateOfDownload}" pattern="dd.MM.yyyy"/></p></td>
+                        <td><p> ${attachment.comment}</p></td>
+                    </tr>
+                </c:forEach>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script type="text/javascript" src="${pageContext.request.contextPath}/web-resources/scripts/showContact.js">
+        //hiii
+    </script>
+    </body>
+
+    </html>
+</jsp:root>

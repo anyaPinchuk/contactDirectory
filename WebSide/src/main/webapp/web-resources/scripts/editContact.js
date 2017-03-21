@@ -357,6 +357,14 @@ function editAttachment(id) {
 function validateForm() {
     var input = document.getElementById("contactPhoto");
     var photo = document.getElementById("photo");
+    var date = document.getElementById("contactDate");
+    if (!date.value.match(/^(0?[1-9]|[12][0-9]|3[01])[\-](0?[1-9]|1[012])[\-]\d{4}$/)){
+        alert("not match");
+    } else {
+        var strings = date.value.split("-");
+        date.value = strings[2] +  "-" + strings[1] + "-" + strings[0];
+        alert(date.value);
+    }
     var nameOfImage = photo.split("=");
     if (input.files[0].name != nameOfImage[1]) {
         input.value = "";

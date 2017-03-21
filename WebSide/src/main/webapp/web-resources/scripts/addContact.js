@@ -211,4 +211,11 @@ if (document.querySelectorAll(".fileRows").length == 0) {
 if (document.querySelectorAll(".rows").length == 0) {
     table.style.visibility = "hidden";
 }
-
+function validateForm() {
+    var date = document.getElementById("contactDate");
+    if (!date.value.match(/^(0?[1-9]|[12][0-9]|3[01])[\-](0?[1-9]|1[012])[\-]\d{4}$/)){
+    } else {
+        var strings = date.value.split("-");
+        date.value = strings[2] +  "-" + strings[1] + "-" + strings[0];
+    }
+}

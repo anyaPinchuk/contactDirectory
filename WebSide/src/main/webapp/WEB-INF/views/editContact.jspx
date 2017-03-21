@@ -13,7 +13,7 @@
         <c:set var="contact" value="${requestScope.contact}"/>
     </head>
     <body>
-    <form name='editContact' enctype="multipart/form-data" action="editContact" onsubmit="return validateForm()"
+    <form name='editContact' enctype="multipart/form-data" action="editContact"
           method="post">
         <div class="center">
             <input type="hidden" value="${contact.address.id}" name="address_id"/>
@@ -46,7 +46,7 @@
                 </div>
                 <div class="form-group">
                     <label for="contactDate">Enter date of birth </label>
-                    <input class="form-control" value="${contact.dateOfBirth}" id="contactDate" type="date"
+                    <input class="form-control" value="${contact.dateOfBirth}" id="contactDate" type="text"
                            placeholder="DD-MM-YYYY" name="dateOfBirth"/>
                 </div>
                 <div class="form-group">
@@ -95,7 +95,7 @@
                     <input class="form-control input-lg" id="contactIndex" type="text" name="index"
                            value="${contact.address.index}" placeholder="Input index"/><br/>
                 </div>
-                <button id="addContact" type="submit" class="btn btn-primary">Save contact</button>
+                <button id="addContact" type="submit" onclick="validateForm()" class="btn btn-primary">Save contact</button>
 
             </div>
             <div class="tables">
@@ -137,8 +137,7 @@
                 <div>
                     <div class="vertical-group">
                         <button id="attachmentBtn" type="button" class="btn btn-success padding">Add attachment</button>
-                        <button type="button" id="attachmentDelete" class="btn btn-link padding">Delete chosen<br/> attachments
-                        </button>
+                        <button type="button" id="attachmentDelete" class="btn btn-link padding">Delete chosen<br/> attachments</button>
                     </div>
                     <table class="table-bordered" id="attachments">
                         <tbody id="tbodyAttach">

@@ -26,7 +26,9 @@ public class FrontControllerServlet extends HttpServlet {
 
     private FrontCommand getCommand(HttpServletRequest request) {
         try {
+            request.setCharacterEncoding("UTF-8");
             String command = request.getRequestURI().substring(5);
+            System.out.println(command);
             LOG.info("handle request from user at URL " + command + " starting ");
             Class type = Class.forName(String.format(
                     "commands.%sCommand", command.substring(0, 1).toUpperCase() + command.substring(1)));

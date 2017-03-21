@@ -102,6 +102,7 @@ public class EditContactCommand extends FrontCommand {
         DiskFileItemFactory factory = new DiskFileItemFactory();
         factory.setRepository(new File(System.getProperty("java.io.tmpdir")));
         ServletFileUpload upload = new ServletFileUpload(factory);
+        upload.setHeaderEncoding("UTF-8");
         List<FileItem> formItems = null;
         List<FileItem> documents = new ArrayList<>();
         Contact contact = new Contact();
@@ -117,7 +118,7 @@ public class EditContactCommand extends FrontCommand {
                 // iterates over form's fields
                 for (FileItem item : formItems) {
                     if (item.isFormField()) {
-                        field = item.getString();
+                        field = item.getString("UTF-8");
                         fieldName = item.getFieldName();
                         switch (fieldName) {
                             case "id": {
@@ -144,7 +145,10 @@ public class EditContactCommand extends FrontCommand {
                                 break;
                             }
                             case "dateOfBirth": {
-                                contact.setDateOfBirth(java.sql.Date.valueOf(field));
+                                if(field.equals("")){
+                                    contact.setDateOfBirth(null);
+                                } else
+                                    contact.setDateOfBirth(java.sql.Date.valueOf(field));
                                 break;
                             }
                             case "sex": {

@@ -15,13 +15,12 @@ import utilities.FileUploadDocuments;
 import javax.servlet.ServletException;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 public class AddContactCommand extends FrontCommand {
 
@@ -36,6 +35,7 @@ public class AddContactCommand extends FrontCommand {
         DiskFileItemFactory factory = new DiskFileItemFactory();
         factory.setRepository(new File(System.getProperty("java.io.tmpdir")));
         ServletFileUpload upload = new ServletFileUpload(factory);
+        upload.setHeaderEncoding("UTF-8");
         List<FileItem> formItems = null;
         List<FileItem> documents = new ArrayList<>();
         List<PhoneNumber> numbersForInsert = new ArrayList<>();
@@ -49,7 +49,7 @@ public class AddContactCommand extends FrontCommand {
                 // iterates over form's fields
                 for (FileItem item : formItems) {
                     if (item.isFormField()) {
-                        field = item.getString();
+                        field = item.getString("UTF-8");
                         fieldName = item.getFieldName();
                         switch (fieldName) {
                             case "name": {
@@ -65,7 +65,10 @@ public class AddContactCommand extends FrontCommand {
                                 break;
                             }
                             case "dateOfBirth": {
-                                contact.setDateOfBirth(java.sql.Date.valueOf(field));
+                                if (field.equals("")) {
+                                    contact.setDateOfBirth(null);
+                                } else
+                                    contact.setDateOfBirth(java.sql.Date.valueOf(field));
                                 break;
                             }
                             case "sex": {
@@ -127,33 +130,32 @@ public class AddContactCommand extends FrontCommand {
                     }
                 }
             }
-        } catch (FileUploadException e) {
+            Long contact_id = insertContact(contact, address);
+            numbersForInsert.forEach(obj -> {
+                obj.setContact_id(contact_id);
+                try {
+                    phoneDAO.insert(obj);
+                } catch (GenericDAOException e) {
+                    LOG.error("error while processing insert Phone in AddContactCommand");
+                    e.printStackTrace();
+                }
+            });
+
+            if (documents.size() != 0) {
+                documents.forEach(obj -> {
+                    if (!obj.getName().equals("")) {
+                        FileUploadDocuments.saveDocument(request, obj, contact_id, false);
+                    }
+                });
+            }
+            if (attachments.size() != 0) {
+                insertAttachments(attachments, contact_id);
+            }
+            response.sendRedirect("Contacts");
+        } catch (FileUploadException | GenericDAOException e) {
             LOG.error(e.getMessage());
             e.printStackTrace();
         }
-
-        Long contact_id = insertContact(contact, address);
-        numbersForInsert.forEach(obj -> {
-            obj.setContact_id(contact_id);
-            try {
-                phoneDAO.insert(obj);
-            } catch (GenericDAOException e) {
-                LOG.error("error while processing insert Phone in AddContactCommand");
-                e.printStackTrace();
-            }
-        });
-
-        if (documents.size() != 0){
-            documents.forEach(obj -> {
-                if (!obj.getName().equals("")){
-                    FileUploadDocuments.saveDocument(request, obj, contact_id, false);
-                }
-            });
-        }
-        if (attachments.size() != 0) {
-            insertAttachments(attachments, contact_id);
-        }
-        response.sendRedirect("Contacts");
     }
 
     private void insertAttachments(List<Attachment> attachments, Long contact_id) {
@@ -168,8 +170,7 @@ public class AddContactCommand extends FrontCommand {
         });
     }
 
-    public Long insertContact(Contact contact, Address address) {
-        try {
+    private Long insertContact(Contact contact, Address address) throws GenericDAOException {
             if (address.getCountry().equals("") && address.getCity().equals("") && address.getStreetAddress().equals("")
                     && address.getIndex().equals("")) {
                 return contactDAO.insert(contact);
@@ -180,11 +181,5 @@ public class AddContactCommand extends FrontCommand {
                 }
                 return contactDAO.insertWithAddress(contact);
             }
-
-        } catch (GenericDAOException e) {
-            LOG.error("error while processing insert Contact in AddContactCommand");
-            e.printStackTrace();
-        }
-        return null;
     }
 }

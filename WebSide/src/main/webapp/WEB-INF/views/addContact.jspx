@@ -10,7 +10,7 @@
 
     </head>
     <body>
-    <form name='addContact' enctype="multipart/form-data" action="addContact" onsubmit="" method="post">
+    <form name='addContact' enctype="multipart/form-data" action="addContact"  method="post">
         <div class="center">
             <div>
                 <div class="form-group">
@@ -77,7 +77,7 @@
                     <input class="form-control turnOFF" id="contactIndex" type="text" name="index"
                            placeholder="Input index"/><br/>
                 </div>
-                <button id="addContact" type="submit" class="btn btn-primary">Add contact</button>
+                <button id="addContact" type="submit" onclick="validateForm()" class="btn btn-primary">Add contact</button>
             </div>
             <div class="tables">
                 <div>
