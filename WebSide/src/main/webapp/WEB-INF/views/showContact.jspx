@@ -52,7 +52,7 @@
             </div>
             <div>
                 <label>Status: </label>
-                <p>${contact.status}</p>
+                <p>${contact.maritalStatus}</p>
             </div>
             <div>
                 <label>Web-site: </label>
@@ -72,7 +72,6 @@
             <table class="table-bordered" id="phones">
                 <tbody>
                 <tr>
-                    <th>Chosen</th>
                     <th>Number</th>
                     <th>Type</th>
                     <th>Comment</th>
@@ -93,7 +92,6 @@
             <table class="table-bordered" id="attachments">
                 <tbody>
                 <tr>
-                    <th>Chosen</th>
                     <th>File name</th>
                     <th>Date of upload</th>
                     <th>Comment</th>

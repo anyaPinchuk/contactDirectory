@@ -151,7 +151,17 @@ function addFileInfoInTable(i, fileName, date, comment) {
     tr.appendChild(td2);
     var td3 = document.createElement("td");
     var p2 = document.createElement('p');
-    p2.innerHTML = date.getDate() + "." + (date.getMonth() + 1) + "." + date.getFullYear();
+    if (Number(date.getDate()) < 10) {
+        p2.innerHTML = "0" + date.getDate() + ".";
+    } else {
+        p2.innerHTML = "" + date.getDate() + ".";
+    }
+    if (Number(date.getMonth() + 1) < 10) {
+        p2.innerHTML += "0" + (date.getMonth() + 1) + ".";
+    } else {
+        p2.innerHTML += (date.getMonth() + 1) + ".";
+    }
+    p2.innerHTML += date.getFullYear();
     td3.appendChild(p2);
     tr.appendChild(td3);
     var td4 = document.createElement("td");

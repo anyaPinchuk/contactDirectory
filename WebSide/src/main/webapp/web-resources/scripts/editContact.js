@@ -231,9 +231,6 @@ var indexOfFile = 0;
 var tableAttach = document.getElementById("attachments");
 
 function addAttachment() {
-    if (document.querySelectorAll(".fileRows").length == 0) {
-        table.style.display = "block";
-    }
     var allHiddenInputs = document.getElementsByName("hiddensForUpdate");
     //проверка на совпадение id
     var attachment = document.getElementById("attachment" + indexOfFile);
@@ -257,6 +254,7 @@ function addAttachment() {
 
 
 function addFileInfoInTable(i, fileName, date, comment) {
+    tableAttach.style.visibility = "visible";
     var tbody = document.getElementById("tbodyAttach");
     var tr = document.createElement("tr");
     tr.className = "fileRows";
@@ -283,7 +281,17 @@ function addFileInfoInTable(i, fileName, date, comment) {
     tr.appendChild(td2);
     var td3 = document.createElement("td");
     var p2 = document.createElement('p');
-    p2.innerHTML = date.getDate() + "." + (date.getMonth() + 1) + "." + date.getFullYear();
+    if (Number(date.getDate()) < 10) {
+        p2.innerHTML = "0" + date.getDate() + ".";
+    } else {
+        p2.innerHTML = "" + date.getDate() + ".";
+    }
+    if (Number(date.getMonth() + 1) < 10) {
+        p2.innerHTML += "0" + (date.getMonth() + 1) + ".";
+    } else {
+        p2.innerHTML += (date.getMonth() + 1) + ".";
+    }
+    p2.innerHTML += date.getFullYear();
     td3.appendChild(p2);
     tr.appendChild(td3);
     var td4 = document.createElement("td");
@@ -298,8 +306,17 @@ function addFileInfoInTable(i, fileName, date, comment) {
     hiddenInput.type = "hidden";
     hiddenInput.name = "hiddenInfoForInsert";
     hiddenInput.id = "hiddenFileInfo" + i;
-    hiddenInput.value = i + ";" + fileName + ";" + date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate()
-        + ";" + comment;
+    hiddenInput.value = i + ";" + fileName + ";" + date.getFullYear() + "-";
+    if (Number(date.getMonth() + 1) < 10) {
+        hiddenInput.value += "0" + (date.getMonth() + 1) + "-";
+    } else {
+        hiddenInput.value += (date.getMonth() + 1) + "-";
+    }
+    if (Number(date.getDate()) < 10) {
+        hiddenInput.value += "0" + date.getDate() + ";" + comment;
+    } else {
+        hiddenInput.value += date.getDate() + ";" + comment;
+    }
     tbody.appendChild(tr);
     hiddenTR.appendChild(hiddenInput);
     tbody.appendChild(hiddenTR);
@@ -329,7 +346,7 @@ function deleteChosenAttachments() {
     }
 }
 if (document.querySelectorAll(".fileRows").length == 0) {
-    tableAttach.style.display = "none";
+    tableAttach.style.visibility = "hidden";
 }
 
 if (document.querySelectorAll(".rows").length == 0) {
@@ -358,12 +375,10 @@ function validateForm() {
     var input = document.getElementById("contactPhoto");
     var photo = document.getElementById("photo");
     var date = document.getElementById("contactDate");
-    if (!date.value.match(/^(0?[1-9]|[12][0-9]|3[01])[\-](0?[1-9]|1[012])[\-]\d{4}$/)){
-        alert("not match");
+    if (!date.value.match(/^(0?[1-9]|[12][0-9]|3[01])[\-](0?[1-9]|1[012])[\-]\d{4}$/)) {
     } else {
         var strings = date.value.split("-");
-        date.value = strings[2] +  "-" + strings[1] + "-" + strings[0];
-        alert(date.value);
+        date.value = strings[2] + "-" + strings[1] + "-" + strings[0];
     }
     var nameOfImage = photo.split("=");
     if (input.files[0].name != nameOfImage[1]) {

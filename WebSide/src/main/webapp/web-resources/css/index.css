@@ -62,10 +62,6 @@ tr th{
     cursor: pointer;
 }
 
-#phones input{
-    width: 160px;
-}
-
 input{
     height: 30px !important;
 }
@@ -75,7 +71,17 @@ input{
     flex-direction: column;
 }
 
+#phones, #attachments{
+    text-align: center;
+}
 
-#attachments td{
-    width: auto;
+
+
+#attachments{
+    display: flex;
+    justify-content: flex-end;
+}
+
+#attachments td p{
+    width: 100%;
 }
