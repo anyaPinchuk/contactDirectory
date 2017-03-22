@@ -57,18 +57,17 @@ public class FileUploadDocuments {
                 array = Files.readAllBytes(Paths.get(uploadPath + File.separator + "contact" + contact_id +
                         File.separator + fileName));
             }
-
-        } catch (IOException e) {
-            try(InputStream inputStream = ImageCommand.class.getResourceAsStream("no_avatar.png")){
-                array = IOUtils.toByteArray(inputStream);
-            } catch (Exception ex){
-                LOG.error(ex.getMessage());
+            return array;
+        } catch (Exception e) {
+            try {
+                array = Files.readAllBytes(Paths.get(uploadPath + File.separator + "no_avatar.png"));
+            } catch (IOException e1) {
+                e1.printStackTrace();
             }
             LOG.error(e.getMessage());
             e.printStackTrace();
         }
         return array;
-
     }
 
     public static boolean renameDocument(String fileName, String newFileName, Long contact_id){

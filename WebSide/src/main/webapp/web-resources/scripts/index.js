@@ -11,7 +11,9 @@ function showContact() {
     }
     link.href += id;
 }
-
+var deleteContactBtn = document.getElementById("deleteContactBtn");
+deleteContactBtn.addEventListener("click", deleteContacts);
 function deleteContacts() {
-    document.forms.deleteContact.submit();
+    //include check on empty list of inputs
+    document.forms[0].submit();
 }

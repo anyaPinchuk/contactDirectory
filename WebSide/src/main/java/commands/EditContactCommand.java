@@ -239,9 +239,9 @@ public class EditContactCommand extends FrontCommand {
             LOG.error(e.getMessage());
             e.printStackTrace();
         }
-        if (contact.getPhoto_id() != null) {
-            updatePhoto(contact);
-        }
+//        if (contact.getPhoto_id() != null) {
+//            updatePhoto(contact);
+//        }
 
         if (numbersForUpdate.size() != 0) {
             numbersForUpdate.forEach(obj -> {
@@ -281,12 +281,14 @@ public class EditContactCommand extends FrontCommand {
     }
 
     public void updatePhoto(Contact contact) {
+        //TODO rewrite function, to call updateContact func
         try {
             contactDAO.findById(contact.getId()).ifPresent(o -> {
                 if (!(o.getPhoto_id().equals(contact.getPhoto_id()))) {
                     try {
                         photoDAO.findById(o.getPhoto_id()).ifPresent(obj -> {
-                            if (FileUploadDocuments.deleteDocument(obj.getName(), true, null)) {
+                            //if (FileUploadDocuments.deleteDocument(obj.getName(), true, null)) {
+                            FileUploadDocuments.deleteDocument(obj.getName(), true, null);
                                 Contact contact1 = new Contact();
                                 contact1.setId(contact.getId());
                                 contact1.setDateOfBirth(null);
@@ -295,12 +297,12 @@ public class EditContactCommand extends FrontCommand {
                                     contactDAO.updateById(contact1.getId(), contact1);
                                     photoDAO.deleteById(obj.getId());
                                 } catch (GenericDAOException e) {
-                                    LOG.error("error while processing update contact or delete phone by id in editContactCommand");
+                                    LOG.error("error while processing update contact or delete photo by id in editContactCommand");
                                     e.printStackTrace();
                                 }
-                            } else {
-                                LOG.info("photo was not deleted on disk");
-                            }
+                           // } else {
+                                //LOG.info("photo was not deleted on disk");
+                           // }
                         });
                     } catch (GenericDAOException e) {
                         LOG.error("error while processing find photo by id in editContactCommand");

@@ -24,7 +24,7 @@
         <a href="">
             <button class="btn btn-primary">Send email</button>
         </a>
-        <button onclick="deleteContacts" class="btn btn-primary">Delete chosen contacts</button>
+        <button id="deleteContactBtn" class="btn btn-primary">Delete chosen contacts</button>
     </div>
     <form method="post" action="deleteContact" name="deleteContact">
     <table class="table-bordered table">
