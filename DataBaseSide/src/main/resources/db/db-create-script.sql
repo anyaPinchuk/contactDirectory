@@ -1,107 +1,109 @@
+CREATE SCHEMA IF NOT EXISTS `anya_pinchuk` DEFAULT CHARACTER SET utf8 ;
+USE `anya_pinchuk` ;
 
 -- -----------------------------------------------------
--- Schema contacts
+-- Table `anya_pinchuk`.`address`
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `contacts` DEFAULT CHARACTER SET utf8 ;
-USE `contacts` ;
-
--- -----------------------------------------------------
--- Table `contacts`.`address`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `contacts`.`address` (
+CREATE TABLE IF NOT EXISTS `anya_pinchuk`.`address` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `country` VARCHAR(45) NULL DEFAULT NULL,
   `city` VARCHAR(45) NULL DEFAULT NULL,
-  `streetAddress` VARCHAR(45) NULL DEFAULT NULL,
+  `street_address` VARCHAR(45) NULL DEFAULT NULL,
   `index` VARCHAR(45) NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC))
+  ENGINE = InnoDB
   DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `contacts`.`photo`
+-- Table `anya_pinchuk`.`photo`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `contacts`.`photo` (
+CREATE TABLE IF NOT EXISTS `anya_pinchuk`.`photo` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NOT NULL,
-  `pathToFile` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC),
   UNIQUE INDEX `photo_name_uindex` (`name` ASC))
+  ENGINE = InnoDB
   DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `contacts`.`contact`
+-- Table `anya_pinchuk`.`contact`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `contacts`.`contact` (
+CREATE TABLE IF NOT EXISTS `anya_pinchuk`.`contact` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NOT NULL,
   `surname` VARCHAR(45) NOT NULL,
-  `thirdName` VARCHAR(45) NULL DEFAULT NULL,
-  `dateOfBirth` DATE NULL DEFAULT NULL,
-  `sex` VARCHAR(45) NULL DEFAULT NULL,
+  `third_name` VARCHAR(45) NULL DEFAULT NULL,
+  `date_of_birth` DATE NULL DEFAULT NULL,
+  `gender` ENUM('man', 'woman') NULL DEFAULT NULL,
   `citizenship` VARCHAR(45) NULL DEFAULT NULL,
-  `maritalStatus` VARCHAR(45) NULL DEFAULT NULL,
-  `webSite` VARCHAR(45) NULL DEFAULT NULL,
+  `marital_status` VARCHAR(45) NULL DEFAULT NULL,
+  `web_site` VARCHAR(45) NULL DEFAULT NULL,
   `email` VARCHAR(45) NOT NULL,
   `job` VARCHAR(45) NULL DEFAULT NULL,
-  `Address_id` INT(11) NULL DEFAULT NULL,
+  `address_id` INT(11) NULL DEFAULT NULL,
   `photo_id` INT(11) NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC),
-  INDEX `fk_Contact_Address_idx` (`Address_id` ASC),
+  INDEX `fk_contact_address_idx` (`address_id` ASC),
   INDEX `fk_contact_photo1_idx` (`photo_id` ASC),
-  CONSTRAINT `fk_Contact_Address`
-  FOREIGN KEY (`Address_id`)
-  REFERENCES `contacts`.`address` (`id`)
-    ON DELETE NO ACTION
+  CONSTRAINT `fk_contact_address`
+  FOREIGN KEY (`address_id`)
+  REFERENCES `anya_pinchuk`.`address` (`id`)
+    ON DELETE CASCADE
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_contact_photo1`
   FOREIGN KEY (`photo_id`)
-  REFERENCES `contacts`.`photo` (`id`)
-    ON DELETE NO ACTION
+  REFERENCES `anya_pinchuk`.`photo` (`id`)
+    ON DELETE CASCADE
     ON UPDATE NO ACTION)
+  ENGINE = InnoDB
   DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `contacts`.`attachment`
+-- Table `anya_pinchuk`.`attachment`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `contacts`.`attachment` (
+CREATE TABLE IF NOT EXISTS `anya_pinchuk`.`attachment` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
-  `dateOfDownload` DATETIME NULL DEFAULT NULL,
-  `fileName` VARCHAR(45) NOT NULL,
+  `date_of_download` DATETIME NULL DEFAULT NULL,
+  `file_name` VARCHAR(45) NOT NULL,
   `comment` VARCHAR(45) NULL DEFAULT NULL,
-  `Contact_id` INT(11) NOT NULL,
+  `contact_id` INT(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC),
-  INDEX `fk_Attachment_Contact1_idx` (`Contact_id` ASC),
-  CONSTRAINT `fk_Attachment_Contact1`
-  FOREIGN KEY (`Contact_id`)
-  REFERENCES `contacts`.`contact` (`id`)
-    ON DELETE NO ACTION
+  INDEX `fk_attachment_sontact1_idx` (`contact_id` ASC),
+  CONSTRAINT `fk_attachment_contact1`
+  FOREIGN KEY (`contact_id`)
+  REFERENCES `anya_pinchuk`.`contact` (`id`)
+    ON DELETE CASCADE
     ON UPDATE NO ACTION)
+  ENGINE = InnoDB
   DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `contacts`.`phonenumber`
+-- Table `anya_pinchuk`.`phonenumber`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `contacts`.`phonenumber` (
+CREATE TABLE IF NOT EXISTS `anya_pinchuk`.`phone_number` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
-  `countryCode` VARCHAR(45) NOT NULL,
-  `operatorCode` VARCHAR(45) NOT NULL,
+  `country_code` VARCHAR(45) NOT NULL,
+  `operator_code` VARCHAR(45) NOT NULL,
   `number` VARCHAR(45) NOT NULL,
-  `numberType` VARCHAR(10) NULL DEFAULT NULL,
+  `phone_type` ENUM('mobile', 'home') NULL DEFAULT NULL,
   `comment` VARCHAR(45) NULL DEFAULT NULL,
-  `Contact_id` INT(11) NOT NULL,
+  `contact_id` INT(11) NOT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_PhoneNumber_Contact1_idx` (`Contact_id` ASC),
-  CONSTRAINT `fk_PhoneNumber_Contact1`
-  FOREIGN KEY (`Contact_id`)
-  REFERENCES `contacts`.`contact` (`id`)
-    ON DELETE NO ACTION
+  INDEX `fk_phonenumber_contact1_idx` (`contact_id` ASC),
+  CONSTRAINT `fk_phonenumber_contact1`
+  FOREIGN KEY (`contact_id`)
+  REFERENCES `anya_pinchuk`.`contact` (`id`)
+    ON DELETE CASCADE
     ON UPDATE NO ACTION)
+  ENGINE = InnoDB
   DEFAULT CHARACTER SET = utf8;
+
+

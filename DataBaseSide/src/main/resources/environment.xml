@@ -5,6 +5,6 @@
     <entry key="port">3306</entry>
     <entry key="user">root</entry>
     <entry key="password">root</entry>
-    <entry key="db_name">contacts</entry>
+    <entry key="db_name">anya_pinchuk</entry>
     <entry key="useSSL">false</entry>
 </properties>

@@ -5,57 +5,48 @@ import entities.Contact;
 import exceptions.GenericDAOException;
 import exceptions.UniqueDAOException;
 
+import java.sql.*;
 import java.sql.Date;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class ContactDAO extends AbstractDAO<Contact> {
 
     @Override
     public List<Contact> findAll() throws GenericDAOException {
-        return connectionAwareExecutor.submit(statement -> {
+        return connectionAwareExecutor.submit(connection -> {
             LOG.info("findAll Contact starting");
+            ResultSet resultSet = null;
             List<Contact> contacts = new LinkedList<>();
-            try (ResultSet resultSet = statement.executeQuery("SELECT * FROM contacts.contact")) {
+            try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM anya_pinchuk.contact")) {
+                resultSet = statement.executeQuery();
                 while (resultSet.next()) {
-                    Long id = resultSet.getLong("id");
-                    String name = resultSet.getString("name");
-                    String surname = resultSet.getString("surname");
-                    String thirdName = resultSet.getString("thirdName");
-                    java.sql.Date birthDate = resultSet.getDate("dateOfBirth");
-                    String sex = resultSet.getString("sex");
-                    String citizenship = resultSet.getString("citizenship");
-                    String status = resultSet.getString("maritalStatus");
-                    String webSite = resultSet.getString("webSite");
-                    String email = resultSet.getString("email");
-                    String job = resultSet.getString("job");
-                    Long address_id = resultSet.getLong("Address_id");
-                    Long photo_id = resultSet.getLong("photo_id");
-                    contacts.add(new Contact(id, name, surname, thirdName, birthDate, sex, citizenship,
-                            status, webSite, email, job, photo_id, address_id));
+                    contacts.add(buildEntityFromResult(resultSet).get());
                 }
                 return contacts;
             } catch (SQLException e) {
                 LOG.error("Contacts weren't found", e);
                 throw new GenericDAOException(e);
+            } finally {
+                connectionAwareExecutor.closeResultSet(resultSet);
             }
         });
     }
 
     @Override
     public Optional<? extends Contact> findById(Long id) throws GenericDAOException {
-        return connectionAwareExecutor.submit(statement -> {
+        return connectionAwareExecutor.submit(connection -> {
             LOG.info("findById Contact starting");
-            try (ResultSet resultSet = statement.executeQuery("SELECT * FROM contacts.contact WHERE id = " + id + " LIMIT 1")) {
+            ResultSet resultSet = null;
+            try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM anya_pinchuk.contact WHERE id = ? LIMIT 1")) {
+                statement.setLong(1, id);
+                resultSet = statement.executeQuery();
                 if (resultSet.next())
                     return buildEntityFromResult(resultSet);
             } catch (SQLException e) {
                 LOG.error("Contact wasn't found", e);
                 throw new GenericDAOException(e);
+            } finally {
+                connectionAwareExecutor.closeResultSet(resultSet);
             }
             return Optional.empty();
         });
@@ -65,29 +56,33 @@ public class ContactDAO extends AbstractDAO<Contact> {
         Long id = resultSet.getLong("id");
         String name = resultSet.getString("name");
         String surname = resultSet.getString("surname");
-        String thirdName = resultSet.getString("thirdName");
-        Date birthDate = resultSet.getDate("dateOfBirth");
-        String sex = resultSet.getString("sex");
+        String thirdName = resultSet.getString("third_name");
+        java.sql.Date birthDate = resultSet.getDate("date_of_birth");
+        String sex = resultSet.getString("gender");
         String citizenship = resultSet.getString("citizenship");
-        String status = resultSet.getString("maritalStatus");
-        String webSite = resultSet.getString("webSite");
+        String status = resultSet.getString("marital_status");
+        String webSite = resultSet.getString("web_site");
         String email = resultSet.getString("email");
         String job = resultSet.getString("job");
-        Long address_id = resultSet.getLong("Address_id");
-        Long photo_id = resultSet.getLong("photo_id");
+        Long addressId = resultSet.getLong("address_id");
+        Long photoId = resultSet.getLong("photo_id");
         return Optional.of(new Contact(id, name, surname, thirdName, birthDate, sex, citizenship,
-                status, webSite, email, job, photo_id, address_id));
+                status, webSite, email, job, photoId, addressId));
     }
 
     @Override
     public Optional<? extends Contact> findByField(Object field) throws GenericDAOException {
-        return connectionAwareExecutor.submit(statement -> {
-            try (ResultSet resultSet = statement.executeQuery("SELECT * FROM contacts.contact WHERE email = '"
-                    + field + "' LIMIT 1")) {
+        return connectionAwareExecutor.submit(connection -> {
+            ResultSet resultSet = null;
+            try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM anya_pinchuk.contact WHERE email = ? LIMIT 1")) {
+                statement.setString(1, (String) field);
+                resultSet = statement.executeQuery();
                 if (resultSet.next())
                     return buildEntityFromResult(resultSet);
             } catch (SQLException e) {
                 throw new GenericDAOException(e);
+            } finally {
+                connectionAwareExecutor.closeResultSet(resultSet);
             }
             return Optional.empty();
         });
@@ -96,12 +91,23 @@ public class ContactDAO extends AbstractDAO<Contact> {
     @Override
     public int updateById(Long id, Contact entity) throws GenericDAOException {
         if (entity == null) return 0;
-        return connectionAwareExecutor.submit(statement -> {
-            try {
-                String query = buildQueryForUpdate(entity.getDateOfBirth() == null, entity.getAddress_id() == null,
-                        entity.getPhoto_id() == null, entity);
+        return connectionAwareExecutor.submit(connection -> {
+            StringBuilder builder = new StringBuilder("UPDATE anya_pinchuk.contact SET name = ?, surname = ?, third_name = ?");
+            if (entity.getDateOfBirth() != null) {
+                builder.append(", date_of_birth = ?");
+            }
+            builder.append(", gender = ?").append(", citizenship = ?").append(", marital_status = ?")
+                    .append(", web_site = ?").append(", email = ?").append(", job = ?");
+            if (entity.getAddress_id() != 0) {
+                builder.append(", address_id = ?");
+            }
+            if (entity.getPhoto_id() != 0) {
+                builder.append(", photo_id = ?");
+            }
+            builder.append(" WHERE id = ?");
+            try (PreparedStatement statement = setParameters(connection,builder.toString(), entity)) {
                 LOG.info("updateById Contact starting");
-                return statement.executeUpdate(query);
+                return statement.executeUpdate();
             } catch (SQLException e) {
                 LOG.error("Contact wasn't updated", e);
                 throw new GenericDAOException(e);
@@ -109,62 +115,58 @@ public class ContactDAO extends AbstractDAO<Contact> {
         });
     }
 
-    private String buildQueryForUpdate(boolean isDateNull, boolean isAddressNull, boolean isPhotoNull, Contact entity) {
-        StringBuilder builder = new StringBuilder("UPDATE contacts.contact SET ");
-        builder.append("name = '").append(entity.getName()).append("', surname = '").append(entity.getSurname())
-                .append("', thirdName = '").append(entity.getThirdName());
-        if (!isDateNull) {
-            builder.append("', dateOfBirth = '").append(entity.getDateOfBirth());
+    public PreparedStatement setParameters(Connection connection, String query, Contact entity) throws SQLException {
+        PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+        List<Object> parameters = new ArrayList<>();
+        parameters.add(entity.getName());
+        parameters.add(entity.getSurname());
+        parameters.add(entity.getThirdName());
+        if (entity.getDateOfBirth() != null) {
+            parameters.add(entity.getDateOfBirth());
         }
-        builder.append("', sex = '").append(entity.getSex()).append("', citizenship = '").append(entity.getCitizenship())
-                .append("', maritalStatus = '").append(entity.getMaritalStatus()).append("', webSite = '")
-                .append(entity.getWebSite()).append("', email = '").append(entity.getEmail()).append("', job = '")
-                .append(entity.getJob());
-        if (!isAddressNull) {
-            builder.append("', Address_id = '").append(entity.getAddress_id());
+        parameters.add(entity.getSex());
+        parameters.add(entity.getCitizenship());
+        parameters.add(entity.getMaritalStatus());
+        parameters.add(entity.getWebSite());
+        parameters.add(entity.getEmail());
+        parameters.add(entity.getJob());
+        if (entity.getAddress_id() != 0)
+            parameters.add(entity.getAddress_id());
+        if (entity.getPhoto_id() != 0)
+            parameters.add(entity.getPhoto_id());
+        parameters.add(entity.getId());
+        int i = 0;
+        for (Object arg : parameters) {
+            i++;
+            if (arg instanceof Date) {
+                statement.setDate(i, (Date) arg);
+            } else if (arg instanceof Long) {
+                statement.setLong(i, (Long) arg);
+            } else  if (arg instanceof String){
+                statement.setString(i, (String) arg);
+            } else if(arg == null){
+                statement.setString(i,"");
+            }
+
         }
-        if (!isPhotoNull) {
-            builder.append("', photo_id = '").append(entity.getPhoto_id());
-        }
-        builder.append("' WHERE id = ").append(entity.getId());
-        return builder.toString();
+        return statement;
     }
 
     @Override
     public Long insert(Contact entity) throws GenericDAOException {
         if (entity == null) return 0L;
-        return connectionAwareExecutor.submit(statement -> {
-            try {
-                int result;
+        return connectionAwareExecutor.submit(connection -> {
+            String query = "";
+            if (entity.getDateOfBirth() != null) {
+                query = "INSERT INTO anya_pinchuk.contact (name, surname, third_name, date_of_birth, gender, citizenship," +
+                        " marital_status, web_site, email, job) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            } else {
+                query = "INSERT INTO anya_pinchuk.contact (name, surname, third_name, gender, citizenship, marital_status," +
+                        " web_site, email, job) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            }
+            try (PreparedStatement statement = setParameters(connection,query,entity)) {
                 LOG.info("insert Contact starting");
-                if (entity.getDateOfBirth() == null) {
-                    result = statement.executeUpdate("INSERT INTO contacts.contact (name, surname, thirdName," +
-                            " sex, citizenship, maritalStatus, webSite, email, job) VALUES ('"
-                            + entity.getName()
-                            + "','" + entity.getSurname()
-                            + "','" + entity.getThirdName()
-                            + "','" + entity.getSex()
-                            + "','" + entity.getCitizenship()
-                            + "','" + entity.getMaritalStatus()
-                            + "','" + entity.getWebSite()
-                            + "','" + entity.getEmail()
-                            + "','" + entity.getJob()
-                            + "')", Statement.RETURN_GENERATED_KEYS);
-                } else {
-                    result = statement.executeUpdate("INSERT INTO contacts.contact (name, surname, thirdName," +
-                            " dateOfBirth, sex, citizenship, maritalStatus, webSite, email, job) VALUES ('"
-                            + entity.getName()
-                            + "','" + entity.getSurname()
-                            + "','" + entity.getThirdName()
-                            + "','" + entity.getDateOfBirth()
-                            + "','" + entity.getSex()
-                            + "','" + entity.getCitizenship()
-                            + "','" + entity.getMaritalStatus()
-                            + "','" + entity.getWebSite()
-                            + "','" + entity.getEmail()
-                            + "','" + entity.getJob()
-                            + "')", Statement.RETURN_GENERATED_KEYS);
-                }
+                int result = statement.executeUpdate();
                 if (result == 0) {
                     throw new SQLException("Creating contact failed, contact wasn't added");
                 }
@@ -184,40 +186,18 @@ public class ContactDAO extends AbstractDAO<Contact> {
 
     public Long insertWithAddress(Contact entity) throws GenericDAOException {
         if (entity == null) return 0L;
-        return connectionAwareExecutor.submit(statement -> {
-            try {
-                int result;
+        return connectionAwareExecutor.submit(connection -> {
+            String query = "";
+            if (entity.getDateOfBirth() != null) {
+                query = "INSERT INTO anya_pinchuk.contact (name, surname, third_name, date_of_birth, gender, citizenship," +
+                        " marital_status, web_site, email, job, address_id) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            } else {
+                query = "INSERT INTO anya_pinchuk.contact (name, surname, third_name, gender, citizenship, marital_status," +
+                        " web_site, email, job, address_id) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            }
+            try (PreparedStatement statement = setParameters(connection,query,entity)) {
                 LOG.info("insert Contact starting");
-                if (entity.getDateOfBirth() == null) {
-                    result = statement.executeUpdate("INSERT INTO contacts.contact (name, surname, thirdName," +
-                            " sex, citizenship, maritalStatus, webSite, email, job, Address_id) VALUES ('"
-                            + entity.getName()
-                            + "','" + entity.getSurname()
-                            + "','" + entity.getThirdName()
-                            + "','" + entity.getSex()
-                            + "','" + entity.getCitizenship()
-                            + "','" + entity.getMaritalStatus()
-                            + "','" + entity.getWebSite()
-                            + "','" + entity.getEmail()
-                            + "','" + entity.getJob()
-                            + "','" + entity.getAddress_id()
-                            + "')", Statement.RETURN_GENERATED_KEYS);
-                } else {
-                    result = statement.executeUpdate("INSERT INTO contacts.contact (name, surname, thirdName," +
-                            " dateOfBirth, sex, citizenship, maritalStatus, webSite, email, job, Address_id) VALUES ('"
-                            + entity.getName()
-                            + "','" + entity.getSurname()
-                            + "','" + entity.getThirdName()
-                            + "','" + entity.getDateOfBirth()
-                            + "','" + entity.getSex()
-                            + "','" + entity.getCitizenship()
-                            + "','" + entity.getMaritalStatus()
-                            + "','" + entity.getWebSite()
-                            + "','" + entity.getEmail()
-                            + "','" + entity.getJob()
-                            + "','" + entity.getAddress_id()
-                            + "')", Statement.RETURN_GENERATED_KEYS);
-                }
+                int result = statement.executeUpdate();
                 if (result == 0) {
                     throw new SQLException("Creating contact failed, contact wasn't added");
                 }
@@ -237,10 +217,11 @@ public class ContactDAO extends AbstractDAO<Contact> {
 
     @Override
     public int deleteById(Long id) throws GenericDAOException {
-        return connectionAwareExecutor.submit(statement -> {
-            try {
+        return connectionAwareExecutor.submit(connection -> {
+            try (PreparedStatement statement = connection.prepareStatement("DELETE FROM anya_pinchuk.contact WHERE id = ?")) {
                 LOG.info("deleteById Contact starting");
-                return statement.executeUpdate("DELETE FROM contacts.contact WHERE id = '" + id + "'");
+                statement.setLong(1, id);
+                return statement.executeUpdate();
             } catch (SQLException e) {
                 LOG.error("Contact wasn't deleted", e);
                 throw new GenericDAOException(e);

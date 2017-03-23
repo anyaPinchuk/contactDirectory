@@ -76,7 +76,7 @@ public class EditContactCommand extends FrontCommand {
                     : null;
             PhotoDTO photoDTO = null;
             if (photo != null) {
-                photoDTO = new PhotoDTO(photo.getId(), photo.getName(), photo.getPathToFile());
+                photoDTO = new PhotoDTO(photo.getId(), photo.getName());
                 contactDTO.setPhoto(photoDTO);
             }
 
@@ -225,7 +225,7 @@ public class EditContactCommand extends FrontCommand {
                         if ((!item.getName().equals("") && !item.getFieldName().contains("attachment"))) {
                             String fileName = item.getName();
                             if (!(photoDAO.findByField(fileName).isPresent())) {
-                                Long photo_id = photoDAO.insert(new Photo(item.getName(), FileUploadDocuments.getFileDirectory(true)));
+                                Long photo_id = photoDAO.insert(new Photo(item.getName()));
                                 contact.setPhoto_id(photo_id);
                                 FileUploadDocuments.saveDocument(request, item, null, true);
                             }

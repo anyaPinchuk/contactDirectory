@@ -38,13 +38,24 @@ public class ConnectionAwareExecutor {
 
 
     public <T> T submit(ConnectionTask<T> task) throws GenericDAOException {
-        try(Connection connection = connect();
-            Statement statement = connection.createStatement()){
-            return task.execute(statement);
+        try(Connection connection = connect()){
+            return task.execute(connection);
         } catch (SQLException e) {
             throw new GenericDAOException(e);
         } finally {
             LOG.info("dao Disconnected");
         }
     }
+
+    public void closeResultSet(ResultSet resultSet){
+        try{
+            if (resultSet!=null){
+                resultSet.close();
+            }
+        }
+        catch (SQLException e){
+            LOG.error(e.getMessage());
+        }
+    }
+
 }

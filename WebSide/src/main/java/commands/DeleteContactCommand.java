@@ -30,22 +30,6 @@ public class DeleteContactCommand extends FrontCommand{
             Arrays.stream(ids).forEach((Long id) -> {
                 try {
                     //delete photo and attachments if exist from disk
-                    List<Attachment> attachmentList = attachmentDAO.findAllById(id);
-                    attachmentList.forEach(obj -> {
-                        try {
-                            attachmentDAO.deleteById(obj.getId());
-                        } catch (GenericDAOException e) {
-                            e.printStackTrace();
-                        }
-                    });
-                    List<PhoneNumber> phoneNumbers = phoneDAO.findAllById(id);
-                    phoneNumbers.forEach(obj -> {
-                        try {
-                            phoneDAO.deleteById(obj.getId());
-                        } catch (GenericDAOException e) {
-                            e.printStackTrace();
-                        }
-                    });
                     Contact contact = contactDAO.findById(id).get();
                     contactDAO.deleteById(id);
                     if (contact.getAddress_id() != 0){

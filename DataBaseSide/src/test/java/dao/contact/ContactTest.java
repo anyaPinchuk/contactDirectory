@@ -6,6 +6,7 @@ import exceptions.GenericDAOException;
 import exceptions.MessageError;
 import org.junit.Test;
 
+import java.sql.Date;
 import java.util.List;
 
 
@@ -30,7 +31,9 @@ public class ContactTest {
 //        try {
 //           if (contactDAO.findByField("anya@gmail.com").isPresent()){
 //               contact = contactDAO.findByField("anya@gmail.com").get();
-//               contact.setCitizenship("belarus");
+//               contact.setDateOfBirth(Date.valueOf("1990-11-10"));
+//               contact.setAddress_id(1L);
+//               contact.setPhoto_id(1L);
 //               contactDAO.updateById(contact.getId(), contact);
 //           } else{
 //               throw new GenericDAOException("Contact wasn't found");

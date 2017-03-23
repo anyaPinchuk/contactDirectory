@@ -6,6 +6,7 @@ import entities.Photo;
 import exceptions.GenericDAOException;
 import exceptions.UniqueDAOException;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -21,14 +22,19 @@ public class PhotoDAO extends AbstractDAO<Photo>{
 
     @Override
     public Optional<? extends Photo> findById(Long id) throws GenericDAOException {
-        return connectionAwareExecutor.submit(statement -> {
+        return connectionAwareExecutor.submit(connection -> {
             LOG.info("findById photo starting");
-            try (ResultSet resultSet = statement.executeQuery("SELECT * FROM contacts.photo WHERE id = " + id + " LIMIT 1")) {
+            ResultSet resultSet = null;
+            try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM anya_pinchuk.photo WHERE id = ? LIMIT 1")) {
+                statement.setLong(1, id);
+                resultSet = statement.executeQuery();
                 if (resultSet.next())
                     return buildEntityFromResult(resultSet);
             } catch (SQLException e) {
-                LOG.error("Address wasn't found", e);
+                LOG.error("Photo wasn't found", e);
                 throw new GenericDAOException(e);
+            }finally {
+                connectionAwareExecutor.closeResultSet(resultSet);
             }
             return Optional.empty();
         });
@@ -37,19 +43,23 @@ public class PhotoDAO extends AbstractDAO<Photo>{
     private Optional<Photo> buildEntityFromResult(ResultSet resultSet) throws SQLException {
         Long id = resultSet.getLong("id");
         String name = resultSet.getString("name");
-        String pathToFile = resultSet.getString("pathToFile");
-        return Optional.of(new Photo(name, pathToFile));
+        return Optional.of(new Photo(id, name));
     }
 
     @Override
     public Optional<? extends Photo> findByField(Object field) throws GenericDAOException {
-            return connectionAwareExecutor.submit(statement -> {
-                try (ResultSet resultSet = statement.executeQuery("SELECT * FROM contacts.photo WHERE name = '"
-                        + field + "' LIMIT 1")) {
+            return connectionAwareExecutor.submit(connection -> {
+                ResultSet resultSet = null;
+                try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM anya_pinchuk.photo WHERE name = ? LIMIT 1")) {
+                    statement.setString(1, (String) field);
+                    resultSet = statement.executeQuery();
                     if (resultSet.next())
                         return buildEntityFromResult(resultSet);
                 } catch (SQLException e) {
+                    LOG.error("Photo wasn't found", e);
                     throw new GenericDAOException(e);
+                }finally {
+                    connectionAwareExecutor.closeResultSet(resultSet);
                 }
                 return Optional.empty();
             });
@@ -58,16 +68,14 @@ public class PhotoDAO extends AbstractDAO<Photo>{
     @Override
     public int updateById(Long id, Photo entity) throws GenericDAOException {
         if (entity == null) return 0;
-        return connectionAwareExecutor.submit(statement -> {
-            try {
+        return connectionAwareExecutor.submit(connection -> {
+            try (PreparedStatement statement = connection.prepareStatement("UPDATE anya_pinchuk.photo SET name = ? WHERE id = ?")) {
                 LOG.info("updateById photo starting");
-                return statement.executeUpdate("UPDATE contacts.photo SET " +
-                        "name = '" + entity.getName()
-                        + "', pathToFile = '" + entity.getPathToFile()
-                        + "' WHERE id = " + id);
-
+                statement.setString(1, entity.getName());
+                statement.setLong(2, id);
+                return statement.executeUpdate();
             } catch (SQLException e) {
-                LOG.error("Address wasn't updated", e);
+                LOG.error("photo wasn't updated", e);
                 throw new GenericDAOException(e);
             }
         });
@@ -76,16 +84,14 @@ public class PhotoDAO extends AbstractDAO<Photo>{
     @Override
     public Long insert(Photo entity) throws GenericDAOException {
         if (entity == null) return 0L;
-        return connectionAwareExecutor.submit(statement -> {
-            try {
-                LOG.info("insert Address starting");
-                int result = statement.executeUpdate("INSERT INTO contacts.photo (name, pathToFile" +
-                        " ) VALUES ('"
-                        + entity.getName()
-                        + "','" + entity.getPathToFile()
-                        + "')", Statement.RETURN_GENERATED_KEYS);
+        return connectionAwareExecutor.submit(connection -> {
+            try (PreparedStatement statement = connection.prepareStatement("INSERT INTO anya_pinchuk.photo (name) VALUES (?)",
+                    Statement.RETURN_GENERATED_KEYS)) {
+                LOG.info("insert Photo starting");
+                statement.setString(1, entity.getName());
+                int result = statement.executeUpdate();
                 if (result == 0) {
-                    throw new SQLException("Creating photo failed, address wasn't added");
+                    throw new SQLException("Creating photo failed, Photo wasn't added");
                 }
                 try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
                     if (generatedKeys.next())
@@ -103,10 +109,11 @@ public class PhotoDAO extends AbstractDAO<Photo>{
 
     @Override
     public int deleteById(Long id) throws GenericDAOException {
-        return connectionAwareExecutor.submit(statement -> {
-            try {
+        return connectionAwareExecutor.submit(connection -> {
+            try (PreparedStatement statement = connection.prepareStatement("DELETE FROM anya_pinchuk.photo WHERE id = ?")){
                 LOG.info("deleteById photo starting");
-                return statement.executeUpdate("DELETE FROM contacts.photo WHERE id = '" + id + "'");
+                statement.setLong(1, id);
+                return statement.executeUpdate();
             } catch (SQLException e) {
                 LOG.error("photo wasn't deleted", e);
                 throw new GenericDAOException(e);

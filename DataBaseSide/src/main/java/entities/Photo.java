@@ -3,14 +3,17 @@ package entities;
 public class Photo {
     private Long id;
     private String name;
-    private String pathToFile;
 
     public Photo() {
     }
 
-    public Photo(String name, String pathToFile) {
+    public Photo(String name) {
         this.name = name;
-        this.pathToFile = pathToFile;
+    }
+
+    public Photo(Long id, String name) {
+        this.id = id;
+        this.name = name;
     }
 
     public Long getId() {
@@ -27,13 +30,5 @@ public class Photo {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getPathToFile() {
-        return pathToFile;
-    }
-
-    public void setPathToFile(String pathToFile) {
-        this.pathToFile = pathToFile;
     }
 }
