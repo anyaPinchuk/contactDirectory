@@ -15,6 +15,8 @@ public abstract class AbstractDAO<T> {
 
     public abstract List<T> findAll() throws GenericDAOException;
 
+    public abstract List<T> findAllById(Long contact_id) throws GenericDAOException;
+
     public abstract Optional<? extends T> findById(Long id) throws GenericDAOException;
 
     public abstract Optional<? extends T> findByField(Object field) throws GenericDAOException;

@@ -21,6 +21,11 @@ public class PhotoDAO extends AbstractDAO<Photo>{
     }
 
     @Override
+    public List<Photo> findAllById(Long contact_id) throws GenericDAOException {
+        return null;
+    }
+
+    @Override
     public Optional<? extends Photo> findById(Long id) throws GenericDAOException {
         return connectionAwareExecutor.submit(connection -> {
             LOG.info("findById photo starting");

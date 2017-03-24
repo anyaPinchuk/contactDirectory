@@ -10,6 +10,7 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import services.InsertEntityService;
 import utilities.FileUploadDocuments;
 
 import javax.servlet.ServletException;
@@ -130,56 +131,23 @@ public class AddContactCommand extends FrontCommand {
                     }
                 }
             }
-            Long contact_id = insertContact(contact, address);
-            numbersForInsert.forEach(obj -> {
-                obj.setContact_id(contact_id);
-                try {
-                    phoneDAO.insert(obj);
-                } catch (GenericDAOException e) {
-                    LOG.error("error while processing insert Phone in AddContactCommand");
-                    e.printStackTrace();
-                }
-            });
+            InsertEntityService insertEntityService = new InsertEntityService();
+            insertEntityService.insertContact(contact, address);
+            insertEntityService.insertPhone(numbersForInsert);
 
             if (documents.size() != 0) {
                 documents.forEach(obj -> {
                     if (!obj.getName().equals("")) {
-                        FileUploadDocuments.saveDocument(request, obj, contact_id, false);
+                        FileUploadDocuments.saveDocument(request, obj, insertEntityService.getContactId(), false);
                     }
                 });
             }
-            if (attachments.size() != 0) {
-                insertAttachments(attachments, contact_id);
-            }
+
+            insertEntityService.insertAttachment(attachments);
             response.sendRedirect("Contacts");
         } catch (FileUploadException | GenericDAOException e) {
             LOG.error(e.getMessage());
             e.printStackTrace();
         }
-    }
-
-    private void insertAttachments(List<Attachment> attachments, Long contact_id) {
-        attachments.forEach(obj -> {
-            try {
-                obj.setContact_id(contact_id);
-                attachmentDAO.insert(obj);
-            } catch (GenericDAOException e) {
-                LOG.error("error while processing insert attachment in AddContactCommand");
-                e.printStackTrace();
-            }
-        });
-    }
-
-    private Long insertContact(Contact contact, Address address) throws GenericDAOException {
-            if (address.getCountry().equals("") && address.getCity().equals("") && address.getStreetAddress().equals("")
-                    && address.getIndex().equals("")) {
-                return contactDAO.insert(contact);
-            } else {
-                Long address_id = addressDAO.insert(address);
-                if (address_id != 0) {
-                    contact.setAddress_id(address_id);
-                }
-                return contactDAO.insertWithAddress(contact);
-            }
     }
 }

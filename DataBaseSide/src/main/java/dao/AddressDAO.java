@@ -12,10 +12,16 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
 
+
 public class AddressDAO extends AbstractDAO<Address> {
 
     @Override
     public List<Address> findAll() throws GenericDAOException {
+        return null;
+    }
+
+    @Override
+    public List<Address> findAllById(Long contact_id) throws GenericDAOException {
         return null;
     }
 

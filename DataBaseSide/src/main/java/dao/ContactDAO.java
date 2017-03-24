@@ -33,6 +33,11 @@ public class ContactDAO extends AbstractDAO<Contact> {
     }
 
     @Override
+    public List<Contact> findAllById(Long contact_id) throws GenericDAOException {
+        return null;
+    }
+
+    @Override
     public Optional<? extends Contact> findById(Long id) throws GenericDAOException {
         return connectionAwareExecutor.submit(connection -> {
             LOG.info("findById Contact starting");
@@ -98,10 +103,10 @@ public class ContactDAO extends AbstractDAO<Contact> {
             }
             builder.append(", gender = ?").append(", citizenship = ?").append(", marital_status = ?")
                     .append(", web_site = ?").append(", email = ?").append(", job = ?");
-            if (entity.getAddress_id() != 0) {
+            if (entity.getAddress_id() != null) {
                 builder.append(", address_id = ?");
             }
-            if (entity.getPhoto_id() != 0) {
+            if (entity.getPhoto_id() != null ) {
                 builder.append(", photo_id = ?");
             }
             builder.append(" WHERE id = ?");
@@ -130,11 +135,12 @@ public class ContactDAO extends AbstractDAO<Contact> {
         parameters.add(entity.getWebSite());
         parameters.add(entity.getEmail());
         parameters.add(entity.getJob());
-        if (entity.getAddress_id() != 0)
+        if (entity.getAddress_id() != null)
             parameters.add(entity.getAddress_id());
-        if (entity.getPhoto_id() != 0)
+        if (entity.getPhoto_id() != null)
             parameters.add(entity.getPhoto_id());
-        parameters.add(entity.getId());
+        if (entity.getId() != null)
+            parameters.add(entity.getId());
         int i = 0;
         for (Object arg : parameters) {
             i++;

@@ -54,7 +54,7 @@ public class ShowContactCommand extends FrontCommand{
                     : null;
             PhotoDTO photoDTO = null;
             if (photo != null) {
-                photoDTO = new PhotoDTO(photo.getId(), photo.getName(), photo.getPathToFile());
+                photoDTO = new PhotoDTO(photo.getId(), photo.getName());
                 contactDTO.setPhoto(photoDTO);
             }
 

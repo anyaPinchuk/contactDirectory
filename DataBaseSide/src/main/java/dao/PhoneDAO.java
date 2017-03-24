@@ -133,7 +133,7 @@ public class PhoneDAO extends AbstractDAO<PhoneNumber>{
     @Override
     public int deleteById(Long id) throws GenericDAOException {
         return connectionAwareExecutor.submit(connection -> {
-            try (PreparedStatement statement = connection.prepareStatement("DELETE FROM anya_pinchuk.phone_number WHERE contact_id = ?")){
+            try (PreparedStatement statement = connection.prepareStatement("DELETE FROM anya_pinchuk.phone_number WHERE id = ?")){
                 LOG.info("deleteById Phone starting");
                 statement.setLong(1, id);
                 return statement.executeUpdate();

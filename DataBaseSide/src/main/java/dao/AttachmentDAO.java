@@ -133,7 +133,7 @@ public class AttachmentDAO extends AbstractDAO<Attachment>{
     @Override
     public int deleteById(Long id) throws GenericDAOException {
         return connectionAwareExecutor.submit(connection -> {
-            try (PreparedStatement statement = connection.prepareStatement("DELETE FROM anya_pinchuk.attachment WHERE contact_id = ?")){
+            try (PreparedStatement statement = connection.prepareStatement("DELETE FROM anya_pinchuk.attachment WHERE id = ?")){
                 LOG.info("deleteById Attachment starting");
                 statement.setLong(1, id);
                 return statement.executeUpdate();

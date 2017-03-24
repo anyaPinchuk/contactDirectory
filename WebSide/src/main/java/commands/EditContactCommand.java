@@ -17,6 +17,9 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import services.EntityService;
+import services.InsertEntityService;
+import services.UpdateEntityService;
 import utilities.FileUploadDocuments;
 
 import javax.servlet.ServletException;
@@ -34,7 +37,6 @@ public class EditContactCommand extends FrontCommand {
     private ContactConverter contactConverter;
     private AddressConverter addressConverter;
     private PhoneConverter phoneConverter;
-    private AttachmentConverter attachmentConverter;
     private PhotoDAO photoDAO = new PhotoDAO();
     private PhoneDAO phoneDAO = new PhoneDAO();
 
@@ -42,7 +44,6 @@ public class EditContactCommand extends FrontCommand {
         contactConverter = new ContactConverter();
         addressConverter = new AddressConverter();
         phoneConverter = new PhoneConverter();
-        attachmentConverter = new AttachmentConverter();
     }
 
     @Override
@@ -103,14 +104,13 @@ public class EditContactCommand extends FrontCommand {
         factory.setRepository(new File(System.getProperty("java.io.tmpdir")));
         ServletFileUpload upload = new ServletFileUpload(factory);
         upload.setHeaderEncoding("UTF-8");
-        List<FileItem> formItems = null;
-        List<FileItem> documents = new ArrayList<>();
+        List<FileItem> formItems, documents = new ArrayList<>();
         Contact contact = new Contact();
-        List<PhoneNumber> numbersForUpdate = new ArrayList<>();
-        List<PhoneNumber> numbersForInsert = new ArrayList<>();
-        List<Attachment> attachmentsForInsert = new ArrayList<>();
-        List<Attachment> attachmentsForUpdate = new ArrayList<>();
+        List<PhoneNumber> numbersForUpdate = new ArrayList<>(), numbersForInsert = new ArrayList<>();
+        List<Attachment> attachmentsForInsert = new ArrayList<>(), attachmentsForUpdate = new ArrayList<>();
         Address address = new Address();
+        FileItem photoItem = null;
+        UpdateEntityService service = new UpdateEntityService();
         try {
             formItems = upload.parseRequest(request);
             if (formItems != null && formItems.size() > 0) {
@@ -145,7 +145,7 @@ public class EditContactCommand extends FrontCommand {
                                 break;
                             }
                             case "dateOfBirth": {
-                                if(field.equals("")){
+                                if (field.equals("")) {
                                     contact.setDateOfBirth(null);
                                 } else
                                     contact.setDateOfBirth(java.sql.Date.valueOf(field));
@@ -221,49 +221,25 @@ public class EditContactCommand extends FrontCommand {
                             }
                         }
                     } else {
-                        //проверка на то чтобы фотография уже добавлена к профилю и не изменилась
                         if ((!item.getName().equals("") && !item.getFieldName().contains("attachment"))) {
-                            String fileName = item.getName();
-                            if (!(photoDAO.findByField(fileName).isPresent())) {
-                                Long photo_id = photoDAO.insert(new Photo(item.getName()));
-                                contact.setPhoto_id(photo_id);
-                                FileUploadDocuments.saveDocument(request, item, null, true);
-                            }
+                            photoItem = item;
                         } else if (item.getFieldName().contains("attachment")) {
                             documents.add(item);
                         }
                     }
                 }
             }
+            if (photoItem != null) {
+                contact.setPhoto_id(service.updatePhoto(contact, photoItem.getName()));
+                FileUploadDocuments.saveDocument(request, photoItem, null, true);
+            }
+            service.updatePhone(contact.getId(), numbersForUpdate);
+            service.updateAttachment(attachmentsForUpdate, contact.getId());
+
         } catch (FileUploadException | GenericDAOException e) {
             LOG.error(e.getMessage());
             e.printStackTrace();
         }
-//        if (contact.getPhoto_id() != null) {
-//            updatePhoto(contact);
-//        }
-
-        if (numbersForUpdate.size() != 0) {
-            numbersForUpdate.forEach(obj -> {
-                obj.setContact_id(contact.getId());
-            });
-
-        }
-        updatePhone(contact.getId(), numbersForUpdate);
-        if (numbersForInsert.size() != 0) {
-            numbersForInsert.forEach(obj -> {
-                obj.setContact_id(contact.getId());
-            });
-            insertPhone(numbersForInsert);
-        }
-
-        ///////////////////////////////
-
-        if (attachmentsForUpdate.size() != 0) {
-            updateAttachments(attachmentsForUpdate, contact.getId());
-        }
-
-        //////////////////////////////
         if (documents.size() != 0) {
             documents.forEach(obj -> {
                 if (!obj.getName().equals("")) {
@@ -271,158 +247,11 @@ public class EditContactCommand extends FrontCommand {
                 }
             });
         }
-        if (attachmentsForInsert.size() != 0) {
-            insertAttachments(attachmentsForInsert, contact.getId());
-
-        }
-        ////////////////////////////////////////////////////////
-        updateContact(contact, address);
+        InsertEntityService insertEntityService = new InsertEntityService();
+        insertEntityService.setContactId(contact.getId());
+        insertEntityService.insertPhone(numbersForInsert);
+        insertEntityService.insertAttachment(attachmentsForInsert);
+        service.updateContact(contact, address);
         response.sendRedirect("Contacts");
-    }
-
-    public void updatePhoto(Contact contact) {
-        //TODO rewrite function, to call updateContact func
-        try {
-            contactDAO.findById(contact.getId()).ifPresent(o -> {
-                if (!(o.getPhoto_id().equals(contact.getPhoto_id()))) {
-                    try {
-                        photoDAO.findById(o.getPhoto_id()).ifPresent(obj -> {
-                            //if (FileUploadDocuments.deleteDocument(obj.getName(), true, null)) {
-                            FileUploadDocuments.deleteDocument(obj.getName(), true, null);
-                                Contact contact1 = new Contact();
-                                contact1.setId(contact.getId());
-                                contact1.setDateOfBirth(null);
-                                contact1.setPhoto_id(contact.getPhoto_id());
-                                try {
-                                    contactDAO.updateById(contact1.getId(), contact1);
-                                    photoDAO.deleteById(obj.getId());
-                                } catch (GenericDAOException e) {
-                                    LOG.error("error while processing update contact or delete photo by id in editContactCommand");
-                                    e.printStackTrace();
-                                }
-                           // } else {
-                                //LOG.info("photo was not deleted on disk");
-                           // }
-                        });
-                    } catch (GenericDAOException e) {
-                        LOG.error("error while processing find photo by id in editContactCommand");
-                        e.printStackTrace();
-                    }
-                }
-            });
-        } catch (GenericDAOException e) {
-            LOG.error("error while processing find contact by id in editContactCommand");
-            e.printStackTrace();
-        }
-    }
-
-
-    private void updateAttachments(List<Attachment> attachmentsForUpdate, Long contact_id) {
-        try {
-            List<Attachment> attachments = attachmentDAO.findAllById(contact_id);
-            attachmentsForUpdate.forEach(obj -> {
-                try {
-                    if (attachments.contains(obj)) {
-                        if (FileUploadDocuments.renameDocument(attachmentDAO.findById(obj.getId()).get().getFileName(),
-                                obj.getFileName(), contact_id)) {
-                            attachmentDAO.updateById(obj.getId(), obj);
-                            attachments.remove(obj);
-                        } else {
-                            LOG.info("the attachment was not updated");
-                        }
-                    }
-                } catch (GenericDAOException e) {
-                    LOG.error("error while processing update attachment by id in editContactCommand");
-                    e.printStackTrace();
-                }
-            });
-            attachments.forEach(object -> {
-                try {
-                    attachmentDAO.deleteById(object.getId());
-                    FileUploadDocuments.deleteDocument(object.getFileName(), false, contact_id);
-                } catch (GenericDAOException e) {
-                    LOG.error("error while processing delete attachment by id in editContactCommand");
-                    e.printStackTrace();
-                }
-            });
-        } catch (GenericDAOException e) {
-            LOG.error("error while processing find all attachments in EditContactCommand");
-            e.printStackTrace();
-        }
-    }
-
-    private void insertAttachments(List<Attachment> attachmentsForInsert, Long id) {
-        attachmentsForInsert.forEach(obj -> {
-            try {
-                obj.setContact_id(id);
-                attachmentDAO.insert(obj);
-            } catch (GenericDAOException e) {
-                LOG.error("error while processing insert attachment in EditContactCommand");
-                e.printStackTrace();
-            }
-        });
-    }
-
-    private void insertPhone(List<PhoneNumber> numbersForInsert) {
-        numbersForInsert.forEach(obj -> {
-            try {
-                phoneDAO.insert(obj);
-            } catch (GenericDAOException e) {
-                LOG.error("error while processing insert phone in editContactCommand");
-                e.printStackTrace();
-            }
-        });
-    }
-
-    public void updateContact(Contact contact, Address address) {
-        Long address_id = address.getId();
-        try {
-            if (address.getCountry().equals("") && address.getCity().equals("") && address.getStreetAddress().equals("")
-                    && address.getIndex().equals("")) {
-                contact.setAddress_id(null);
-                contactDAO.updateById(contact.getId(), contact);
-            } else {
-                if (address_id == 0) {
-                    Long addressID = addressDAO.insert(address);
-                    contact.setAddress_id(addressID);
-                } else {
-                    addressDAO.updateById(address_id, address);
-                    contact.setAddress_id(address_id);
-                }
-                contactDAO.updateById(contact.getId(), contact);
-            }
-        } catch (GenericDAOException e) {
-            LOG.error("error while processing update Contact in editContactCommand");
-            e.printStackTrace();
-        }
-
-    }
-
-    public void updatePhone(Long contact_id, List<PhoneNumber> phoneNumbersForUpdate) {
-        try {
-            List<PhoneNumber> numbers = phoneDAO.findAllById(contact_id);
-            phoneNumbersForUpdate.forEach(obj -> {
-                try {
-                    if (numbers.contains(obj)) {
-                        phoneDAO.updateById(obj.getId(), obj);
-                        numbers.remove(obj);
-                    }
-                } catch (GenericDAOException e) {
-                    LOG.error("error while processing update phone by id in editContactCommand");
-                    e.printStackTrace();
-                }
-            });
-            numbers.forEach(obj -> {
-                try {
-                    phoneDAO.deleteById(obj.getId());
-                } catch (GenericDAOException e) {
-                    LOG.error("error while processing update phone by id in editContactCommand");
-                    e.printStackTrace();
-                }
-            });
-        } catch (GenericDAOException e) {
-            LOG.error("error while processing find all phones by id in editContactCommand");
-            e.printStackTrace();
-        }
     }
 }

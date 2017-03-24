@@ -215,7 +215,7 @@
             <span class="close">Cancel</span>
             <div class="form-group">
                 <label id="labelFile">Choose file </label>
-                <input accept="application/msword, text/plain, application/pdf, application/xml, .docx" class="form-control"
+                <input accept="application/msword, text/plain, application/pdf, application/xml, .docx, image/*" class="form-control"
                        type="file" name="attachment-0" id="attachment0"/>
             </div>
             <div class="form-group" style="display:none;">

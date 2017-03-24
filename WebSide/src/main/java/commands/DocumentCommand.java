@@ -4,6 +4,8 @@ import utilities.FileUploadDocuments;
 
 import javax.servlet.ServletException;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class DocumentCommand extends FrontCommand{
 
@@ -22,8 +24,11 @@ public class DocumentCommand extends FrontCommand{
         if (bytes == null){
             bytes = "<h1>Unable to load content</h1>".getBytes();
         }
+        String MIMEType = Files.probeContentType(Paths.get(FileUploadDocuments.getFileDirectory(false) +
+                strings[0]));
+        if(MIMEType.equals("application/vnd.openxmlformats-officedocument.wordprocessingml.document"))
+            response.setContentType(MIMEType);
         response.getOutputStream().write(bytes);
-
     }
 
     @Override
