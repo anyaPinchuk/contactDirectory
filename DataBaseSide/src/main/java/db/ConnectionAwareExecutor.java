@@ -14,7 +14,7 @@ public class ConnectionAwareExecutor {
 
     protected static final Logger LOG = Logger.getLogger(ConnectionAwareExecutor.class);
 
-    private Connection connect() throws GenericDAOException {
+    public Connection connect() throws GenericDAOException {
         try {
             Properties properties = ManagerDB.getEnvironmentProperties();
             String host = properties.getProperty("host");
@@ -37,25 +37,34 @@ public class ConnectionAwareExecutor {
     }
 
 
-    public <T> T submit(ConnectionTask<T> task) throws GenericDAOException {
-        try(Connection connection = connect()){
-            return task.execute(connection);
-        } catch (SQLException e) {
-            throw new GenericDAOException(e);
-        } finally {
-            LOG.info("dao Disconnected");
-        }
-    }
-
-    public void closeResultSet(ResultSet resultSet){
-        try{
-            if (resultSet!=null){
+    public void closeResultSet(ResultSet resultSet) {
+        try {
+            if (resultSet != null) {
                 resultSet.close();
             }
-        }
-        catch (SQLException e){
+        } catch (SQLException e) {
             LOG.error(e.getMessage());
         }
     }
+
+    public void closeConnection(Connection connection) {
+        try {
+            if (connection != null) {
+                connection.close();
+            }
+        } catch (SQLException e) {
+            LOG.error(e.getMessage());
+        }
+    }
+
+    public void rollbackConnection(Connection connection) {
+        try {
+            if (connection != null)
+                connection.rollback();
+        } catch (SQLException e) {
+            LOG.error(e.getMessage());
+        }
+    }
+
 
 }

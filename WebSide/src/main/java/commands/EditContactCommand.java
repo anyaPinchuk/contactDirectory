@@ -239,7 +239,7 @@ public class EditContactCommand extends FrontCommand {
                 }
             });
         }
-        phoneService.insertPhone(numbersForInsert, contact.getId());
+        phoneService.insertPhones(numbersForInsert, contact.getId());
         attachmentService.insertAttachments(attachmentsForInsert, contact.getId());
         contactService.updateContact(contact, address);
         response.sendRedirect("Contacts");

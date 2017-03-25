@@ -4,6 +4,8 @@ import db.ConnectionAwareExecutor;
 import exceptions.GenericDAOException;
 import org.apache.log4j.Logger;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,6 +14,7 @@ public abstract class AbstractDAO<T> {
 
     protected static final Logger LOG = Logger.getLogger("dao");
     protected ConnectionAwareExecutor connectionAwareExecutor = new ConnectionAwareExecutor();
+    protected Connection connection;
 
     public abstract List<T> findAll() throws GenericDAOException;
 
@@ -27,4 +30,11 @@ public abstract class AbstractDAO<T> {
 
     public abstract int deleteById(Long id) throws GenericDAOException;
 
+    public Connection getConnection() {
+        return connection;
+    }
+
+    public void setConnection(Connection connection) {
+        this.connection = connection;
+    }
 }

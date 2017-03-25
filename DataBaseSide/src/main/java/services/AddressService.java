@@ -5,17 +5,19 @@ import entities.Address;
 import exceptions.GenericDAOException;
 import org.apache.log4j.Logger;
 
-public class AddressService {
+import java.sql.Connection;
+import java.sql.SQLException;
+
+public class AddressService implements ServiceEntity{
     private AddressDAO addressDAO = new AddressDAO();
-    private static final Logger LOG = Logger.getLogger(ContactService.class);
+    private static final Logger LOG = Logger.getLogger(AddressService.class);
 
     public Address findById(Long id){
-        try {
-            return addressDAO.findById(id)
-                    .orElseThrow(()->new GenericDAOException("address was not found"));
-        } catch (GenericDAOException e) {
-            LOG.error("error while processng get address by id in AddressService");
-            e.printStackTrace();
+        try(Connection connection = connectionAwareExecutor.connect())  {
+            addressDAO.setConnection(connection);
+            return addressDAO.findById(id).get();
+        } catch (GenericDAOException | SQLException e) {
+            LOG.error("error while processing get address by id in AddressService");
         }
         return null;
     }
@@ -29,10 +31,18 @@ public class AddressService {
     }
 
     public void deleteById(Long address_id) {
+        Connection connection = null;
         try {
+            connection = connectionAwareExecutor.connect();
+            connection.setAutoCommit(false);
+            addressDAO.setConnection(connection);
             addressDAO.deleteById(address_id);
-        } catch (GenericDAOException e) {
-            e.printStackTrace();
+            connection.commit();
+        } catch (GenericDAOException | SQLException e) {
+            LOG.error("error while processing delete address by id in AddressService");
+            connectionAwareExecutor.rollbackConnection(connection);
+        } finally {
+            connectionAwareExecutor.closeConnection(connection);
         }
     }
 }

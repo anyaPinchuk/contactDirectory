@@ -128,7 +128,7 @@ public class AddContactCommand extends FrontCommand {
             AttachmentService attachmentService = new AttachmentService();
             PhoneService phoneService = new PhoneService();
             Long contactId = contactService.insertContact(contact, address);
-            phoneService.insertPhone(numbersForInsert, contactId);
+            phoneService.insertPhones(numbersForInsert, contactId);
 
             if (documents.size() != 0) {
                 documents.forEach(obj -> {
@@ -140,7 +140,7 @@ public class AddContactCommand extends FrontCommand {
 
             attachmentService.insertAttachments(attachments, contactId);
             response.sendRedirect("Contacts");
-        } catch (FileUploadException | GenericDAOException e) {
+        } catch (FileUploadException e) {
             LOG.error(e.getMessage());
             e.printStackTrace();
         }

@@ -27,7 +27,6 @@ public class AddressDAO extends AbstractDAO<Address> {
 
     @Override
     public Optional<? extends Address> findById(Long id) throws GenericDAOException {
-        return connectionAwareExecutor.submit(connection -> {
             LOG.info("findById Address starting");
             ResultSet resultSet = null;
             try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM anya_pinchuk.address WHERE id = ? LIMIT 1")) {
@@ -42,7 +41,6 @@ public class AddressDAO extends AbstractDAO<Address> {
                 connectionAwareExecutor.closeResultSet(resultSet);
             }
             return Optional.empty();
-        });
     }
 
     private Optional<Address> buildEntityFromResult(ResultSet resultSet) throws SQLException {
@@ -62,7 +60,6 @@ public class AddressDAO extends AbstractDAO<Address> {
     @Override
     public int updateById(Long id, Address entity) throws GenericDAOException {
         if (entity == null) return 0;
-        return connectionAwareExecutor.submit(connection -> {
             try (PreparedStatement statement = connection.prepareStatement("UPDATE anya_pinchuk.address SET country = ?, " +
                     "city = ?, street_address = ?, `index` = ? WHERE id = ?")) {
                 LOG.info("updateById Address starting");
@@ -76,13 +73,11 @@ public class AddressDAO extends AbstractDAO<Address> {
                 LOG.error("Address wasn't updated", e);
                 throw new GenericDAOException(e);
             }
-        });
     }
 
     @Override
     public Long insert(Address entity) throws GenericDAOException {
         if (entity == null) return 0L;
-        return connectionAwareExecutor.submit(connection -> {
             try (PreparedStatement statement = connection.prepareStatement("INSERT INTO anya_pinchuk.address (country, city, street_address," +
                     " `index`) VALUES (?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS)) {
                 LOG.info("insert Address starting");
@@ -105,12 +100,10 @@ public class AddressDAO extends AbstractDAO<Address> {
                     throw new UniqueDAOException(e);
                 else throw new GenericDAOException(e);
             }
-        });
     }
 
     @Override
     public int deleteById(Long id) throws GenericDAOException {
-        return connectionAwareExecutor.submit(connection -> {
             try (PreparedStatement statement = connection.prepareStatement("DELETE FROM anya_pinchuk.address WHERE id = ?")) {
                 LOG.info("deleteById Address starting");
                 statement.setLong(1, id);
@@ -119,6 +112,5 @@ public class AddressDAO extends AbstractDAO<Address> {
                 LOG.error("Address wasn't deleted", e);
                 throw new GenericDAOException(e);
             }
-        });
     }
 }
