@@ -27,29 +27,35 @@
         <button id="deleteContactBtn" class="btn btn-primary">Delete chosen contacts</button>
     </div>
     <form method="post" action="deleteContact" name="deleteContact">
-    <table class="table-bordered table">
-        <tbody>
-        <tr>
-            <th></th>
-            <th>FIO</th>
-            <th>Date of Birth</th>
-            <th>Address</th>
-            <th>Company</th>
-        </tr>
-        <c:forEach var="contact" items="${requestScope.contactList}">
+        <table class="table-bordered table">
+            <tbody>
             <tr>
-                <td><input value="${contact.id}" type="checkbox" name="chosenContacts"/></td>
-                <td><a href="editContact?id=${contact.id}" id="editAccountLink">
-                    <c:out value="${contact.surname} ${contact.name} ${contact.thirdName}"/></a></td>
-                <td><fmt:formatDate value="${contact.dateOfBirth}" pattern="dd-MM-yyyy"/></td>
-                <td><c:out value="${contact.address.country} ${contact.address.city} ${contact.address.streetAddress}
-             ${contact.address.index}"/>
-                </td>
-                <td><c:out value="${contact.job}"/></td>
+                <th></th>
+                <th>FIO</th>
+                <th>Date of Birth</th>
+                <th>Address</th>
+                <th>Company</th>
             </tr>
-        </c:forEach>
-        </tbody>
-    </table>
+            <c:forEach var="contact" items="${requestScope.contactList}">
+                <tr>
+                    <td><input value="${contact.id}" type="checkbox" name="chosenContacts"/></td>
+                    <td><a href="editContact?id=${contact.id}" id="editAccountLink">
+                        <c:out value="${contact.surname} ${contact.name} ${contact.thirdName}"/></a></td>
+                    <td><fmt:formatDate value="${contact.dateOfBirth}" pattern="dd-MM-yyyy"/></td>
+                    <td><c:out
+                            value="${contact.address.country} ${contact.address.city} ${contact.address.streetAddress}
+             ${contact.address.index}"/>
+                    </td>
+                    <td><c:out value="${contact.job}"/></td>
+                </tr>
+            </c:forEach>
+            </tbody>
+        </table>
+        <ul class="pagination">
+            <c:forEach var="page" items="${requestScope.pageList}">
+                <li><a href="contacts?page=${page}">${page}</a></li>
+            </c:forEach>
+        </ul>
     </form>
     <script src="${pageContext.request.contextPath}/web-resources/scripts/index.js">//hhh</script>
     </body>

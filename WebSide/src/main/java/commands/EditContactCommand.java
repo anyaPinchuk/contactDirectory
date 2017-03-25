@@ -53,12 +53,15 @@ public class EditContactCommand extends FrontCommand {
         Long id = Long.valueOf(request.getParameter("id"));
         Long address_id;
         try {
-            Contact contact = contactDAO.findById(id).get();
+            Contact contact = contactDAO.findById(id).orElseThrow(() -> new GenericDAOException("contact wasn't found"));
             address_id = contact.getAddress_id();
-            contactDTO = contactConverter.toDTO(Optional.of(contact)).get();
+            contactDTO = contactConverter.toDTO(Optional.of(contact)).orElseThrow(() ->
+                    new GenericDAOException("contact wasn't converted"));
             if (address_id != 0) {
-                Address address = addressDAO.findById(address_id).get();
-                contactDTO.setAddress(addressConverter.toDTO(Optional.of(address)).get());
+                Address address = addressDAO.findById(address_id).orElseThrow(() ->
+                        new GenericDAOException("contact wasn't found"));
+                contactDTO.setAddress(addressConverter.toDTO(Optional.of(address)).orElseThrow(() ->
+                        new GenericDAOException("contact wasn't found")));
             }
 
             ///////////////////////////////////////////////////////////////////////

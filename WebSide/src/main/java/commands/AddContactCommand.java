@@ -1,9 +1,5 @@
 package commands;
 
-import converters.AddressConverter;
-import converters.ContactConverter;
-import dto.AttachmentDTO;
-import dto.PhoneDTO;
 import entities.*;
 import exceptions.GenericDAOException;
 import org.apache.commons.fileupload.FileItem;
@@ -16,11 +12,6 @@ import utilities.FileUploadDocuments;
 import javax.servlet.ServletException;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class AddContactCommand extends FrontCommand {

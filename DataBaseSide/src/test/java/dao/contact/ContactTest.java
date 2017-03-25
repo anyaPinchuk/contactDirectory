@@ -63,10 +63,12 @@ public class ContactTest {
 //    @Test
 //    public void findAll(){
 //        ContactDAO contactDAO = new ContactDAO();
-//        List<Contact> contacts;
+//        //List<Contact> contacts;
 //        try {
-//            contacts = contactDAO.findAll();
-//            System.out.println(contacts);
+//           // contacts = contactDAO.findByParts(3, 3);
+//            int value = contactDAO.getCountRows();
+//            //System.out.println(contacts);
+//            System.out.println(value);
 //        }
 //        catch (GenericDAOException e){
 //            new MessageError(e.getMessage(), e);

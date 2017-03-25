@@ -9,6 +9,8 @@ import entities.Address;
 import entities.Contact;
 import exceptions.GenericDAOException;
 import exceptions.MessageError;
+import services.AddressService;
+import services.ContactService;
 
 import javax.servlet.ServletException;
 import java.io.IOException;
@@ -19,44 +21,49 @@ import java.util.Optional;
 public class ContactsCommand extends FrontCommand {
     private ContactConverter contactConverter;
     private AddressConverter addressConverter;
+    private ContactService contactService;
+    private AddressService addressService;
 
     public ContactsCommand() {
         contactConverter = new ContactConverter();
         addressConverter = new AddressConverter();
+        contactService = new ContactService();
+        addressService = new AddressService();
     }
 
     @Override
     public void processGet() throws ServletException, IOException {
+        int start = 0;
+        int count = 10;
+        int currentPage = 1;
+        String pageFromClient = request.getParameter("page");
+        if (pageFromClient != null && !pageFromClient.equals("1")) {
+            currentPage = Integer.valueOf(pageFromClient);
+            start += currentPage * count - count;
+        }
         List<Contact> contacts;
         List<ContactDTO> contactsDTO = new ArrayList<>();
-        LOG.info("get all contacts starting ");
-        try {
-            contacts = contactDAO.findAll();
-            contacts.forEach(contact ->{
-                if (contact.getAddress_id()!=0){
-                    try {
-                        Address address = addressDAO.findById(contact.getAddress_id())
-                                .orElseThrow(()->new GenericDAOException("address was not found"));
-                        ContactDTO contactDTO = contactConverter.toDTO(Optional.of(contact)).get();
-                        contactDTO.setAddress(addressConverter.toDTO(Optional.of(address)).get());
-                        contactsDTO.add(contactDTO);
-                    } catch (GenericDAOException e) {
-                        e.printStackTrace();
-                    }
-                }
-                else{
-                    ContactDTO contactDTO = contactConverter.toDTO(Optional.of(contact)).get();
-                    contactsDTO.add(contactDTO);
-                }
-            });
-
+        List<Integer> pageList = new ArrayList<>();
+        contacts = contactService.findByParts(start, count);
+        if (contacts.size() != 0) {
+            int countRows = contactService.getCountRows();
+            for (int i = 1; i <= countRows/count + 1; i++) {
+                pageList.add(i);
+            }
         }
-        catch (GenericDAOException e){
-            LOG.error("error while processing all contacts from ContactsCommand");
-            new MessageError(e.getMessage(), e);
-        }
-            request.setAttribute("contactList", contactsDTO);
-            forward("main");
+        contacts.forEach(contact -> {
+            ContactDTO contactDTO = contactConverter.toDTO(Optional.of(contact)).get();
+            if (contact.getAddress_id() != 0) {
+                Address address = addressService.findById(contact.getAddress_id());
+                contactDTO.setAddress(addressConverter.toDTO(Optional.of(address)).get());
+                contactsDTO.add(contactDTO);
+            } else {
+                contactsDTO.add(contactDTO);
+            }
+        });
+        request.setAttribute("pageList", pageList);
+        request.setAttribute("contactList", contactsDTO);
+        forward("contacts");
     }
 
     @Override
