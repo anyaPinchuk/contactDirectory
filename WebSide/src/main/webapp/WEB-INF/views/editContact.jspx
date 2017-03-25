@@ -50,14 +50,14 @@
                            placeholder="DD-MM-YYYY" name="dateOfBirth"/>
                 </div>
                 <div class="form-group">
-                    <label for="contactSex">Choose sex </label>
-                    <select class="form-control" id="contactSex" name="sex">
+                    <label for="contactGender">Choose gender </label>
+                    <select class="form-control" id="contactGender" name="gender">
                         <c:choose>
-                            <c:when test="${contact.sex == 'man'}">
+                            <c:when test="${contact.gender == 'man'}">
                                 <option value="man" selected="selected">Male</option>
                                 <option value="woman">Female</option>
                             </c:when>
-                            <c:when test="${contact.sex == 'woman'}">
+                            <c:when test="${contact.gender == 'woman'}">
                                 <option value="man">Male</option>
                                 <option selected="selected" value="woman">Female</option>
                             </c:when>
@@ -171,7 +171,7 @@
             </div>
         </div>
         <div id="myModalPhoto" class="modal-content">
-            <span class="close">Cancel</span>
+            <span class="close"><span class="glyphicon glyphicon-remove"> </span>Cancel</span>
             <div>
                 <label for="contactPhoto">Choose photo </label>
                 <input accept="image/gif, image/jpeg, image/png" class="form-control turnOFF" id="contactPhoto"

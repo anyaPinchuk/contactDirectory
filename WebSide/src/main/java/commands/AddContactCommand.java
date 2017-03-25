@@ -1,7 +1,6 @@
 package commands;
 
 import entities.*;
-import exceptions.GenericDAOException;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
@@ -65,8 +64,8 @@ public class AddContactCommand extends FrontCommand {
                                     contact.setDateOfBirth(java.sql.Date.valueOf(field));
                                 break;
                             }
-                            case "sex": {
-                                contact.setSex(field);
+                            case "gender": {
+                                contact.setGender(field);
                                 break;
                             }
                             case "citizenship": {

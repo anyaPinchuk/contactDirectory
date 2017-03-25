@@ -12,7 +12,7 @@ public class ContactConverter extends Converter<ContactDTO, Contact>{
         if(dto == null) return Optional.empty();
         Date date = new Date(dto.getDateOfBirth().getTime());
         return Optional.of(new Contact(dto.getId(),dto.getName(), dto.getSurname(), dto.getThirdName(),
-                date, dto.getSex(), dto.getCitizenship(), dto.getMaritalStatus(), dto.getWebSite(),
+                date, dto.getGender(), dto.getCitizenship(), dto.getMaritalStatus(), dto.getWebSite(),
                 dto.getEmail(), dto.getJob(), dto.getAddress().getId()));
     }
 
@@ -20,7 +20,7 @@ public class ContactConverter extends Converter<ContactDTO, Contact>{
     public Optional<ContactDTO> toDTO(Optional<? extends Contact> entity) {
         if (entity != null && entity.isPresent())
             return Optional.of(new ContactDTO(entity.get().getId(), entity.get().getName(), entity.get().getSurname(),
-                    entity.get().getThirdName(), entity.get().getDateOfBirth(), entity.get().getSex(),
+                    entity.get().getThirdName(), entity.get().getDateOfBirth(), entity.get().getGender(),
                     entity.get().getCitizenship(), entity.get().getMaritalStatus(), entity.get().getWebSite(),
                     entity.get().getEmail(), entity.get().getJob(), null));
         return Optional.empty();

@@ -30,6 +30,27 @@ public class ContactDAO extends AbstractDAO<Contact> {
             }
     }
 
+    public List<Contact> findByCriteria(Contact entity) throws GenericDAOException {
+        LOG.info("findAll Contact starting");
+        ResultSet resultSet = null;
+        List<Contact> contacts = new LinkedList<>();
+        StringBuilder builder = new StringBuilder("SELECT * FROM anya_pinchuk.contact where ");
+        builder.append("name = ?");
+        try (PreparedStatement statement = connection.prepareStatement(builder.toString())) {
+            statement.setString(1, entity.getName());
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                contacts.add(buildEntityFromResult(resultSet).get());
+            }
+            return contacts;
+        } catch (SQLException e) {
+            LOG.error("Contacts weren't found", e);
+            throw new GenericDAOException(e);
+        } finally {
+            connectionAwareExecutor.closeResultSet(resultSet);
+        }
+    }
+
     public List<Contact> findByParts(int startIndex, int totalCount) throws GenericDAOException {
             LOG.info("findByParts Contact starting");
             ResultSet resultSet = null;
@@ -158,7 +179,7 @@ public class ContactDAO extends AbstractDAO<Contact> {
         if (entity.getDateOfBirth() != null) {
             parameters.add(entity.getDateOfBirth());
         }
-        parameters.add(entity.getSex());
+        parameters.add(entity.getGender());
         parameters.add(entity.getCitizenship());
         parameters.add(entity.getMaritalStatus());
         parameters.add(entity.getWebSite());

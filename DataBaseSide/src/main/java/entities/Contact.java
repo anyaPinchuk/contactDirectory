@@ -1,15 +1,12 @@
 package entities;
 
-import java.sql.Blob;
-import java.util.Date;
-
 public class Contact {
     private Long id;
     private String name;
     private String surname;
     private String thirdName;
     private java.sql.Date dateOfBirth;
-    private String sex;
+    private String gender;
     private String citizenship;
     private String maritalStatus;
     private String webSite;
@@ -26,14 +23,14 @@ public class Contact {
         this.surname = surname;
     }
 
-    public Contact(Long id, String name, String surname, String thirdName, java.sql.Date dateOfBirth, String sex,
+    public Contact(Long id, String name, String surname, String thirdName, java.sql.Date dateOfBirth, String gender,
                    String citizenship, String maritalStatus, String webSite, String email, String job, Long address_id) {
         this.id = id;
         this.name = name;
         this.surname = surname;
         this.thirdName = thirdName;
         this.dateOfBirth = dateOfBirth;
-        this.sex = sex;
+        this.gender = gender;
         this.citizenship = citizenship;
         this.maritalStatus = maritalStatus;
         this.webSite = webSite;
@@ -42,7 +39,7 @@ public class Contact {
         this.address_id = address_id;
     }
 
-    public Contact(Long id, String name, String surname, String thirdName, java.sql.Date dateOfBirth, String sex,
+    public Contact(Long id, String name, String surname, String thirdName, java.sql.Date dateOfBirth, String gender,
                    String citizenship, String maritalStatus, String webSite, String email, String job, Long photo_id,
                    Long address_id) {
         this.id = id;
@@ -50,7 +47,7 @@ public class Contact {
         this.surname = surname;
         this.thirdName = thirdName;
         this.dateOfBirth = dateOfBirth;
-        this.sex = sex;
+        this.gender = gender;
         this.citizenship = citizenship;
         this.maritalStatus = maritalStatus;
         this.webSite = webSite;
@@ -100,12 +97,12 @@ public class Contact {
         return dateOfBirth;
     }
 
-    public String getSex() {
-        return sex;
+    public String getGender() {
+        return gender;
     }
 
-    public void setSex(String sex) {
-        this.sex = sex;
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 
     public String getCitizenship() {
@@ -172,7 +169,7 @@ public class Contact {
                 ", surname='" + surname + '\'' +
                 ", thirdName='" + thirdName + '\'' +
                 ", dateOfBirth=" + dateOfBirth +
-                ", sex='" + sex + '\'' +
+                ", gender='" + gender + '\'' +
                 ", citizenship='" + citizenship + '\'' +
                 ", maritalStatus='" + maritalStatus + '\'' +
                 ", webSite='" + webSite + '\'' +

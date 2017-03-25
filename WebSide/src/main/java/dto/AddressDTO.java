@@ -15,6 +15,9 @@ public class AddressDTO extends DTO{
         this.index = index;
     }
 
+    public AddressDTO() {
+    }
+
     public Long getId() {
         return id;
     }

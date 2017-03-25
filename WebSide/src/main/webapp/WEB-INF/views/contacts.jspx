@@ -20,7 +20,7 @@
                 <button class="btn btn-primary">Add contact</button>
             </a>
             <a href="searchContact">
-                <button class="btn btn-primary">Search contact</button>
+                <button class="btn btn-primary"><span class="glyphicon glyphicon-search"> </span>Search contact</button>
             </a>
             <a href="">
                 <button class="btn btn-primary">Send email</button>

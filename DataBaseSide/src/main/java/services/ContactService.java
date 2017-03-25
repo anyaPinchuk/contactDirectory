@@ -63,6 +63,19 @@ public class ContactService implements ServiceEntity{
         return count;
     }
 
+    public List<Contact> findByCriteria(Contact contact, Address address, String dateCriteria){
+        LOG.info("find contacts by criteria starting");
+        List<Contact> contacts = null;
+        try (Connection connection = connectionAwareExecutor.connect()) {
+            contactDAO.setConnection(connection);
+            contacts = contactDAO.findByCriteria(contact);
+        } catch (GenericDAOException | SQLException e) {
+            LOG.error("error while processing get contacts in ContactService");
+            e.printStackTrace();
+        }
+        return contacts;
+    }
+
     public void updateContact(Contact contact, Address address) {
         Long address_id = address.getId();
         Connection connection = null;

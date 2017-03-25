@@ -4,11 +4,13 @@ import entities.Attachment;
 import entities.Contact;
 import entities.Photo;
 import exceptions.GenericDAOException;
+import org.apache.log4j.Logger;
 import utilities.FileUploadDocuments;
 
 import java.util.List;
 
-public class UpdateEntityService extends EntityService {
+public class UpdateEntityService  {
+    private Logger LOG = Logger.getLogger(UpdateEntityService.class);
     private AttachmentService attachmentService = new AttachmentService();
 
     public void updateAttachments(List<Attachment> listForUpdate, Long contact_id) throws GenericDAOException {

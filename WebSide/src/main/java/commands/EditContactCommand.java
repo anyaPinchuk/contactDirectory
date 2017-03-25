@@ -143,8 +143,8 @@ public class EditContactCommand extends FrontCommand {
                                     contact.setDateOfBirth(java.sql.Date.valueOf(field));
                                 break;
                             }
-                            case "sex": {
-                                contact.setSex(field);
+                            case "gender": {
+                                contact.setGender(field);
                                 break;
                             }
                             case "citizenship": {

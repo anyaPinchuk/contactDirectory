@@ -39,8 +39,8 @@
                             name="dateOfBirth"/>
                 </div>
                 <div class="form-group">
-                    <label for="contactSex">Choose sex </label>
-                    <select class="form-control turnOFF" id="contactSex" name="sex">
+                    <label for="contactGender">Choose gender </label>
+                    <select class="form-control turnOFF" id="contactGender" name="gender">
                         <option value="man">Male</option>
                         <option value="woman">Female</option>
                     </select>
