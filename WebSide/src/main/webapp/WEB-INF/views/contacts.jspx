@@ -53,7 +53,7 @@
                 </tbody>
             </table>
         </form>
-        <div class="pagination">
+        <div>
             <c:forEach var="page" items="${requestScope.pageList}">
                 <a href="contacts?page=${page}">
                     <button class="btn btn-default">${page}</button>
