@@ -17,10 +17,6 @@ public abstract class FrontCommand {
     protected ServletContext context;
     protected HttpServletRequest request;
     protected HttpServletResponse response;
-    protected ContactDAO contactDAO = new ContactDAO();
-    protected AddressDAO addressDAO = new AddressDAO();
-    protected PhoneDAO phoneDAO = new PhoneDAO();
-    protected AttachmentDAO attachmentDAO = new AttachmentDAO();
     protected static final Logger LOG = Logger.getLogger("commands");
 
     public void init(

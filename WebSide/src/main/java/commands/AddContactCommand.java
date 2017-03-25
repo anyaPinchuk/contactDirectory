@@ -6,7 +6,9 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import services.InsertEntityService;
+import services.AttachmentService;
+import services.ContactService;
+import services.PhoneService;
 import utilities.FileUploadDocuments;
 
 import javax.servlet.ServletException;
@@ -122,19 +124,21 @@ public class AddContactCommand extends FrontCommand {
                     }
                 }
             }
-            InsertEntityService insertEntityService = new InsertEntityService();
-            insertEntityService.insertContact(contact, address);
-            insertEntityService.insertPhone(numbersForInsert);
+            ContactService contactService = new ContactService();
+            AttachmentService attachmentService = new AttachmentService();
+            PhoneService phoneService = new PhoneService();
+            Long contactId = contactService.insertContact(contact, address);
+            phoneService.insertPhone(numbersForInsert, contactId);
 
             if (documents.size() != 0) {
                 documents.forEach(obj -> {
                     if (!obj.getName().equals("")) {
-                        FileUploadDocuments.saveDocument(request, obj, insertEntityService.getContactId(), false);
+                        FileUploadDocuments.saveDocument(request, obj, contactId, false);
                     }
                 });
             }
 
-            insertEntityService.insertAttachment(attachments);
+            attachmentService.insertAttachments(attachments, contactId);
             response.sendRedirect("Contacts");
         } catch (FileUploadException | GenericDAOException e) {
             LOG.error(e.getMessage());

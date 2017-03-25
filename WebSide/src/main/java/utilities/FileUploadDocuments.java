@@ -4,6 +4,7 @@ import commands.ImageCommand;
 import dto.PhotoDTO;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 
@@ -133,4 +134,11 @@ public class FileUploadDocuments {
         return true;
     }
 
+    public static void deleteAttachmentDirectory(Long contact_id) {
+        try {
+            FileUtils.deleteDirectory(new File(getFileDirectory(false) + File.separator + "contact" + contact_id));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
