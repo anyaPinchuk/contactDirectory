@@ -15,5 +15,5 @@ searchContactBtn.addEventListener("click", function () {
     }
     if (flag) {
         form.submit();
-    }
+}
 });

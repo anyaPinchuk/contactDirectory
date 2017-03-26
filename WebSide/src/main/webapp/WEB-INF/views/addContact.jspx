@@ -164,6 +164,9 @@
         <button id="addAttachmentBtn" type="button" class="btn btn-success" onclick="addAttachment()">Add</button>
     </div>
     <script src="${pageContext.request.contextPath}/web-resources/scripts/addContact.js">//hi</script>
+    <script type="text/javascript" src="${pageContext.request.contextPath}/web-resources/bootstrap/js/bootstrap.min.js">
+        //hiii
+    </script>
     </body>
     </html>
 </jsp:root>

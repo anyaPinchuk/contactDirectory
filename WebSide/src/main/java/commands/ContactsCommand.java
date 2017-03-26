@@ -23,6 +23,8 @@ public class ContactsCommand extends FrontCommand {
     private AddressConverter addressConverter;
     private ContactService contactService;
     private AddressService addressService;
+    private List<ContactDTO> contactsDTO = new ArrayList<>();
+
 
     public ContactsCommand() {
         contactConverter = new ContactConverter();
@@ -42,12 +44,11 @@ public class ContactsCommand extends FrontCommand {
             start += currentPage * count - count;
         }
         List<Contact> contacts;
-        List<ContactDTO> contactsDTO = new ArrayList<>();
         List<Integer> pageList = new ArrayList<>();
         contacts = contactService.findByParts(start, count);
         if (contacts.size() != 0) {
             int countRows = contactService.getCountRows();
-            for (int i = 1; i <= countRows/count + 1; i++) {
+            for (int i = 1; i <= countRows / count + 1; i++) {
                 pageList.add(i);
             }
         }
@@ -65,6 +66,11 @@ public class ContactsCommand extends FrontCommand {
         request.setAttribute("contactList", contactsDTO);
         forward("contacts");
     }
+
+    public void redirectWithContacts(List<ContactDTO> contactsDTO){
+
+    }
+
 
     @Override
     public void processPost() throws ServletException, IOException {

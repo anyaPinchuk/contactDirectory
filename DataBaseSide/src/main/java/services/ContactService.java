@@ -68,7 +68,7 @@ public class ContactService implements ServiceEntity{
         List<Contact> contacts = null;
         try (Connection connection = connectionAwareExecutor.connect()) {
             contactDAO.setConnection(connection);
-            contacts = contactDAO.findByCriteria(contact);
+            contacts = contactDAO.findByCriteria(contact, address, dateCriteria);
         } catch (GenericDAOException | SQLException e) {
             LOG.error("error while processing get contacts in ContactService");
             e.printStackTrace();
@@ -111,6 +111,7 @@ public class ContactService implements ServiceEntity{
             connection = connectionAwareExecutor.connect();
             connection.setAutoCommit(false);
             contactDAO.setConnection(connection);
+            addressDAO.setConnection(connection);
             if (address.getCountry().equals("") && address.getCity().equals("") && address.getStreetAddress().equals("")
                     && address.getIndex().equals("")) {
                 id = contactDAO.insert(contact);

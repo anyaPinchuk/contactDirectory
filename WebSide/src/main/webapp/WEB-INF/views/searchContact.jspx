@@ -1,7 +1,9 @@
 <jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" xmlns="http://www.w3.org/1999/xhtml" version="2.0">
     <jsp:directive.page contentType="text/html" pageEncoding="UTF-8" />
     <html>
-    <head><title>Search</title></head>
+    <head><title>Search</title>
+        <link href="${pageContext.request.contextPath}/web-resources/bootstrap/css/bootstrap.css" rel="stylesheet"
+              type="text/css" media="screen"/></head>
     <body>
     <form name="searchForm" action="searchContact" method="post">
         <div class="form-group">
@@ -56,6 +58,9 @@
         <button type="button" id="searchContactBtn">Search</button>
     </form>
     <script src="${pageContext.request.contextPath}/web-resources/scripts/search.js">//hhh</script>
+    <script type="text/javascript" src="${pageContext.request.contextPath}/web-resources/bootstrap/js/bootstrap.min.js">
+        //hiii
+    </script>
     </body>
     </html>
 </jsp:root>

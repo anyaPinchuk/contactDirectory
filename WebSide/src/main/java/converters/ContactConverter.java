@@ -16,6 +16,16 @@ public class ContactConverter extends Converter<ContactDTO, Contact>{
                 dto.getEmail(), dto.getJob(), dto.getAddress().getId()));
     }
 
+    public Optional<Contact> toEntitySearch(ContactDTO dto){
+        if(dto == null) return Optional.empty();
+        Date date = null;
+        if (dto.getDateOfBirth()!=null){
+             date = new Date(dto.getDateOfBirth().getTime());
+        }
+        return Optional.of(new Contact(null, dto.getName(), dto.getSurname(), dto.getThirdName(),
+                date, dto.getGender(), dto.getCitizenship(), dto.getMaritalStatus(), null,
+                null, null, null));
+    }
     @Override
     public Optional<ContactDTO> toDTO(Optional<? extends Contact> entity) {
         if (entity != null && entity.isPresent())

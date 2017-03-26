@@ -13,7 +13,7 @@
     <h1>Contact Directory</h1>
     <div>
         <div class="vertical-group">
-            <a onclick="showContact" href="showContact?id=">
+            <a id="showContactBtn" href="javascript: showContact();" >
                 <button class="btn btn-primary">Show contact</button>
             </a>
             <a href="addContact">
@@ -62,6 +62,9 @@
         </div>
     </div>
     <script src="${pageContext.request.contextPath}/web-resources/scripts/index.js">//hhh</script>
+    <script type="text/javascript" src="${pageContext.request.contextPath}/web-resources/bootstrap/js/bootstrap.min.js">
+        //hiii
+    </script>
     </body>
     </html>
 </jsp:root>

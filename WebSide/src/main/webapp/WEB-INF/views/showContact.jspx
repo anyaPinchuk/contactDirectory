@@ -112,6 +112,9 @@
     <script type="text/javascript" src="${pageContext.request.contextPath}/web-resources/scripts/showContact.js">
         //hiii
     </script>
+    <script type="text/javascript" src="${pageContext.request.contextPath}/web-resources/bootstrap/js/bootstrap.min.js">
+        //hiii
+    </script>
     </body>
 
     </html>

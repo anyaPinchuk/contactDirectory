@@ -96,14 +96,12 @@ public class FileUploadDocuments {
     }
 
     public static boolean saveDocument(HttpServletRequest request, FileItem item, Long contact_id, boolean isImage) {
-
         if (!ServletFileUpload.isMultipartContent(request)) {
             LOG.error("Error: Form must has enctype=multipart/form-data.");
             return false;
         }
         String uploadPath = getFileDirectory(isImage);
         File uploadDir;
-
         if (uploadPath != null) {
             if (isImage) {
                 uploadDir = new File(uploadPath);
@@ -112,7 +110,6 @@ public class FileUploadDocuments {
                 uploadDir = new File(uploadPath);
 
             }
-
         } else {
             LOG.error("Directory property is null");
             return false;

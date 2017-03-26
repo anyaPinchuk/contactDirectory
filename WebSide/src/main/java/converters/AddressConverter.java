@@ -21,4 +21,10 @@ public class AddressConverter extends Converter<AddressDTO, Address>{
                     entity.get().getStreetAddress(), entity.get().getIndex()));
         return Optional.empty();
     }
+
+    public Optional<Address> toEntitySearch(AddressDTO dto) {
+        if(dto == null) return Optional.empty();
+        return Optional.of(new Address(null, dto.getCountry(), dto.getCity(), dto.getStreetAddress(),
+                dto.getIndex()));
+    }
 }

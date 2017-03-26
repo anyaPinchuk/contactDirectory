@@ -1,15 +1,28 @@
+var link = document.getElementById("showContactBtn");
+// link.addEventListener("click", function (link) {
+//     var inputs = document.getElementsByTagName("input");
+//     var id;
+//     for (var i = 0; i < inputs.length; i++) {
+//         if (inputs[i].checked) {
+//             id = inputs[i].value;
+//             break;
+//         }
+//     }
+//     link.href = "showContact?id=" + id;
+//     //link.submit();
+// });
 function showContact() {
-    var inputs = document.getElementsByTagName("input");
-    var id;
-    var link = document.getElementsByTagName("a")[0];
-    for (var i = 0; i < inputs.length; i++) {
-        if (inputs[i].checked) {
-            id = inputs[i].value;
-
-            break;
+        var inputs = document.getElementsByTagName("input");
+        var id = null;
+        for (var i = 0; i < inputs.length; i++) {
+            if (inputs[i].checked) {
+                id = inputs[i].value;
+                break;
+            }
         }
-    }
-    link.href += id;
+        if (id!=null){
+            document.location.href = "showContact?id=" + id;
+        }
 }
 var deleteContactBtn = document.getElementById("deleteContactBtn");
 deleteContactBtn.addEventListener("click", deleteContacts);
