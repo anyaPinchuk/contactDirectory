@@ -13,7 +13,7 @@
     <h1>Contact Directory</h1>
     <div>
         <div class="vertical-group">
-            <a id="showContactBtn" href="javascript: showContact();" >
+            <a id="showContactBtn" href="javascript: showContact();">
                 <button class="btn btn-primary">Show contact</button>
             </a>
             <a href="addContact">
@@ -22,9 +22,7 @@
             <a href="searchContact">
                 <button class="btn btn-primary"><span class="glyphicon glyphicon-search"> </span>Search contact</button>
             </a>
-            <a href="">
-                <button class="btn btn-primary">Send email</button>
-            </a>
+            <button id="sendMailBtn" class="btn btn-primary">Send email</button>
             <button id="deleteContactBtn" class="btn btn-primary">Delete chosen contacts</button>
         </div>
         <form method="post" action="deleteContact" name="deleteContact">

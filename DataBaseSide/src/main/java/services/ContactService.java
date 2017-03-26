@@ -10,6 +10,8 @@ import org.apache.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ContactService implements ServiceEntity{
@@ -74,6 +76,19 @@ public class ContactService implements ServiceEntity{
             e.printStackTrace();
         }
         return contacts;
+    }
+
+    public List<String> findEmailsById(Long[] ids){
+        List<String> emails = new ArrayList<>();
+        try (Connection connection = connectionAwareExecutor.connect()) {
+            contactDAO.setConnection(connection);
+            for (Long id: ids) {
+                emails.add(contactDAO.findEmailById(id));
+            }
+        } catch (GenericDAOException | SQLException e) {
+            LOG.error("error while processing get contact by id in ContactService");
+        }
+        return emails;
     }
 
     public void updateContact(Contact contact, Address address) {

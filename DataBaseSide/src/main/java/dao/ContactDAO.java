@@ -31,6 +31,25 @@ public class ContactDAO extends AbstractDAO<Contact> {
         }
     }
 
+    public String findEmailById(Long id) throws GenericDAOException {
+        LOG.info("findEmail by id starting");
+        ResultSet resultSet = null;
+        String email = "";
+        try (PreparedStatement statement = connection.prepareStatement("SELECT email FROM anya_pinchuk.contact WHERE id = ?")) {
+            statement.setLong(1, id);
+            resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                email = resultSet.getString("email");
+            }
+            return email;
+        } catch (SQLException e) {
+            LOG.error("Contact wasn't found", e);
+            throw new GenericDAOException(e);
+        } finally {
+            connectionAwareExecutor.closeResultSet(resultSet);
+        }
+    }
+
     public List<Contact> findByCriteria(Contact entity, Address address, String dateCriteria) throws GenericDAOException {
         LOG.info("findAll Contact starting");
         ResultSet resultSet = null;
@@ -113,7 +132,7 @@ public class ContactDAO extends AbstractDAO<Contact> {
                 statement.setDate(i, (Date) arg);
                 i++;
             } else if (arg instanceof String) {
-                if (!arg.equals("")){
+                if (!arg.equals("")) {
                     statement.setString(i, (String) arg);
                     i++;
                 }

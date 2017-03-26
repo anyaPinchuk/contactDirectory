@@ -1,9 +1,12 @@
 <jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" xmlns="http://www.w3.org/1999/xhtml" version="2.0">
-    <jsp:directive.page contentType="text/html" pageEncoding="UTF-8" />
+    <jsp:directive.page contentType="text/html" pageEncoding="UTF-8"/>
     <html>
     <head><title>Search</title>
         <link href="${pageContext.request.contextPath}/web-resources/bootstrap/css/bootstrap.css" rel="stylesheet"
-              type="text/css" media="screen"/></head>
+              type="text/css" media="screen"/>
+        <link href="${pageContext.request.contextPath}/web-resources/bootstrap/css/bootstrap.css" rel="stylesheet"
+              type="text/css" media="screen"/>
+    </head>
     <body>
     <form name="searchForm" action="searchContact" method="post">
         <div class="form-group">
@@ -21,7 +24,8 @@
         <div class="form-group">
             <label>Date of birth: </label>
             <input class="form-control" type="text" placeholder="DD-MM-YYYY" name="dateOfBirth"/>
-            <label class="radio-inline"><input checked="checked" type="radio" name="dateCriteria"  value="after"/>After</label>
+            <label class="radio-inline"><input checked="checked" type="radio" name="dateCriteria"
+                                               value="after"/>After</label>
             <label class="radio-inline"><input type="radio" name="dateCriteria" value="before"/>Begin</label>
         </div>
         <div class="form-group">
