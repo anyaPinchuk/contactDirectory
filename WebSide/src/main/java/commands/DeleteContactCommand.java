@@ -1,12 +1,6 @@
 package commands;
 
-import dao.PhoneDAO;
-import dao.PhotoDAO;
-import entities.Address;
-import entities.Attachment;
 import entities.Contact;
-import entities.PhoneNumber;
-import exceptions.GenericDAOException;
 import services.AddressService;
 import services.ContactService;
 import services.PhotoService;
@@ -14,9 +8,7 @@ import utilities.FileUploadDocuments;
 
 import javax.servlet.ServletException;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class DeleteContactCommand extends FrontCommand {
     private ContactService contactService = new ContactService();
@@ -43,7 +35,7 @@ public class DeleteContactCommand extends FrontCommand {
                         FileUploadDocuments.deleteDocument(photoService.findById(contact.getPhoto_id()).getName(),
                                 true, null);
                     }
-                    FileUploadDocuments.deleteAttachmentDirectory(contact.getId());
+                    FileUploadDocuments.deleteDirectory(contact.getId());
             });
         }
         response.sendRedirect("Contacts");

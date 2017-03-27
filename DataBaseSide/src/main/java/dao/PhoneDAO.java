@@ -19,7 +19,7 @@ public class PhoneDAO extends AbstractDAO<PhoneNumber>{
             LOG.info("findAll Phones starting");
             ResultSet resultSet = null;
             List<PhoneNumber> numbers = new LinkedList<>();
-            try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM anya_pinchuk.phone_number" +
+            try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM phone_number" +
                     " WHERE contact_id = ?")) {
                 statement.setLong(1, id_contact);
                 resultSet = statement.executeQuery();
@@ -45,7 +45,7 @@ public class PhoneDAO extends AbstractDAO<PhoneNumber>{
     public Optional<? extends PhoneNumber> findById(Long id) throws GenericDAOException {
             LOG.info("findById Phone starting");
             ResultSet resultSet = null;
-            try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM anya_pinchuk.phone_number WHERE id = ? LIMIT 1")) {
+            try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM phone_number WHERE id = ? LIMIT 1")) {
                 statement.setLong(1, id);
                 resultSet = statement.executeQuery();
                 if (resultSet.next())
@@ -78,7 +78,7 @@ public class PhoneDAO extends AbstractDAO<PhoneNumber>{
     @Override
     public int updateById(Long id, PhoneNumber entity) throws GenericDAOException {
         if (entity == null) return 0;
-            try (PreparedStatement statement = connection.prepareStatement("UPDATE anya_pinchuk.phone_number SET country_code = ?, " +
+            try (PreparedStatement statement = connection.prepareStatement("UPDATE phone_number SET country_code = ?, " +
                     "operator_code = ?, number = ?, phone_type = ?, contact_id = ? WHERE id = ?")) {
                 LOG.info("updateById Phone starting");
                 statement.setString(1, entity.getCountryCode());
@@ -97,7 +97,7 @@ public class PhoneDAO extends AbstractDAO<PhoneNumber>{
     @Override
     public Long insert(PhoneNumber entity) throws GenericDAOException {
         if (entity == null) return 0L;
-            try (PreparedStatement statement = connection.prepareStatement("INSERT INTO anya_pinchuk.phone_number" +
+            try (PreparedStatement statement = connection.prepareStatement("INSERT INTO phone_number" +
                     " (country_code, operator_code, number, phone_type, contact_id) VALUES (?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS)){
                 LOG.info("insert PhoneNumber starting");
                 statement.setString(1, entity.getCountryCode());
@@ -124,7 +124,7 @@ public class PhoneDAO extends AbstractDAO<PhoneNumber>{
 
     @Override
     public int deleteById(Long id) throws GenericDAOException {
-            try (PreparedStatement statement = connection.prepareStatement("DELETE FROM anya_pinchuk.phone_number WHERE id = ?")){
+            try (PreparedStatement statement = connection.prepareStatement("DELETE FROM phone_number WHERE id = ?")){
                 LOG.info("deleteById Phone starting");
                 statement.setLong(1, id);
                 return statement.executeUpdate();

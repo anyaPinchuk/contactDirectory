@@ -91,22 +91,12 @@ public class ContactService implements ServiceEntity{
         return emails;
     }
 
-    public void updateContact(Contact contact, Address address) {
-        Long address_id = address.getId();
+    public void updateContact(Contact contact) {
         Connection connection = null;
         try {
             connection = connectionAwareExecutor.connect();
             connection.setAutoCommit(false);
             contactDAO.setConnection(connection);
-            addressDAO.setConnection(connection);
-            if (address_id == null) {
-                if (!(address.getCountry().equals("") && address.getCity().equals("") && address.getStreetAddress().equals(""))) {
-                    address_id = addressDAO.insert(address);
-                }
-            } else {
-                addressDAO.updateById(address_id, address);
-            }
-            contact.setAddress_id(address_id);
             contactDAO.updateById(contact.getId(), contact);
             connection.commit();
         } catch (GenericDAOException | SQLException e) {
@@ -119,7 +109,7 @@ public class ContactService implements ServiceEntity{
 
     }
 
-    public Long insertContact(Contact contact, Address address) {
+    public Long insertContact(Contact contact) {
         Long id;
         Connection connection = null;
         try {
@@ -127,16 +117,7 @@ public class ContactService implements ServiceEntity{
             connection.setAutoCommit(false);
             contactDAO.setConnection(connection);
             addressDAO.setConnection(connection);
-            if (address.getCountry().equals("") && address.getCity().equals("") && address.getStreetAddress().equals("")
-                    && address.getIndex().equals("")) {
-                id = contactDAO.insert(contact);
-            } else {
-                Long address_id = addressDAO.insert(address);
-                if (address_id != 0) {
-                    contact.setAddress_id(address_id);
-                }
-                id = contactDAO.insertWithAddress(contact);
-            }
+            id = contactDAO.insert(contact);
             connection.commit();
             return id;
         } catch (GenericDAOException | SQLException e) {

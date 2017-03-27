@@ -29,7 +29,7 @@ public class PhotoDAO extends AbstractDAO<Photo>{
     public Optional<? extends Photo> findById(Long id) throws GenericDAOException {
             LOG.info("findById photo starting");
             ResultSet resultSet = null;
-            try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM anya_pinchuk.photo WHERE id = ? LIMIT 1")) {
+            try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM photo WHERE id = ? LIMIT 1")) {
                 statement.setLong(1, id);
                 resultSet = statement.executeQuery();
                 if (resultSet.next())
@@ -46,13 +46,14 @@ public class PhotoDAO extends AbstractDAO<Photo>{
     private Optional<Photo> buildEntityFromResult(ResultSet resultSet) throws SQLException {
         Long id = resultSet.getLong("id");
         String name = resultSet.getString("name");
-        return Optional.of(new Photo(id, name));
+        Long contactId = resultSet.getLong("contact_id");
+        return Optional.of(new Photo(id, name, contactId));
     }
 
     @Override
     public Optional<? extends Photo> findByField(Object field) throws GenericDAOException {
                 ResultSet resultSet = null;
-                try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM anya_pinchuk.photo WHERE name = ? LIMIT 1")) {
+                try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM photo WHERE name = ? LIMIT 1")) {
                     statement.setString(1, (String) field);
                     resultSet = statement.executeQuery();
                     if (resultSet.next())
@@ -69,7 +70,7 @@ public class PhotoDAO extends AbstractDAO<Photo>{
     @Override
     public int updateById(Long id, Photo entity) throws GenericDAOException {
         if (entity == null) return 0;
-            try (PreparedStatement statement = connection.prepareStatement("UPDATE anya_pinchuk.photo SET name = ? WHERE id = ?")) {
+            try (PreparedStatement statement = connection.prepareStatement("UPDATE photo SET name = ? WHERE id = ?")) {
                 LOG.info("updateById photo starting");
                 statement.setString(1, entity.getName());
                 statement.setLong(2, id);
@@ -83,10 +84,11 @@ public class PhotoDAO extends AbstractDAO<Photo>{
     @Override
     public Long insert(Photo entity) throws GenericDAOException {
         if (entity == null) return 0L;
-            try (PreparedStatement statement = connection.prepareStatement("INSERT INTO anya_pinchuk.photo (name) VALUES (?)",
+            try (PreparedStatement statement = connection.prepareStatement("INSERT INTO photo (name, contact_id) VALUES (?, ?)",
                     Statement.RETURN_GENERATED_KEYS)) {
                 LOG.info("insert Photo starting");
                 statement.setString(1, entity.getName());
+                statement.setLong(2, entity.getContactId());
                 int result = statement.executeUpdate();
                 if (result == 0) {
                     throw new SQLException("Creating photo failed, Photo wasn't added");
@@ -106,7 +108,7 @@ public class PhotoDAO extends AbstractDAO<Photo>{
 
     @Override
     public int deleteById(Long id) throws GenericDAOException {
-            try (PreparedStatement statement = connection.prepareStatement("DELETE FROM anya_pinchuk.photo WHERE id = ?")){
+            try (PreparedStatement statement = connection.prepareStatement("DELETE FROM photo WHERE id = ?")){
                 LOG.info("deleteById photo starting");
                 statement.setLong(1, id);
                 return statement.executeUpdate();

@@ -18,7 +18,7 @@ public class PhotoService implements ServiceEntity {
     public Photo findById(Long id) {
         try (Connection connection = connectionAwareExecutor.connect()) {
             photoDAO.setConnection(connection);
-            return photoDAO.findById(id).get();
+            return photoDAO.findById(id).isPresent() ? photoDAO.findById(id).get() : null;
         } catch (GenericDAOException | SQLException e) {
             LOG.error("error while processing get Photo by id in PhotoService");
         }
@@ -41,13 +41,13 @@ public class PhotoService implements ServiceEntity {
         }
     }
 
-    public Long insert(String fileName) {
+    public Long insert(String fileName, Long contactId) {
         Connection connection = null;
         try {
             connection = connectionAwareExecutor.connect();
             connection.setAutoCommit(false);
             photoDAO.setConnection(connection);
-            Long id = photoDAO.insert(new Photo(fileName));
+            Long id = photoDAO.insert(new Photo(fileName, contactId));
             connection.commit();
             return id;
         } catch (GenericDAOException | SQLException e) {

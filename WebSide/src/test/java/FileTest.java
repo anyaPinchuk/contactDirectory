@@ -4,9 +4,9 @@ import utilities.MailSender;
 
 public class FileTest {
 
-    @Test
-    public void testLoadProperties(){
-        MailSender.sendMail();
-    }
+//    @Test
+//    public void testLoadProperties(){
+//        MailSender.sendMail();
+//    }
 
 }

@@ -6,16 +6,18 @@ public class Address {
     private String city;
     private String streetAddress;
     private String index;
+    private Long contactId;
 
     public Address() {
     }
 
-    public Address(Long id, String country, String city, String streetAddress, String index) {
+    public Address(Long id, String country, String city, String streetAddress, String index, Long contactId) {
         this.id = id;
         this.country = country;
         this.city = city;
         this.streetAddress = streetAddress;
         this.index = index;
+        this.contactId = contactId;
     }
 
     public Long getId() {
@@ -56,5 +58,13 @@ public class Address {
 
     public void setIndex(String index) {
         this.index = index;
+    }
+
+    public Long getContactId() {
+        return contactId;
+    }
+
+    public void setContactId(Long contactId) {
+        this.contactId = contactId;
     }
 }

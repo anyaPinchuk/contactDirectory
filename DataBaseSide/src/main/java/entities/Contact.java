@@ -12,8 +12,6 @@ public class Contact {
     private String webSite;
     private String email;
     private String job;
-    private Long photo_id;
-    private Long address_id;
 
     public Contact() {
     }
@@ -24,7 +22,7 @@ public class Contact {
     }
 
     public Contact(Long id, String name, String surname, String thirdName, java.sql.Date dateOfBirth, String gender,
-                   String citizenship, String maritalStatus, String webSite, String email, String job, Long address_id) {
+                   String citizenship, String maritalStatus, String webSite, String email, String job) {
         this.id = id;
         this.name = name;
         this.surname = surname;
@@ -36,25 +34,6 @@ public class Contact {
         this.webSite = webSite;
         this.email = email;
         this.job = job;
-        this.address_id = address_id;
-    }
-
-    public Contact(Long id, String name, String surname, String thirdName, java.sql.Date dateOfBirth, String gender,
-                   String citizenship, String maritalStatus, String webSite, String email, String job, Long photo_id,
-                   Long address_id) {
-        this.id = id;
-        this.name = name;
-        this.surname = surname;
-        this.thirdName = thirdName;
-        this.dateOfBirth = dateOfBirth;
-        this.gender = gender;
-        this.citizenship = citizenship;
-        this.maritalStatus = maritalStatus;
-        this.webSite = webSite;
-        this.email = email;
-        this.job = job;
-        this.photo_id = photo_id;
-        this.address_id = address_id;
     }
 
     public Long getId() {
@@ -144,23 +123,6 @@ public class Contact {
     public void setJob(String job) {
         this.job = job;
     }
-
-    public Long getAddress_id() {
-        return address_id;
-    }
-
-    public void setAddress_id(Long address_id) {
-        this.address_id = address_id;
-    }
-
-    public Long getPhoto_id() {
-        return photo_id;
-    }
-
-    public void setPhoto_id(Long photo_id) {
-        this.photo_id = photo_id;
-    }
-
     @Override
     public String toString() {
         return "Contact{" +

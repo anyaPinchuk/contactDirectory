@@ -29,7 +29,7 @@ public class AddressDAO extends AbstractDAO<Address> {
     public Optional<? extends Address> findById(Long id) throws GenericDAOException {
             LOG.info("findById Address starting");
             ResultSet resultSet = null;
-            try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM anya_pinchuk.address WHERE id = ? LIMIT 1")) {
+            try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM address WHERE id = ? LIMIT 1")) {
                 statement.setLong(1, id);
                 resultSet = statement.executeQuery();
                 if (resultSet.next())
@@ -49,7 +49,8 @@ public class AddressDAO extends AbstractDAO<Address> {
         String city = resultSet.getString("city");
         String streetAddress = resultSet.getString("street_address");
         String index = resultSet.getString("index");
-        return Optional.of(new Address(id, country, city, streetAddress, index));
+        Long contactId = resultSet.getLong("contact_id");
+        return Optional.of(new Address(id, country, city, streetAddress, index, contactId));
     }
 
     @Override
@@ -60,7 +61,7 @@ public class AddressDAO extends AbstractDAO<Address> {
     @Override
     public int updateById(Long id, Address entity) throws GenericDAOException {
         if (entity == null) return 0;
-            try (PreparedStatement statement = connection.prepareStatement("UPDATE anya_pinchuk.address SET country = ?, " +
+            try (PreparedStatement statement = connection.prepareStatement("UPDATE address SET country = ?, " +
                     "city = ?, street_address = ?, `index` = ? WHERE id = ?")) {
                 LOG.info("updateById Address starting");
                 statement.setString(1, entity.getCountry());
@@ -78,13 +79,14 @@ public class AddressDAO extends AbstractDAO<Address> {
     @Override
     public Long insert(Address entity) throws GenericDAOException {
         if (entity == null) return 0L;
-            try (PreparedStatement statement = connection.prepareStatement("INSERT INTO anya_pinchuk.address (country, city, street_address," +
-                    " `index`) VALUES (?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS)) {
+            try (PreparedStatement statement = connection.prepareStatement("INSERT INTO address (country, city, street_address," +
+                    " `index`, contact_id) VALUES (?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS)) {
                 LOG.info("insert Address starting");
                 statement.setString(1, entity.getCountry());
                 statement.setString(2, entity.getCity());
                 statement.setString(3, entity.getStreetAddress());
                 statement.setString(4, entity.getIndex());
+                statement.setLong(5, entity.getContactId());
                 int result = statement.executeUpdate();
                 if (result == 0) {
                     throw new SQLException("Creating address failed, address wasn't added");
@@ -104,7 +106,7 @@ public class AddressDAO extends AbstractDAO<Address> {
 
     @Override
     public int deleteById(Long id) throws GenericDAOException {
-            try (PreparedStatement statement = connection.prepareStatement("DELETE FROM anya_pinchuk.address WHERE id = ?")) {
+            try (PreparedStatement statement = connection.prepareStatement("DELETE FROM address WHERE id = ?")) {
                 LOG.info("deleteById Address starting");
                 statement.setLong(1, id);
                 return statement.executeUpdate();

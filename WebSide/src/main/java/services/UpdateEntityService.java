@@ -9,7 +9,7 @@ import utilities.FileUploadDocuments;
 
 import java.util.List;
 
-public class UpdateEntityService  {
+public class UpdateEntityService {
     private Logger LOG = Logger.getLogger(UpdateEntityService.class);
     private AttachmentService attachmentService = new AttachmentService();
 
@@ -34,21 +34,18 @@ public class UpdateEntityService  {
     }
 
 
-    public Long updatePhoto(Contact contact, String fileName) throws GenericDAOException {
+    public Long updatePhoto(Long contact_id, String fileName) throws GenericDAOException {
         if (fileName == null) return null;
         PhotoService photoService = new PhotoService();
-        ContactService contactService = new ContactService();
-        Contact contact1 = contactService.findById(contact.getId());
-        if (contact1.getPhoto_id() != 0) {
-            Photo obj = photoService.findById(contact1.getPhoto_id());
+        Photo obj = photoService.findById(contact_id);
+        if (obj == null){
+            photoService.insert(fileName, contact_id);
+        } else {
             FileUploadDocuments.deleteDocument(obj.getName(), true, null);
             obj.setName(fileName);
             photoService.updatePhoto(obj.getId(), obj);
-        } else {
-            photoService.insert(fileName);
         }
         return null;
     }
-
 
 }
