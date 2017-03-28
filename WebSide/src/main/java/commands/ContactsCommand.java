@@ -54,23 +54,16 @@ public class ContactsCommand extends FrontCommand {
         }
         contacts.forEach(contact -> {
             ContactDTO contactDTO = contactConverter.toDTO(Optional.of(contact)).get();
-            if (contact.getAddress_id() != 0) {
-                Address address = addressService.findById(contact.getAddress_id());
+            Address address = addressService.findById(contact.getId());
+            if (address != null) {
                 contactDTO.setAddress(addressConverter.toDTO(Optional.of(address)).get());
-                contactsDTO.add(contactDTO);
-            } else {
-                contactsDTO.add(contactDTO);
             }
+            contactsDTO.add(contactDTO);
         });
         request.setAttribute("pageList", pageList);
         request.setAttribute("contactList", contactsDTO);
         forward("contacts");
     }
-
-    public void redirectWithContacts(List<ContactDTO> contactsDTO){
-
-    }
-
 
     @Override
     public void processPost() throws ServletException, IOException {

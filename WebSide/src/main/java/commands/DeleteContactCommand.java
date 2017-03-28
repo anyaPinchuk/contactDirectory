@@ -25,17 +25,10 @@ public class DeleteContactCommand extends FrontCommand {
         if (values != null) {
             Long[] ids = Arrays.stream(values).map(Long::valueOf).toArray(Long[]::new);
             Arrays.stream(ids).forEach((Long id) -> {
-                    Contact contact = contactService.findById(id);
-                    contactService.deleteById(id);
-                    if (contact.getAddress_id() != 0) {
-                        addressService.deleteById(contact.getAddress_id());
-                    }
-                    if (contact.getPhoto_id() != 0) {
-                        photoService.deleteById(contact.getPhoto_id());
-                        FileUploadDocuments.deleteDocument(photoService.findById(contact.getPhoto_id()).getName(),
-                                true, null);
-                    }
-                    FileUploadDocuments.deleteDirectory(contact.getId());
+                Contact contact = contactService.findById(id);
+                contactService.deleteById(id);
+                FileUploadDocuments.deleteDirectory(contact.getId(), false);
+                FileUploadDocuments.deleteDirectory(contact.getId(), true);
             });
         }
         response.sendRedirect("Contacts");

@@ -13,7 +13,7 @@ public class ContactConverter extends Converter<ContactDTO, Contact>{
         Date date = new Date(dto.getDateOfBirth().getTime());
         return Optional.of(new Contact(dto.getId(),dto.getName(), dto.getSurname(), dto.getThirdName(),
                 date, dto.getGender(), dto.getCitizenship(), dto.getMaritalStatus(), dto.getWebSite(),
-                dto.getEmail(), dto.getJob(), dto.getAddress().getId()));
+                dto.getEmail(), dto.getJob()));
     }
 
     public Optional<Contact> toEntitySearch(ContactDTO dto){
@@ -24,7 +24,7 @@ public class ContactConverter extends Converter<ContactDTO, Contact>{
         }
         return Optional.of(new Contact(null, dto.getName(), dto.getSurname(), dto.getThirdName(),
                 date, dto.getGender(), dto.getCitizenship(), dto.getMaritalStatus(), null,
-                null, null, null));
+                null, null));
     }
     @Override
     public Optional<ContactDTO> toDTO(Optional<? extends Contact> entity) {

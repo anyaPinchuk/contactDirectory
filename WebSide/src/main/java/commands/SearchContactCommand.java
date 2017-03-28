@@ -7,11 +7,17 @@ import services.SearchService;
 import javax.servlet.ServletException;
 import java.io.IOException;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 public class SearchContactCommand extends FrontCommand{
     @Override
     public void processGet() throws ServletException, IOException {
+        List<Integer> pageList = new ArrayList<>();
+        for (int i = 1; i < 5; i++) {
+            pageList.add(i);
+        }
+        request.setAttribute("pageList", pageList);
         forward("searchContact");
     }
 

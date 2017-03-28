@@ -50,30 +50,27 @@ public class EditContactCommand extends FrontCommand {
         String id_param = request.getParameter("id");
         if (id_param == null) return;
         Long id = Long.valueOf(id_param);
-        Long address_id;
         try {
             Contact contact = contactService.findById(id);
-            address_id = contact.getAddress_id();
-            contactDTO = contactConverter.toDTO(Optional.of(contact)).orElseThrow(() ->
-                    new GenericDAOException("contact wasn't converted"));
-            if (address_id != 0) {
-                Address address = addressService.findById(address_id);
+            if (contact != null) {
+                contactDTO = contactConverter.toDTO(Optional.of(contact)).orElseThrow(() ->
+                        new GenericDAOException("contact wasn't converted"));
+                Address address = addressService.findById(id);
                 contactDTO.setAddress(addressConverter.toDTO(Optional.of(address)).orElseThrow(() ->
                         new GenericDAOException("address wasn't converted")));
+                List<PhoneNumber> numberList = phoneService.findAllById(id);
+                List<PhoneDTO> phoneDTOList = numberList.size() != 0 ? numberList.stream().map(number ->
+                        phoneConverter.toDTO(Optional.of(number)).get()).collect(Collectors.toList()) : null;
+                contactDTO.setPhoneDTOList(phoneDTOList);
+                PhotoDTO photoDTO;
+                Photo photo = photoService.findById(id);
+                if (photo != null) {
+                    photoDTO = new PhotoDTO(photo.getId(), photo.getName());
+                    contactDTO.setPhoto(photoDTO);
+                }
+                List<Attachment> attachments = attachmentService.findAllById(contactDTO.getId());
+                request.setAttribute("attachments", attachments);
             }
-
-            List<PhoneNumber> numberList = phoneService.findAllById(contactDTO.getId());
-            List<PhoneDTO> phoneDTOList = numberList.size() != 0 ? numberList.stream().map(number ->
-                    phoneConverter.toDTO(Optional.of(number)).get()).collect(Collectors.toList()) : null;
-            contactDTO.setPhoneDTOList(phoneDTOList);
-            PhotoDTO photoDTO;
-            if (contact.getPhoto_id()!=0){
-                Photo photo = photoService.findById(contact.getPhoto_id());
-                photoDTO = new PhotoDTO(photo.getId(), photo.getName());
-                contactDTO.setPhoto(photoDTO);
-            }
-            List<Attachment> attachments = attachmentService.findAllById(contactDTO.getId());
-            request.setAttribute("attachments", attachments);
         } catch (GenericDAOException e) {
             LOG.error("error while processing find contact from EditContactCommand");
             forward("unknown");
@@ -114,13 +111,11 @@ public class EditContactCommand extends FrontCommand {
                         fieldName = item.getFieldName();
                         switch (fieldName) {
                             case "id": {
-                                contact.setId(Long.parseLong(field));
-                                break;
-                            }
-                            case "address_id": {
-                                if (!field.equals("")) {
-                                    contact.setAddress_id(Long.parseLong(field));
-                                    address.setId(contact.getAddress_id());
+                                try {
+                                    contact.setId(Long.parseLong(field));
+                                    address.setId(contact.getId());
+                                } catch (NumberFormatException e) {
+
                                 }
                                 break;
                             }
@@ -222,15 +217,14 @@ public class EditContactCommand extends FrontCommand {
                 }
             }
             if (photoItem != null) {
-                contact.setPhoto_id(service.updatePhoto(contact, photoItem.getName()));
-                FileUploadDocuments.saveDocument(request, photoItem, null, true);
+                service.updatePhoto(contact.getId(), photoItem.getName());
+                FileUploadDocuments.saveDocument(request, photoItem, contact.getId(), true);
             }
             phoneService.updatePhones(contact.getId(), numbersForUpdate);
             service.updateAttachments(attachmentsForUpdate, contact.getId());
 
         } catch (FileUploadException | GenericDAOException e) {
             LOG.error(e.getMessage());
-            e.printStackTrace();
         }
         if (documents.size() != 0) {
             documents.forEach(obj -> {

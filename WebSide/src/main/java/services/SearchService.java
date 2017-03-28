@@ -22,17 +22,14 @@ public class SearchService {
         Contact contact = contactConverter.toEntitySearch(contactDTO).get();
         Address address = addressConverter.toEntitySearch(contactDTO.getAddress()).get();
         if (address.getCountry().equals("") && address.getCity().equals("") && address.getStreetAddress().equals("")
-                && address.getIndex().equals("")){
-            contacts  = contactService.findByCriteria(contact, null, dateCriteria);
-        }
-        else contacts = contactService.findByCriteria(contact, address, dateCriteria);
-        List<ContactDTO> contactDTOList = new ArrayList<>();
+                && address.getIndex().equals("")) {
+            contacts = contactService.findByCriteria(contact, null, dateCriteria);
+        } else contacts = contactService.findByCriteria(contact, address, dateCriteria);
+        List<ContactDTO> contactDTOList;
         contactDTOList = contacts.stream().map(obj -> {
             ContactDTO dto = contactConverter.toDTO(Optional.of(obj)).get();
-            if (obj.getAddress_id()!=0){
-                Address addressObj = addressService.findById(obj.getAddress_id());
-                dto.setAddress(addressConverter.toDTO(Optional.of(addressObj)).get());
-            }
+            Address addressObj = addressService.findById(obj.getId());
+            dto.setAddress(addressConverter.toDTO(Optional.of(addressObj)).get());
             return dto;
         }).collect(Collectors.toList());
         if (contacts.size() == 0) return new ArrayList<>();

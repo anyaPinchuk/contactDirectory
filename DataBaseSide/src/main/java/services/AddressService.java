@@ -18,44 +18,11 @@ public class AddressService implements ServiceEntity {
     public Address findById(Long id) {
         try (Connection connection = connectionAwareExecutor.connect()) {
             addressDAO.setConnection(connection);
-            return addressDAO.findById(id).get();
+            return addressDAO.findById(id).isPresent() ? addressDAO.findById(id).get(): null;
         } catch (GenericDAOException | SQLException e) {
             LOG.error("error while processing get address by id in AddressService");
         }
         return null;
-    }
-
-    public void insert(Address address, Long contactId) {
-        Connection connection = null;
-        try {
-            connection = connectionAwareExecutor.connect();
-            connection.setAutoCommit(false);
-            addressDAO.setConnection(connection);
-            address.setContactId(contactId);
-            addressDAO.insert(address);
-            connection.commit();
-        } catch (GenericDAOException | SQLException e) {
-            connectionAwareExecutor.rollbackConnection(connection);
-            LOG.error("error while processing insert address in attachmentService");
-        } finally {
-            connectionAwareExecutor.closeConnection(connection);
-        }
-    }
-
-    public void updateById(Long id, Address address) {
-        Connection connection = null;
-        try {
-            connection = connectionAwareExecutor.connect();
-            connection.setAutoCommit(false);
-            addressDAO.setConnection(connection);
-            addressDAO.updateById(id, address);
-            connection.commit();
-        } catch (GenericDAOException | SQLException e) {
-            connectionAwareExecutor.rollbackConnection(connection);
-            LOG.error("error while processing update address by id in AddressService");
-        } finally {
-            connectionAwareExecutor.closeConnection(connection);
-        }
     }
 
     public AddressDAO getAddressDAO() {

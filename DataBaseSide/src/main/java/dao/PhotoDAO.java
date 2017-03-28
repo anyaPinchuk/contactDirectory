@@ -29,7 +29,7 @@ public class PhotoDAO extends AbstractDAO<Photo>{
     public Optional<? extends Photo> findById(Long id) throws GenericDAOException {
             LOG.info("findById photo starting");
             ResultSet resultSet = null;
-            try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM photo WHERE id = ? LIMIT 1")) {
+            try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM photo WHERE contact_id = ? LIMIT 1")) {
                 statement.setLong(1, id);
                 resultSet = statement.executeQuery();
                 if (resultSet.next())
@@ -70,7 +70,7 @@ public class PhotoDAO extends AbstractDAO<Photo>{
     @Override
     public int updateById(Long id, Photo entity) throws GenericDAOException {
         if (entity == null) return 0;
-            try (PreparedStatement statement = connection.prepareStatement("UPDATE photo SET name = ? WHERE id = ?")) {
+            try (PreparedStatement statement = connection.prepareStatement("UPDATE photo SET name = ? WHERE contact_id = ?")) {
                 LOG.info("updateById photo starting");
                 statement.setString(1, entity.getName());
                 statement.setLong(2, id);

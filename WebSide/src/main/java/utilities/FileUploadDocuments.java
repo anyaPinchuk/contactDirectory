@@ -57,12 +57,11 @@ public class FileUploadDocuments {
             return array;
         } catch (Exception e) {
             try {
-                array = Files.readAllBytes(Paths.get(uploadPath + File.separator + "no_avatar.png"));
+                if (isImage) array = Files.readAllBytes(Paths.get(uploadPath + File.separator + "no_avatar.png"));
             } catch (IOException e1) {
-                e1.printStackTrace();
+                LOG.info(e.getMessage());
             }
-            LOG.error(e.getMessage());
-            e.printStackTrace();
+            LOG.info(e.getMessage());
         }
         return array;
     }
@@ -123,7 +122,7 @@ public class FileUploadDocuments {
             else filePath = getFileDirectory(false);
             FileUtils.deleteDirectory(new File(filePath + File.separator + "contact" + contact_id));
         } catch (IOException e) {
-            e.printStackTrace();
+            LOG.error(e.getMessage());
         }
     }
 }

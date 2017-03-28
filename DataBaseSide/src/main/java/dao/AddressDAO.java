@@ -29,7 +29,7 @@ public class AddressDAO extends AbstractDAO<Address> {
     public Optional<? extends Address> findById(Long id) throws GenericDAOException {
             LOG.info("findById Address starting");
             ResultSet resultSet = null;
-            try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM address WHERE id = ? LIMIT 1")) {
+            try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM address WHERE contact_id = ? LIMIT 1")) {
                 statement.setLong(1, id);
                 resultSet = statement.executeQuery();
                 if (resultSet.next())
@@ -62,7 +62,7 @@ public class AddressDAO extends AbstractDAO<Address> {
     public int updateById(Long id, Address entity) throws GenericDAOException {
         if (entity == null) return 0;
             try (PreparedStatement statement = connection.prepareStatement("UPDATE address SET country = ?, " +
-                    "city = ?, street_address = ?, `index` = ? WHERE id = ?")) {
+                    "city = ?, street_address = ?, `index` = ? WHERE contact_id = ?")) {
                 LOG.info("updateById Address starting");
                 statement.setString(1, entity.getCountry());
                 statement.setString(2, entity.getCity());

@@ -34,8 +34,8 @@ public class UpdateEntityService {
     }
 
 
-    public Long updatePhoto(Long contact_id, String fileName) throws GenericDAOException {
-        if (fileName == null) return null;
+    public void updatePhoto(Long contact_id, String fileName) throws GenericDAOException {
+        if (fileName == null) return;
         PhotoService photoService = new PhotoService();
         Photo obj = photoService.findById(contact_id);
         if (obj == null){
@@ -43,9 +43,8 @@ public class UpdateEntityService {
         } else {
             FileUploadDocuments.deleteDocument(obj.getName(), true, null);
             obj.setName(fileName);
-            photoService.updatePhoto(obj.getId(), obj);
+            photoService.updatePhoto(contact_id, obj);
         }
-        return null;
     }
 
 }

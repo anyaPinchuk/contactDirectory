@@ -43,26 +43,22 @@ public class ShowContactCommand extends FrontCommand {
         Long address_id;
         try {
             Contact contact = contactService.findById(id);
-            address_id = contact.getAddress_id();
-            contactDTO = contactConverter.toDTO(Optional.of(contact)).orElseThrow(() ->
-                    new GenericDAOException("contact wasn't converted"));
-            if (address_id != 0) {
-                Address address = addressService.findById(address_id);
-                contactDTO.setAddress(addressConverter.toDTO(Optional.of(address)).orElseThrow(() ->
-                        new GenericDAOException("address wasn't converted")));
-            }
-            List<PhoneNumber> numberList = phoneService.findAllById(contactDTO.getId());
-            List<PhoneDTO> phoneDTOList = numberList.size() != 0 ? numberList.stream().map(number ->
-                    phoneConverter.toDTO(Optional.of(number)).get()).collect(Collectors.toList()) : null;
-            contactDTO.setPhoneDTOList(phoneDTOList);
-            PhotoDTO photoDTO;
-            if (contact.getPhoto_id()!=0){
-                Photo photo = photoService.findById(contact.getPhoto_id());
-                photoDTO = new PhotoDTO(photo.getId(), photo.getName());
-                contactDTO.setPhoto(photoDTO);
-            }
-            List<Attachment> attachments = attachmentService.findAllById(contactDTO.getId());
-            if (attachments != null) {
+            if (contact != null) {
+                contactDTO = contactConverter.toDTO(Optional.of(contact)).orElseThrow(() ->
+                        new GenericDAOException("contact wasn't converted"));
+                Address address = addressService.findById(id);
+                contactDTO.setAddress(addressConverter.toDTO(Optional.of(address)).orElseThrow(()
+                        -> new GenericDAOException("address wasn't converted")));
+                List<PhoneNumber> numberList = phoneService.findAllById(contactDTO.getId());
+                List<PhoneDTO> phoneDTOList = numberList.size() != 0 ? numberList.stream().map(number ->
+                        phoneConverter.toDTO(Optional.of(number)).get()).collect(Collectors.toList()) : null;
+                contactDTO.setPhoneDTOList(phoneDTOList);
+                Photo photo = photoService.findById(id);
+                if (photo != null) {
+                    PhotoDTO photoDTO = new PhotoDTO(photo.getId(), photo.getName());
+                    contactDTO.setPhoto(photoDTO);
+                }
+                List<Attachment> attachments = attachmentService.findAllById(contactDTO.getId());
                 request.setAttribute("attachments", attachments);
             }
         } catch (GenericDAOException e) {

@@ -91,13 +91,15 @@ public class ContactService implements ServiceEntity{
         return emails;
     }
 
-    public void updateContact(Contact contact) {
+    public void updateContact(Contact contact, Address address) {
         Connection connection = null;
         try {
             connection = connectionAwareExecutor.connect();
             connection.setAutoCommit(false);
             contactDAO.setConnection(connection);
             contactDAO.updateById(contact.getId(), contact);
+            addressDAO.setConnection(connection);
+            addressDAO.updateById(contact.getId(), address);
             connection.commit();
         } catch (GenericDAOException | SQLException e) {
             connectionAwareExecutor.rollbackConnection(connection);
@@ -109,7 +111,7 @@ public class ContactService implements ServiceEntity{
 
     }
 
-    public Long insertContact(Contact contact) {
+    public Long insertContact(Contact contact, Address address) {
         Long id;
         Connection connection = null;
         try {
@@ -118,6 +120,8 @@ public class ContactService implements ServiceEntity{
             contactDAO.setConnection(connection);
             addressDAO.setConnection(connection);
             id = contactDAO.insert(contact);
+            address.setContactId(id);
+            addressDAO.insert(address);
             connection.commit();
             return id;
         } catch (GenericDAOException | SQLException e) {

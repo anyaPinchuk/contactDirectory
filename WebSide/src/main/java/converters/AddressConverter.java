@@ -11,7 +11,7 @@ public class AddressConverter extends Converter<AddressDTO, Address>{
     public Optional<Address> toEntity(AddressDTO dto) {
         if(dto == null) return Optional.empty();
         return Optional.of(new Address(dto.getId(), dto.getCountry(), dto.getCity(), dto.getStreetAddress(),
-                dto.getIndex()));
+                dto.getIndex(), null));
     }
 
     @Override
@@ -25,6 +25,6 @@ public class AddressConverter extends Converter<AddressDTO, Address>{
     public Optional<Address> toEntitySearch(AddressDTO dto) {
         if(dto == null) return Optional.empty();
         return Optional.of(new Address(null, dto.getCountry(), dto.getCity(), dto.getStreetAddress(),
-                dto.getIndex()));
+                dto.getIndex(), null));
     }
 }
