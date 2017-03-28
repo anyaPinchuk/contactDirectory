@@ -13,6 +13,11 @@ import java.util.List;
 public class SendMailCommand extends FrontCommand{
     @Override
     public void processGet() throws ServletException, IOException {
+
+    }
+
+    @Override
+    public void processPost() throws ServletException, IOException {
         String[] values = request.getParameterValues("chosenContacts");
         if (values != null) {
             Long[] ids = Arrays.stream(values).map(Long::valueOf).toArray(Long[]::new);
@@ -23,18 +28,18 @@ public class SendMailCommand extends FrontCommand{
             }
             List<LetterTemplate> templates = LetterTemplate.getTemplates();
             request.setAttribute("templates", templates);
+            forward("sendMail");
         }
-        forward("sendMail");
-    }
+        else {
+            String[] emails = request.getParameterValues("emails");
+            String subject = request.getParameter("subject");
+            String templateName = request.getParameter("template");
+            String content = request.getParameter("content");
+            //valid
+            MailService mailService = new MailService();
+            mailService.sendEmail(emails, subject, templateName, content);
+            response.sendRedirect("Contacts");
+        }
 
-    @Override
-    public void processPost() throws ServletException, IOException {
-        String[] emails = request.getParameterValues("emails");
-        String subject = request.getParameter("subject");
-        String templateName = request.getParameter("template");
-        //valid
-        MailService mailService = new MailService();
-        mailService.sendEmail(emails, subject, templateName);
-        response.sendRedirect("Contacts");
     }
 }

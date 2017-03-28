@@ -35,7 +35,7 @@
                     <th>Address</th>
                     <th>Company</th>
                 </tr>
-                <c:forEach var="contact" items="${requestScope.contactList}">
+                <c:forEach var="contact" items="${sessionScope.contactList}">
                     <tr>
                         <td><input value="${contact.id}" type="checkbox" name="chosenContacts"/></td>
                         <td><a href="editContact?id=${contact.id}" id="editAccountLink">
@@ -51,12 +51,18 @@
                 </tbody>
             </table>
         </form>
-        <div>
-            <c:forEach var="page" items="${requestScope.pageList}">
+        <div class = "pages">
+            <a id="prev" onclick="showPrevPage">
+                <button class="btn btn-default">prev</button>
+            </a>
+            <c:forEach var="page" items="${sessionScope.pageList}">
                 <a href="contacts?page=${page}">
                     <button class="btn btn-default">${page}</button>
                 </a>
             </c:forEach>
+            <a id="next" onclick="showNextPage">
+                <button class="btn btn-default">next</button>
+            </a>
         </div>
     </div>
     <script src="${pageContext.request.contextPath}/web-resources/scripts/index.js">//hhh</script>

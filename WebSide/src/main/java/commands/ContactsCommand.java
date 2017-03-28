@@ -39,16 +39,25 @@ public class ContactsCommand extends FrontCommand {
         int count = 10;
         int currentPage = 1;
         String pageFromClient = request.getParameter("page");
+        int countRows = contactService.getCountRows();
         if (pageFromClient != null && !pageFromClient.equals("1")) {
-            currentPage = Integer.valueOf(pageFromClient);
-            start += currentPage * count - count;
+            try{
+                int temp = Integer.valueOf(pageFromClient);
+                if (countRows / count >= temp - 1) {
+                    currentPage = temp;
+                    start += currentPage * count - count;
+                }
+            } catch (NumberFormatException e){
+
+            }
         }
         List<Contact> contacts;
         List<Integer> pageList = new ArrayList<>();
         contacts = contactService.findByParts(start, count);
+
         if (contacts.size() != 0) {
-            int countRows = contactService.getCountRows();
-            for (int i = 1; i <= countRows / count + 1; i++) {
+            int pageCount = countRows % count == 0 ? countRows / count : countRows / count + 1;
+            for (int i = 1; i <= pageCount; i++) {
                 pageList.add(i);
             }
         }
@@ -60,8 +69,21 @@ public class ContactsCommand extends FrontCommand {
             }
             contactsDTO.add(contactDTO);
         });
-        request.setAttribute("pageList", pageList);
-        request.setAttribute("contactList", contactsDTO);
+        if (request.getSession().getAttribute("isSearch") != null) {
+            contactsDTO = (List<ContactDTO>) request.getSession().getAttribute("contactList");
+            int endIndex;
+            if (currentPage == 1){
+                endIndex = contactsDTO.size() < count ? start + contactsDTO.size() : count + start;
+            } else endIndex = contactsDTO.size() % count != 0
+                    ? start + (contactsDTO.size() - count * currentPage)
+                    : count + start;
+            contactsDTO = contactsDTO.subList(start, endIndex);
+            request.getSession().setAttribute("contactList", contactsDTO);
+            request.getSession().setAttribute("isSearch", null);
+        } else {
+            request.getSession().setAttribute("pageList", pageList);
+            request.getSession().setAttribute("contactList", contactsDTO);
+        }
         forward("contacts");
     }
 

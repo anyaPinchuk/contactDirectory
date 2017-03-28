@@ -6,10 +6,11 @@ import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.SimpleEmail;
 
 import java.util.Arrays;
+import java.util.Map;
 
 public class MailSender {
 
-    public static void sendMail(String[] recipients, String subject, String message){
+    public static void sendMail(String emailAddress, String message, String subject) {
         Email email = new SimpleEmail();
         email.setSmtpPort(587);
         email.setAuthenticator(new DefaultAuthenticator("info.iposter@gmail.com",
@@ -21,14 +22,11 @@ public class MailSender {
         try {
             email.setFrom("info.iposter@gmail.com");
             email.setSubject(subject);
+            email.addTo(emailAddress);
             email.setMsg(message);
-            for(String recipient : recipients){
-                email.addTo(recipient);
-            }
             email.send();
         } catch (EmailException e) {
             //log
         }
-
     }
 }

@@ -158,4 +158,17 @@ public class ContactService implements ServiceEntity{
     public void setContactDAO(ContactDAO contactDAO) {
         this.contactDAO = contactDAO;
     }
+
+    public List<String> findNamesByEmails(String[] emails) {
+        List<String> names = new ArrayList<>();
+        try (Connection connection = connectionAwareExecutor.connect()) {
+            contactDAO.setConnection(connection);
+            for (String email: emails) {
+                names.add(contactDAO.findByEmail(email));
+            }
+        } catch (GenericDAOException | SQLException e) {
+            LOG.error("error while processing get contact by id in ContactService");
+        }
+        return names;
+    }
 }

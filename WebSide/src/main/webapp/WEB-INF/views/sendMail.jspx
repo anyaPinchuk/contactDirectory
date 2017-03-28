@@ -12,21 +12,21 @@
     <div>
         <form name="sendEmail" method="post" action="sendMail">
             <c:forEach var="email" items="${requestScope.emails}">
-                <input class="form-control" name="email" disabled="disabled" value="${email}"/>
+                <input class="form-control" disabled="disabled" name="emails" value="${email}"/>
             </c:forEach>
             <div class="form-group">
                 <label>Subject </label>
                 <input class="form-control turnOFF" type="text" name="subject" placeholder="Input subject"/>
             </div>
-            <select class="form-control" name="template">
-                <option value="none" onselect="fillContent('')" selected="selected">Choose template</option>
+            <select class="form-control" name="template" onchange="fillContent">
+                <option value="" label="" selected="selected">Choose template</option>
                 <c:forEach var="template" items="${requestScope.templates}">
-                    <option onselect="fillContent(${template.content})" value="${template.name}">${template.name}</option>
+                    <option label="${template.content}" value="${template.name}">${template.name}</option>
                 </c:forEach>
             </select>
             <div class="form-group">
                 <label>Subject </label>
-                <textarea rows="5" cols="40" class="form-control" name="content" placeholder="Text">bla</textarea>
+                <textarea rows="5" cols="40" class="form-control" name="content" placeholder="Text">text</textarea>
             </div>
             <button class="btn btn-primary" id="sendMail">Send</button>
     </form>

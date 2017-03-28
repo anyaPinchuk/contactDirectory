@@ -13,11 +13,7 @@ import java.util.List;
 public class SearchContactCommand extends FrontCommand{
     @Override
     public void processGet() throws ServletException, IOException {
-        List<Integer> pageList = new ArrayList<>();
-        for (int i = 1; i < 5; i++) {
-            pageList.add(i);
-        }
-        request.setAttribute("pageList", pageList);
+
         forward("searchContact");
     }
 
@@ -45,7 +41,14 @@ public class SearchContactCommand extends FrontCommand{
         String dateCriteria = request.getParameter("dateCriteria");
         SearchService searchService = new SearchService();
         contactList = searchService.searchContacts(contactDTO, dateCriteria);
-        request.setAttribute("contactList", contactList);
-        forward("contacts");
+        List<Integer> pageList = new ArrayList<>();
+        int pageCount = contactList.size() % 10 == 0 ? contactList.size() / 10 : contactList.size() / 10 + 1 ;
+        for (int i = 1; i <= pageCount; i++) {
+            pageList.add(i);
+        }
+        request.getSession().setAttribute("pageList", pageList);
+        request.getSession().setAttribute("isSearch", true);
+        request.getSession().setAttribute("contactList", contactList);
+        response.sendRedirect("contacts?page=1");
     }
 }

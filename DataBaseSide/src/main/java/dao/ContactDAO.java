@@ -87,9 +87,9 @@ public class ContactDAO extends AbstractDAO<Contact> {
         if (!entity.getName().equals(""))
             builder.append("c.name = ? and ");
         if (!entity.getSurname().equals(""))
-            builder.append("c.surname = ? and");
+            builder.append("c.surname = ? and ");
         if (!entity.getThirdName().equals(""))
-            builder.append("c.third_name = ? and");
+            builder.append("c.third_name = ? and ");
         if (entity.getDateOfBirth() != null) {
             builder.append("c.date_of_birth ");
             if (dateCriteria.equals("after"))
@@ -218,19 +218,9 @@ public class ContactDAO extends AbstractDAO<Contact> {
 
     @Override
     public Optional<? extends Contact> findByField(Object field) throws GenericDAOException {
-        ResultSet resultSet = null;
-        try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM contact WHERE email = ? LIMIT 1")) {
-            statement.setString(1, (String) field);
-            resultSet = statement.executeQuery();
-            if (resultSet.next())
-                return buildEntityFromResult(resultSet);
-        } catch (SQLException e) {
-            throw new GenericDAOException(e);
-        } finally {
-            connectionAwareExecutor.closeResultSet(resultSet);
-        }
-        return Optional.empty();
+        return null;
     }
+
 
     @Override
     public int updateById(Long id, Contact entity) throws GenericDAOException {
@@ -315,8 +305,6 @@ public class ContactDAO extends AbstractDAO<Contact> {
         }
     }
 
-
-
     @Override
     public int deleteById(Long id) throws GenericDAOException {
         try (PreparedStatement statement = connection.prepareStatement("DELETE FROM contact WHERE id = ?")) {
@@ -326,6 +314,23 @@ public class ContactDAO extends AbstractDAO<Contact> {
         } catch (SQLException e) {
             LOG.error("Contact wasn't deleted", e);
             throw new GenericDAOException(e);
+        }
+    }
+
+    public String findByEmail(String email) throws GenericDAOException {
+        String name = "";
+        ResultSet resultSet = null;
+        try (PreparedStatement statement = connection.prepareStatement("SELECT name FROM contact WHERE email = ? LIMIT 1")) {
+            statement.setString(1, email);
+            resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                name = resultSet.getString("name");
+            }
+            return name;
+        } catch (SQLException e) {
+            throw new GenericDAOException(e);
+        } finally {
+            connectionAwareExecutor.closeResultSet(resultSet);
         }
     }
 }

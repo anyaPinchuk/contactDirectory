@@ -13,7 +13,7 @@ public class LetterTemplate {
     private ST template;
     private String name;
     private String content;
-    private static  STGroup group = new STGroupFile("templates.stg");
+    private static STGroup group = new STGroupFile("templates.stg");
 
     public LetterTemplate(String name) {
         template = group.getInstanceOf(name);
@@ -24,13 +24,13 @@ public class LetterTemplate {
         List<LetterTemplate> templates = new ArrayList<>();
         Set<String> names = group.getTemplateNames();
         names.forEach(name -> {
-            LetterTemplate letterTemplate = new LetterTemplate(name);
+            LetterTemplate letterTemplate = new LetterTemplate(name.substring(1));
             ST template = letterTemplate.getTemplate();
             Map<String, Object> attributes = template.getAttributes();
             attributes.forEach((key, value) -> {
                 switch (key) {
-                    case "argName":
-                        template.add("argName", "<name>");
+                    case "name":
+                        template.add("name", "<name>");
                         break;
                     case "date":
                         template.add("date", "<date>");
@@ -40,6 +40,7 @@ public class LetterTemplate {
                         break;
                 }
             });
+            letterTemplate.setContent(template.render());
             templates.add(letterTemplate);
         });
         return templates;
