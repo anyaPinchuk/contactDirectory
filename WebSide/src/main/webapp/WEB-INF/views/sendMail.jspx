@@ -19,9 +19,9 @@
                 <input class="form-control turnOFF" type="text" name="subject" placeholder="Input subject"/>
             </div>
             <select class="form-control" name="template">
-                <option value="none">Choose template</option>
+                <option value="none" onselect="fillContent('')" selected="selected">Choose template</option>
                 <c:forEach var="template" items="${requestScope.templates}">
-                    <option value="${template.id}">${template.name}</option>
+                    <option onselect="fillContent(${template.content})" value="${template.name}">${template.name}</option>
                 </c:forEach>
             </select>
             <div class="form-group">
@@ -31,6 +31,9 @@
             <button class="btn btn-primary" id="sendMail">Send</button>
     </form>
     </div>
+    <script type="text/javascript" src="${pageContext.request.contextPath}/web-resources/scripts/mail.js">
+        //hiii
+    </script>
     </body>
     </html>
 </jsp:root>

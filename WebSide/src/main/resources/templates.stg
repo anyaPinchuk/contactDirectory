@@ -1,0 +1,8 @@
+birthday(argName) ::= <<
+    Dear <argName>.
+    Happy birthday to you! Have a great time, with memories to last you throughout the whole year.
+>>
+
+meeting(argName, time) ::= <<
+    Hi, <argName>! Can you meet at <time> pm tonight?
+>>

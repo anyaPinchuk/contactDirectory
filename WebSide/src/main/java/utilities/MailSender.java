@@ -9,7 +9,7 @@ import java.util.Arrays;
 
 public class MailSender {
 
-    public static void sendMail(String[] recipients, String subject){
+    public static void sendMail(String[] recipients, String subject, String message){
         Email email = new SimpleEmail();
         email.setSmtpPort(587);
         email.setAuthenticator(new DefaultAuthenticator("info.iposter@gmail.com",
@@ -21,7 +21,7 @@ public class MailSender {
         try {
             email.setFrom("info.iposter@gmail.com");
             email.setSubject(subject);
-            email.setMsg("This is a test mail ... :-)");
+            email.setMsg(message);
             for(String recipient : recipients){
                 email.addTo(recipient);
             }

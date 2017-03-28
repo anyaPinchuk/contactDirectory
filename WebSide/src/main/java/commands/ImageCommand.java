@@ -1,11 +1,9 @@
 package commands;
 
-import org.apache.commons.io.IOUtils;
 import utilities.FileUploadDocuments;
 
 import javax.servlet.ServletException;
 import java.io.IOException;
-import java.io.InputStream;
 
 public class ImageCommand extends FrontCommand {
     @Override

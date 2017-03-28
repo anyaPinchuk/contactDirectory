@@ -1,6 +1,9 @@
 package commands;
 
 import services.ContactService;
+import services.MailService;
+import utilities.LetterTemplate;
+import utilities.MailSender;
 
 import javax.servlet.ServletException;
 import java.io.IOException;
@@ -18,6 +21,8 @@ public class SendMailCommand extends FrontCommand{
             if (emails!=null){
                 request.setAttribute("emails", emails);
             }
+            List<LetterTemplate> templates = LetterTemplate.getTemplates();
+            request.setAttribute("templates", templates);
         }
         forward("sendMail");
     }
@@ -25,7 +30,11 @@ public class SendMailCommand extends FrontCommand{
     @Override
     public void processPost() throws ServletException, IOException {
         String[] emails = request.getParameterValues("emails");
-
+        String subject = request.getParameter("subject");
+        String templateName = request.getParameter("template");
+        //valid
+        MailService mailService = new MailService();
+        mailService.sendEmail(emails, subject, templateName);
         response.sendRedirect("Contacts");
     }
 }
