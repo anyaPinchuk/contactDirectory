@@ -1,10 +1,7 @@
 package commands;
 
-import dao.AddressDAO;
-import dao.AttachmentDAO;
-import dao.ContactDAO;
-import dao.PhoneDAO;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
@@ -17,12 +14,10 @@ public abstract class FrontCommand {
     protected ServletContext context;
     protected HttpServletRequest request;
     protected HttpServletResponse response;
-    protected static final Logger LOG = Logger.getLogger("commands");
+    protected static final Logger LOG = LoggerFactory.getLogger("commands");
 
-    public void init(
-            ServletContext servletContext,
-            HttpServletRequest servletRequest,
-            HttpServletResponse servletResponse) {
+    public void initialize(ServletContext servletContext, HttpServletRequest servletRequest,
+                           HttpServletResponse servletResponse) {
         this.context = servletContext;
         this.request = servletRequest;
         this.response = servletResponse;
@@ -33,25 +28,11 @@ public abstract class FrontCommand {
     public abstract void processPost() throws ServletException, IOException;
 
     protected void forward(String target) throws ServletException, IOException {
+        LOG.info("forward to {}.jspx", target);
         target = String.format("/WEB-INF/views/%s.jspx", target);
         RequestDispatcher dispatcher = context.getRequestDispatcher(target);
         dispatcher.forward(request, response);
 
     }
 
-    public HttpServletRequest getRequest() {
-        return request;
-    }
-
-    public void setRequest(HttpServletRequest request) {
-        this.request = request;
-    }
-
-    public HttpServletResponse getResponse() {
-        return response;
-    }
-
-    public void setResponse(HttpServletResponse response) {
-        this.response = response;
-    }
 }

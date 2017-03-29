@@ -1,22 +1,26 @@
 package db;
 
 import exceptions.GenericDAOException;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.sql.*;
 import java.util.Properties;
 
-import static db.ManagerDB.DB_URL;
-
 
 public class ConnectionAwareExecutor {
+    private static final String DB_URL = "jdbc:mysql://";
+    protected static final Logger LOG = LoggerFactory.getLogger(ConnectionAwareExecutor.class);
 
-    protected static final Logger LOG = Logger.getLogger(ConnectionAwareExecutor.class);
-
+    private static Properties getEnvironmentProperties() throws IOException {
+        Properties properties = new Properties();
+        properties.loadFromXML(ConnectionAwareExecutor.class.getClassLoader().getResourceAsStream("environment.xml"));
+        return properties;
+    }
     public Connection connect() throws GenericDAOException {
         try {
-            Properties properties = ManagerDB.getEnvironmentProperties();
+            Properties properties = getEnvironmentProperties();
             String host = properties.getProperty("host");
             int port = Integer.parseInt(properties.getProperty("port"));
             String user = properties.getProperty("user");
@@ -32,6 +36,7 @@ public class ConnectionAwareExecutor {
             LOG.info("dao Connected to " + metaData.getDatabaseProductName() + " " + metaData.getDatabaseProductVersion());
             return connection;
         } catch (SQLException | IOException e) {
+            LOG.error("error while connecting to DB");
             throw new GenericDAOException(e);
         }
     }

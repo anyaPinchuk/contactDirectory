@@ -2,17 +2,17 @@ package dao;
 
 import db.ConnectionAwareExecutor;
 import exceptions.GenericDAOException;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
 
 public abstract class AbstractDAO<T> {
 
-    protected static final Logger LOG = Logger.getLogger("dao");
+    protected static final Logger LOG = LoggerFactory.getLogger("dao");
     protected ConnectionAwareExecutor connectionAwareExecutor = new ConnectionAwareExecutor();
     protected Connection connection;
 

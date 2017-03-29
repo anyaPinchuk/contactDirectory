@@ -7,25 +7,25 @@ public class PhoneNumber {
     private String number;
     private String numberType;
     private String comment;
-    private Long contact_id;
+    private Long contactId;
 
     public PhoneNumber(Long id, String countryCode, String operatorCode, String number, String numberType,
-                       String comment, Long contact_id) {
+                       String comment, Long contactId) {
         this.id = id;
         this.countryCode = countryCode;
         this.operatorCode = operatorCode;
         this.number = number;
         this.numberType = numberType;
         this.comment = comment;
-        this.contact_id = contact_id;
+        this.contactId = contactId;
     }
 
-    public Long getContact_id() {
-        return contact_id;
+    public Long getContactId() {
+        return contactId;
     }
 
-    public void setContact_id(Long contact_id) {
-        this.contact_id = contact_id;
+    public void setContactId(Long contactId) {
+        this.contactId = contactId;
     }
 
     public Long getId() {

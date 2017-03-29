@@ -1,7 +1,6 @@
 package dao;
 
 import entities.Attachment;
-import entities.PhoneNumber;
 import exceptions.GenericDAOException;
 import exceptions.UniqueDAOException;
 
@@ -9,7 +8,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -20,20 +18,20 @@ public class AttachmentDAO extends AbstractDAO<Attachment>{
         return null;
     }
 
-    public List<Attachment> findAllById(Long id_contact) throws GenericDAOException {
-            LOG.info("findAll Attachment starting");
+    public List<Attachment> findAllById(Long idContact) throws GenericDAOException {
+            LOG.info("findAll Attachment starting by id {}", idContact);
             ResultSet resultSet = null;
             List<Attachment> attachments = new LinkedList<>();
             try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM attachment" +
                     " WHERE contact_id = ?")) {
-                statement.setLong(1, id_contact);
+                statement.setLong(1, idContact);
                 resultSet = statement.executeQuery();
                 while (resultSet.next()) {
                     Long id = resultSet.getLong("id");
                     java.sql.Date dateOfDownload = resultSet.getDate("date_of_download");
                     String fileName = resultSet.getString("file_name");
                     String comment = resultSet.getString("comment");
-                    attachments.add(new Attachment(id, dateOfDownload, fileName, comment, id_contact));
+                    attachments.add(new Attachment(id, dateOfDownload, fileName, comment, idContact));
                 }
                 return attachments;
             } catch (SQLException e) {
@@ -47,7 +45,7 @@ public class AttachmentDAO extends AbstractDAO<Attachment>{
 
     @Override
     public Optional<? extends Attachment> findById(Long id) throws GenericDAOException {
-            LOG.info("findById Attachment starting");
+            LOG.info("find Attachment starting by id {}", id);
             ResultSet resultSet = null;
             try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM attachment WHERE id = ? LIMIT 1")) {
                 statement.setLong(1, id);
@@ -79,10 +77,10 @@ public class AttachmentDAO extends AbstractDAO<Attachment>{
 
     @Override
     public int updateById(Long id, Attachment entity) throws GenericDAOException {
+        LOG.info("updateById Attachment starting by id {}", id);
         if (entity == null) return 0;
             try (PreparedStatement statement = connection.prepareStatement("UPDATE attachment SET " +
                     "file_name = ?, comment = ? WHERE id = ?")) {
-                LOG.info("updateById Attachment starting");
                 statement.setString(1, entity.getFileName());
                 statement.setString(2, entity.getComment());
                 statement.setLong(3, id);
@@ -94,9 +92,9 @@ public class AttachmentDAO extends AbstractDAO<Attachment>{
     }
 
     public int updateFileNameById(Long id, String fileName) throws GenericDAOException {
+        LOG.info("updateById Attachment starting  by id {} and file {}", id, fileName);
         try (PreparedStatement statement = connection.prepareStatement("UPDATE attachment SET " +
                 "file_name = ? WHERE id = ?")) {
-            LOG.info("updateById Attachment starting");
             statement.setString(1, fileName);
             statement.setLong(2, id);
             return statement.executeUpdate();
@@ -108,14 +106,14 @@ public class AttachmentDAO extends AbstractDAO<Attachment>{
 
     @Override
     public Long insert(Attachment entity) throws GenericDAOException {
+        LOG.info("insert Attachment starting");
         if (entity == null) return 0L;
             try (PreparedStatement statement = connection.prepareStatement("INSERT INTO attachment" +
                     " (date_of_download, file_name, comment, contact_id) VALUES (?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS)){
-                LOG.info("insert Attachment starting");
                 statement.setDate(1, entity.getDateOfDownload());
                 statement.setString(2, entity.getFileName());
                 statement.setString(3, entity.getComment());
-                statement.setLong(4, entity.getContact_id());
+                statement.setLong(4, entity.getContactId());
                 int result = statement.executeUpdate();
                 if (result == 0) {
                     throw new SQLException("Creating attachment failed, attachment wasn't added");
@@ -135,8 +133,8 @@ public class AttachmentDAO extends AbstractDAO<Attachment>{
 
     @Override
     public int deleteById(Long id) throws GenericDAOException {
-            try (PreparedStatement statement = connection.prepareStatement("DELETE FROM attachment WHERE id = ?")){
-                LOG.info("deleteById Attachment starting");
+        LOG.info("deleteById Attachment starting  by id {}", id);
+        try (PreparedStatement statement = connection.prepareStatement("DELETE FROM attachment WHERE id = ?")){
                 statement.setLong(1, id);
                 return statement.executeUpdate();
             } catch (SQLException e) {

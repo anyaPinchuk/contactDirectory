@@ -52,7 +52,7 @@ prev.addEventListener("click", showPrevPage);
 function showPrevPage() {
     var strings = document.location.href.split("/");
     var last = strings[strings.length - 1];
-    if (last != "contacts") {
+    if (last.toLowerCase() != "contacts") {
         var newPage = Number(last.substr(last.length - 1)) - 1;
         if (newPage != 0) {
             document.location.href = "contacts?page=" + newPage;
@@ -69,7 +69,7 @@ function showNextPage() {
     var strings = document.location.href.split("/");
     var last = strings[strings.length - 1];
     var newPage = Number(last.substr(last.length - 1)) + 1;
-    if (last == "contacts") {
+    if (last.toLowerCase() == "contacts") {
         newPage = 2;
     }
     if (lastPage >= newPage) {

@@ -36,10 +36,10 @@ public class EditContactCommand extends FrontCommand {
 
     @Override
     public void processGet() throws ServletException, IOException {
-        LOG.info("get contact by id starting ");
         ContactDTO contactDTO = null;
         String paramId = request.getParameter("id");
-        if (!StringUtils.isNotEmpty(paramId)) forward("unknown");
+        LOG.info("get contact by id {} starting in editContactCommand", paramId);
+        if (!StringUtils.isNotEmpty(paramId.trim())) forward("unknown");
         try {
             Long id = Long.valueOf(paramId);
             Contact contact = contactService.findById(id);
@@ -63,7 +63,7 @@ public class EditContactCommand extends FrontCommand {
                 request.setAttribute("attachments", attachments);
             }
         } catch (NumberFormatException | GenericDAOException e) {
-            LOG.error("error while processing find contact from EditContactCommand");
+            LOG.error("error while parsing id or find contact from EditContactCommand");
             forward("unknown");
             new MessageError(e.getMessage(), e);
         }
@@ -77,7 +77,7 @@ public class EditContactCommand extends FrontCommand {
 
     @Override
     public void processPost() throws ServletException, IOException {
-        LOG.info("update contact starting ");
+        LOG.info("update contact command starting ");
         PhoneService phoneService = new PhoneService();
         AttachmentService attachmentService = new AttachmentService();
         ContactService contactService = new ContactService();
@@ -107,6 +107,7 @@ public class EditContactCommand extends FrontCommand {
                                     address.setId(contact.getId());
                                 } catch (NumberFormatException e) {
                                     //to error page
+                                    LOG.error("error while parsing id {}", field);
                                 }
                                 break;
                             }
@@ -199,7 +200,7 @@ public class EditContactCommand extends FrontCommand {
                             }
                         }
                     } else if (!item.isFormField()) {
-                        if (!StringUtils.isNotEmpty(item.getName())) {
+                        if (StringUtils.isNotEmpty(item.getName())) {
                             if (!item.getFieldName().contains("attachment")) photoItem = item;
                             else if (item.getFieldName().contains("attachment")) documents.add(item);
                         }
@@ -216,7 +217,7 @@ public class EditContactCommand extends FrontCommand {
             service.updateAttachments(attachmentsForUpdate, contact.getId());
 
         } catch (FileUploadException | GenericDAOException e) {
-            LOG.error(e.getMessage());
+            LOG.error("error while uploading files or updating phones");
         }
         phoneService.insertPhones(numbersForInsert, contact.getId());
         List<Long> ids = attachmentService.insertAttachments(attachmentsForInsert, contact.getId());
@@ -231,6 +232,6 @@ public class EditContactCommand extends FrontCommand {
         if (contact.getName() != null && contact.getSurname() != null && contact.getEmail() != null) {
             contactService.updateContact(contact, address);
         }
-        response.sendRedirect("Contacts");
+        response.sendRedirect("contacts");
     }
 }

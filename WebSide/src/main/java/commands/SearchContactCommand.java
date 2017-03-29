@@ -20,6 +20,7 @@ public class SearchContactCommand extends FrontCommand {
 
     @Override
     public void processPost() throws ServletException, IOException {
+        LOG.info("search contact command starting");
         ContactDTO contactDTO = new ContactDTO();
         contactDTO.setName(request.getParameter("firstName"));
         contactDTO.setSurname(request.getParameter("surname"));

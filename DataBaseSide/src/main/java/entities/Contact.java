@@ -123,20 +123,5 @@ public class Contact {
     public void setJob(String job) {
         this.job = job;
     }
-    @Override
-    public String toString() {
-        return "Contact{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", surname='" + surname + '\'' +
-                ", thirdName='" + thirdName + '\'' +
-                ", dateOfBirth=" + dateOfBirth +
-                ", gender='" + gender + '\'' +
-                ", citizenship='" + citizenship + '\'' +
-                ", maritalStatus='" + maritalStatus + '\'' +
-                ", webSite='" + webSite + '\'' +
-                ", email='" + email + '\'' +
-                ", job='" + job + '\'' +
-                '}';
-    }
+
 }

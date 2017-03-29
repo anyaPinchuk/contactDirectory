@@ -27,7 +27,7 @@ public class AddressDAO extends AbstractDAO<Address> {
 
     @Override
     public Optional<? extends Address> findById(Long id) throws GenericDAOException {
-            LOG.info("findById Address starting");
+            LOG.info("find Address starting by id {}", id);
             ResultSet resultSet = null;
             try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM address WHERE contact_id = ? LIMIT 1")) {
                 statement.setLong(1, id);
@@ -60,10 +60,10 @@ public class AddressDAO extends AbstractDAO<Address> {
 
     @Override
     public int updateById(Long id, Address entity) throws GenericDAOException {
+        LOG.info("update Address starting By Id {}", id);
         if (entity == null) return 0;
             try (PreparedStatement statement = connection.prepareStatement("UPDATE address SET country = ?, " +
                     "city = ?, street_address = ?, `index` = ? WHERE contact_id = ?")) {
-                LOG.info("updateById Address starting");
                 statement.setString(1, entity.getCountry());
                 statement.setString(2, entity.getCity());
                 statement.setString(3, entity.getStreetAddress());
@@ -78,10 +78,10 @@ public class AddressDAO extends AbstractDAO<Address> {
 
     @Override
     public Long insert(Address entity) throws GenericDAOException {
+        LOG.info("insert Address starting");
         if (entity == null) return 0L;
             try (PreparedStatement statement = connection.prepareStatement("INSERT INTO address (country, city, street_address," +
                     " `index`, contact_id) VALUES (?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS)) {
-                LOG.info("insert Address starting");
                 statement.setString(1, entity.getCountry());
                 statement.setString(2, entity.getCity());
                 statement.setString(3, entity.getStreetAddress());
@@ -106,8 +106,8 @@ public class AddressDAO extends AbstractDAO<Address> {
 
     @Override
     public int deleteById(Long id) throws GenericDAOException {
+        LOG.info("deleteById Address starting bi id {}", id);
             try (PreparedStatement statement = connection.prepareStatement("DELETE FROM address WHERE id = ?")) {
-                LOG.info("deleteById Address starting");
                 statement.setLong(1, id);
                 return statement.executeUpdate();
             } catch (SQLException e) {

@@ -4,7 +4,8 @@ import dao.PhoneDAO;
 import entities.PhoneNumber;
 import exceptions.GenericDAOException;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -12,7 +13,7 @@ import java.util.List;
 
 public class PhoneService implements ServiceEntity {
     private PhoneDAO phoneDAO = new PhoneDAO();
-    private static final Logger LOG = Logger.getLogger(ContactService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ContactService.class);
 
     public List<PhoneNumber> findAllById(Long id) {
         try (Connection connection = connectionAwareExecutor.connect()) {
@@ -20,7 +21,6 @@ public class PhoneService implements ServiceEntity {
             return phoneDAO.findAllById(id);
         } catch (GenericDAOException | SQLException e) {
             LOG.error("error while processing get all phones by id in PhoneService");
-            e.printStackTrace();
         }
         return null;
     }
@@ -33,7 +33,7 @@ public class PhoneService implements ServiceEntity {
             connection.setAutoCommit(false);
             phoneDAO.setConnection(connection);
             numbersForInsert.forEach(obj -> {
-                obj.setContact_id(contactId);
+                obj.setContactId(contactId);
                 try {
                     phoneDAO.insert(obj);
                 } catch (GenericDAOException e) {
@@ -57,7 +57,7 @@ public class PhoneService implements ServiceEntity {
             connection.setAutoCommit(false);
             phoneNumbersForUpdate.forEach(obj -> {
                 try {
-                    obj.setContact_id(contact_id);
+                    obj.setContactId(contact_id);
                     if (numbers.contains(obj)) {
                         phoneDAO.updateById(obj.getId(), obj);
                         numbers.remove(obj);

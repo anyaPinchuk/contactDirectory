@@ -18,7 +18,7 @@ public class UpdateEntityService {
         List<Attachment> attachments = attachmentService.findAllById(contact_id);
         if (CollectionUtils.isEmpty(attachments)) return;
         listForUpdate.forEach(obj -> {
-            obj.setContact_id(contact_id);
+            obj.setContactId(contact_id);
             if (attachments.contains(obj)) {
                 if (FileUploadDocuments.renameDocument(attachmentService.findById(obj.getId()).getFileName(),
                         obj.getFileName(), contact_id)) {

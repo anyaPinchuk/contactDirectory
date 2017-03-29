@@ -18,6 +18,7 @@ public class DeleteContactCommand extends FrontCommand {
 
     @Override
     public void processPost() throws ServletException, IOException {
+        LOG.info("delete contacts command starting");
         String[] values = request.getParameterValues("chosenContacts");
         if (!CollectionUtils.isEmpty(Arrays.asList(values))) {
             Long[] ids = Arrays.stream(values).map(Long::valueOf).toArray(Long[]::new);
@@ -28,6 +29,6 @@ public class DeleteContactCommand extends FrontCommand {
                 FileUploadDocuments.deleteDirectory(contact.getId(), true);
             });
         }
-        response.sendRedirect("Contacts");
+        response.sendRedirect("contacts");
     }
 }

@@ -2,22 +2,19 @@ package services;
 
 import dao.AddressDAO;
 import dao.ContactDAO;
-import db.ConnectionAwareExecutor;
 import entities.Address;
 import entities.Contact;
 import exceptions.GenericDAOException;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class ContactService implements ServiceEntity {
-    private static final Logger LOG = Logger.getLogger(ContactService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ContactService.class);
     private ContactDAO contactDAO;
     private AddressDAO addressDAO;
 
@@ -27,14 +24,12 @@ public class ContactService implements ServiceEntity {
     }
 
     public List<Contact> findByParts(int start, int count) {
-        LOG.info("find contacts starting");
         List<Contact> contacts = null;
         try (Connection connection = connectionAwareExecutor.connect()) {
             contactDAO.setConnection(connection);
             contacts = contactDAO.findByParts(start, count);
         } catch (GenericDAOException | SQLException e) {
             LOG.error("error while processing get contacts in ContactService");
-            e.printStackTrace();
         }
         return contacts;
     }
@@ -60,7 +55,7 @@ public class ContactService implements ServiceEntity {
             connection.commit();
         } catch (GenericDAOException | SQLException e) {
             connectionAwareExecutor.rollbackConnection(connection);
-            LOG.error(e.getMessage());
+            LOG.error("error while processing get count rows in ContactService");
         } finally {
             connectionAwareExecutor.closeConnection(connection);
         }
@@ -68,7 +63,6 @@ public class ContactService implements ServiceEntity {
     }
 
     public List<Contact> findByCriteria(Contact contact, Address address, String dateCriteria) {
-        LOG.info("find contacts by criteria starting");
         List<Contact> contacts = new ArrayList<>();
         try (Connection connection = connectionAwareExecutor.connect()) {
             contactDAO.setConnection(connection);
@@ -81,7 +75,6 @@ public class ContactService implements ServiceEntity {
     }
 
     public List<Contact> findByDate() {
-        LOG.info("find contacts by date starting");
         List<Contact> contacts = new ArrayList<>();
         try (Connection connection = connectionAwareExecutor.connect()) {
             contactDAO.setConnection(connection);
@@ -141,7 +134,6 @@ public class ContactService implements ServiceEntity {
         } catch (GenericDAOException | SQLException e) {
             connectionAwareExecutor.rollbackConnection(connection);
             LOG.error("error while processing insert Contact in ContactService");
-            e.printStackTrace();
         } finally {
             connectionAwareExecutor.closeConnection(connection);
         }
@@ -162,7 +154,6 @@ public class ContactService implements ServiceEntity {
         } catch (GenericDAOException | SQLException e) {
             connectionAwareExecutor.rollbackConnection(connection);
             LOG.error("error while processing delete Contact in ContactService");
-            e.printStackTrace();
         } finally {
             connectionAwareExecutor.closeConnection(connection);
         }

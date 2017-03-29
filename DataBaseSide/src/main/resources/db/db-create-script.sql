@@ -32,12 +32,12 @@ CREATE TABLE IF NOT EXISTS `anya_pinchuk`.`address` (
   `city` VARCHAR(45) NULL DEFAULT NULL,
   `street_address` VARCHAR(45) NULL DEFAULT NULL,
   `index` VARCHAR(45) NULL DEFAULT NULL,
-  `contact_id` INT(11) NOT NULL,
+  `contactId` INT(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC),
-  INDEX `fk_address_contact1_idx` (`contact_id` ASC),
+  INDEX `fk_address_contact1_idx` (`contactId` ASC),
   CONSTRAINT `fk_address_contact1`
-  FOREIGN KEY (`contact_id`)
+  FOREIGN KEY (`contactId`)
   REFERENCES `anya_pinchuk`.`contact` (`id`)
     ON DELETE CASCADE
     ON UPDATE NO ACTION)
@@ -53,12 +53,12 @@ CREATE TABLE IF NOT EXISTS `anya_pinchuk`.`attachment` (
   `date_of_download` DATETIME NULL DEFAULT NULL,
   `file_name` VARCHAR(45) NOT NULL,
   `comment` VARCHAR(45) NULL DEFAULT NULL,
-  `contact_id` INT(11) NOT NULL,
+  `contactId` INT(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC),
-  INDEX `fk_attachment_sontact1_idx` (`contact_id` ASC),
+  INDEX `fk_attachment_sontact1_idx` (`contactId` ASC),
   CONSTRAINT `fk_attachment_contact1`
-  FOREIGN KEY (`contact_id`)
+  FOREIGN KEY (`contactId`)
   REFERENCES `anya_pinchuk`.`contact` (`id`)
     ON DELETE CASCADE
     ON UPDATE NO ACTION)
@@ -76,11 +76,11 @@ CREATE TABLE IF NOT EXISTS `anya_pinchuk`.`phone_number` (
   `number` VARCHAR(45) NOT NULL,
   `phone_type` ENUM('mobile', 'home') NULL DEFAULT NULL,
   `comment` VARCHAR(45) NULL DEFAULT NULL,
-  `contact_id` INT(11) NOT NULL,
+  `contactId` INT(11) NOT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_phonenumber_contact1_idx` (`contact_id` ASC),
+  INDEX `fk_phonenumber_contact1_idx` (`contactId` ASC),
   CONSTRAINT `fk_phonenumber_contact1`
-  FOREIGN KEY (`contact_id`)
+  FOREIGN KEY (`contactId`)
   REFERENCES `anya_pinchuk`.`contact` (`id`)
     ON DELETE CASCADE
     ON UPDATE NO ACTION)
@@ -94,13 +94,13 @@ CREATE TABLE IF NOT EXISTS `anya_pinchuk`.`phone_number` (
 CREATE TABLE IF NOT EXISTS `anya_pinchuk`.`photo` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NOT NULL,
-  `contact_id` INT(11) NOT NULL,
+  `contactId` INT(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC),
   UNIQUE INDEX `photo_name_uindex` (`name` ASC),
-  INDEX `fk_photo_contact1_idx` (`contact_id` ASC),
+  INDEX `fk_photo_contact1_idx` (`contactId` ASC),
   CONSTRAINT `fk_photo_contact1`
-  FOREIGN KEY (`contact_id`)
+  FOREIGN KEY (`contactId`)
   REFERENCES `anya_pinchuk`.`contact` (`id`)
     ON DELETE CASCADE
     ON UPDATE NO ACTION)

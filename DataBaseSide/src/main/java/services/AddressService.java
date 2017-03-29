@@ -2,18 +2,16 @@ package services;
 
 import dao.AddressDAO;
 import entities.Address;
-import entities.Attachment;
-import entities.Photo;
 import exceptions.GenericDAOException;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.List;
 
 public class AddressService implements ServiceEntity {
     private AddressDAO addressDAO = new AddressDAO();
-    private static final Logger LOG = Logger.getLogger(AddressService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AddressService.class);
 
     public Address findById(Long id) {
         try (Connection connection = connectionAwareExecutor.connect()) {

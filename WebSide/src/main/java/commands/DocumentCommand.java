@@ -14,9 +14,10 @@ public class DocumentCommand extends FrontCommand {
     @Override
     public void processGet() throws ServletException, IOException {
         String fileName = request.getParameter("name");
-        byte[] bytes;
+        LOG.info("load document by filename {}", fileName);
+        byte[] bytes = null;
         Long contact_id;
-        String[] strings = new String[]{"", ""};
+        String[] strings;
         if (StringUtils.isNotEmpty(fileName)) {
             try {
                 strings = fileName.split(";");
@@ -28,9 +29,12 @@ public class DocumentCommand extends FrontCommand {
                     response.setContentType(MIMEType);
             } catch (ArrayIndexOutOfBoundsException | NumberFormatException e) {
                 bytes = "<h1>Unable to load content</h1>".getBytes();
-                LOG.error("Error getting document because of contact_id = null");
+                LOG.error("Error getting document");
             }
-        } else bytes = "<h1>Wrong parameter name</h1>".getBytes();
+        }
+        if (bytes == null){
+            bytes = "<h1>Wrong parameter name</h1>".getBytes();
+        }
         response.getOutputStream().write(bytes);
     }
 

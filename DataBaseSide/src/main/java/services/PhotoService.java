@@ -3,14 +3,15 @@ package services;
 import dao.PhotoDAO;
 import entities.Photo;
 import exceptions.GenericDAOException;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 
 public class PhotoService implements ServiceEntity {
     private PhotoDAO photoDAO = new PhotoDAO();
-    private static final Logger LOG = Logger.getLogger(ContactService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ContactService.class);
 
     public Photo findById(Long id) {
         try (Connection connection = connectionAwareExecutor.connect()) {

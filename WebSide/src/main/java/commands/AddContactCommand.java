@@ -26,7 +26,7 @@ public class AddContactCommand extends FrontCommand {
 
     @Override
     public void processPost() throws ServletException, IOException {
-        LOG.info("insert contact starting ");
+        LOG.info("insert contact command starting ");
         DiskFileItemFactory factory = new DiskFileItemFactory();
         factory.setRepository(new File(System.getProperty("java.io.tmpdir")));
         ServletFileUpload upload = new ServletFileUpload(factory);
@@ -143,7 +143,7 @@ public class AddContactCommand extends FrontCommand {
                     }
                 }
             }
-            response.sendRedirect("Contacts");
+            response.sendRedirect("contacts");
         } catch (Exception e) {//error page
             LOG.error(e.getMessage());
         }

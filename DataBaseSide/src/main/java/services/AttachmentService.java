@@ -2,21 +2,20 @@ package services;
 
 import dao.AttachmentDAO;
 import entities.Attachment;
-import entities.Photo;
 import exceptions.GenericDAOException;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class AttachmentService implements ServiceEntity {
     private AttachmentDAO attachmentDAO = new AttachmentDAO();
-    private static final Logger LOG = Logger.getLogger(ContactService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ContactService.class);
 
     public List<Attachment> findAllById(Long id) {
         try (Connection connection = connectionAwareExecutor.connect()) {
@@ -37,7 +36,7 @@ public class AttachmentService implements ServiceEntity {
             connection.setAutoCommit(false);
             attachmentDAO.setConnection(connection);
             attachmentsForInsert.forEach(obj -> {
-                obj.setContact_id(contactId);
+                obj.setContactId(contactId);
                 try {
                     ids.add(attachmentDAO.insert(obj));
                 } catch (GenericDAOException e) {

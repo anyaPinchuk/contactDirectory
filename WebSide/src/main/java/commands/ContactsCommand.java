@@ -25,6 +25,7 @@ public class ContactsCommand extends FrontCommand {
 
     @Override
     public void processGet() throws ServletException, IOException {
+        LOG.info("get contacts command starting");
         int start = 0;
         int count = 10;
         int currentPage = 1;
@@ -38,7 +39,7 @@ public class ContactsCommand extends FrontCommand {
                     start += currentPage * count - count;
                 }
             } catch (NumberFormatException e) {
-                //
+                LOG.error("error while converting page number {} to long", pageFromClient);
             }
         }
         List<Integer> pageList = new ArrayList<>();

@@ -19,26 +19,20 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class ShowContactCommand extends FrontCommand {
-    private ContactConverter contactConverter;
-    private AddressConverter addressConverter;
-    private PhoneConverter phoneConverter;
+    private ContactConverter contactConverter = new ContactConverter();
+    private AddressConverter addressConverter = new AddressConverter();
+    private PhoneConverter phoneConverter = new PhoneConverter();
     private ContactService contactService = new ContactService();
     private AddressService addressService = new AddressService();
     private AttachmentService attachmentService = new AttachmentService();
     private PhoneService phoneService = new PhoneService();
     private PhotoService photoService = new PhotoService();
 
-    public ShowContactCommand() {
-        contactConverter = new ContactConverter();
-        addressConverter = new AddressConverter();
-        phoneConverter = new PhoneConverter();
-    }
-
     @Override
     public void processGet() throws ServletException, IOException {
-        LOG.info("get contact by id starting ");
         ContactDTO contactDTO = null;
         String paramId = request.getParameter("id");
+        LOG.info("show contact starting with parameter id {}", paramId);
         if (!StringUtils.isNotEmpty(paramId)) forward("unknown");;
         try {
             Long id = Long.valueOf(paramId);
@@ -63,7 +57,7 @@ public class ShowContactCommand extends FrontCommand {
             }
         } catch (NumberFormatException | GenericDAOException e) {
             forward("unknown");
-            LOG.error("error while processing find contact from ShowContactCommand");
+            LOG.error("error while processing show contact from ShowContactCommand");
             new MessageError(e.getMessage(), e);
         }
         request.setAttribute("contact", contactDTO);
