@@ -7,6 +7,7 @@ import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
 import utilities.BirthdayJob;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -17,7 +18,7 @@ import java.io.IOException;
 @WebServlet("/app/*")
 public class FrontControllerServlet extends HttpServlet {
     private static final Logger LOG = Logger.getLogger(FrontControllerServlet.class);
-
+    private Scheduler scheduler;
 
     @Override
     public void init() throws ServletException {
@@ -27,9 +28,9 @@ public class FrontControllerServlet extends HttpServlet {
                 .newTrigger()
                 .withIdentity("dummyTriggerName", "group1")
                 .withSchedule(
-                        CronScheduleBuilder.cronSchedule("0 0 9 * * ?"))
+                        CronScheduleBuilder.cronSchedule("0 50 17 * * ?"))
                 .build();
-        Scheduler scheduler;
+
         try {
             scheduler = new StdSchedulerFactory().getScheduler();
             scheduler.start();
@@ -70,4 +71,14 @@ public class FrontControllerServlet extends HttpServlet {
         command.processPost();
     }
 
+    @Override
+    public void destroy() {
+        if (scheduler != null){
+            try {
+                scheduler.shutdown(true);
+            } catch (SchedulerException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }
