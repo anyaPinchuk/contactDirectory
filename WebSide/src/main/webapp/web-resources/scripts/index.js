@@ -54,8 +54,8 @@ function showPrevPage() {
     var last = strings[strings.length - 1];
     if (last != "contacts") {
         var newPage = Number(last.substr(last.length - 1)) - 1;
-        if (newPage != 0){
-            document.location.href =  "contacts?page=" + newPage;
+        if (newPage != 0) {
+            document.location.href = "contacts?page=" + newPage;
         }
 
     }
@@ -69,7 +69,11 @@ function showNextPage() {
     var strings = document.location.href.split("/");
     var last = strings[strings.length - 1];
     var newPage = Number(last.substr(last.length - 1)) + 1;
-    if (!(newPage > lastPage)){
-        document.location.href =  "contacts?page=" + newPage;
+    if (last == "contacts") {
+        newPage = 2;
     }
+    if (lastPage >= newPage) {
+        document.location.href = "contacts?page=" + newPage;
+    }
+
 }

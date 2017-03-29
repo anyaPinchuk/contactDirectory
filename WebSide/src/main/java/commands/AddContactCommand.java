@@ -1,10 +1,12 @@
 package commands;
 
 import entities.*;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.lang3.StringUtils;
 import services.AttachmentService;
 import services.ContactService;
 import services.PhoneService;
@@ -37,12 +39,12 @@ public class AddContactCommand extends FrontCommand {
         List<Attachment> attachments = new ArrayList<>();
         try {
             formItems = upload.parseRequest(request);
-            if (formItems != null && formItems.size() > 0) {
+            if (!CollectionUtils.isEmpty(formItems)) {
                 String field, fieldName;
                 // iterates over form's fields
                 for (FileItem item : formItems) {
-                    if (item.isFormField()) {
-                        field = item.getString("UTF-8");
+                    field = item.getString("UTF-8");
+                    if (item.isFormField() && StringUtils.isNotEmpty(field.trim())) {
                         fieldName = item.getFieldName();
                         switch (fieldName) {
                             case "name": {
@@ -118,7 +120,7 @@ public class AddContactCommand extends FrontCommand {
                                 break;
                             }
                         }
-                    } else {
+                    } else if (!item.isFormField()){
                         documents.add(item);
                     }
                 }
@@ -126,22 +128,24 @@ public class AddContactCommand extends FrontCommand {
             ContactService contactService = new ContactService();
             AttachmentService attachmentService = new AttachmentService();
             PhoneService phoneService = new PhoneService();
-            Long contactId = contactService.insertContact(contact, address);
-            phoneService.insertPhones(numbersForInsert, contactId);
-
-            if (documents.size() != 0) {
-                documents.forEach(obj -> {
-                    if (!obj.getName().equals("")) {
-                        FileUploadDocuments.saveDocument(request, obj, contactId, false);
-                    }
-                });
+            Long contactId = 0L;
+            if (StringUtils.isNotEmpty(contact.getName().trim()) && StringUtils.isNotEmpty(contact.getSurname().trim()) &&
+                    StringUtils.isNotEmpty(contact.getEmail().trim())) {
+                contactId = contactService.insertContact(contact, address);
             }
-
-            attachmentService.insertAttachments(attachments, contactId);
+            phoneService.insertPhones(numbersForInsert, contactId);
+            List<Long> ids = attachmentService.insertAttachments(attachments, contactId);
+            if (!CollectionUtils.isEmpty(documents) && !CollectionUtils.isEmpty(ids)) {
+                for(int i = 0; i < documents.size(); i++){
+                    if (StringUtils.isNotEmpty(documents.get(i).getName())) {
+                        String fileName = FileUploadDocuments.saveDocument(request, documents.get(i), contactId, ids.get(i), false);
+                        attachmentService.updateById(ids.get(i), new Attachment(fileName));
+                    }
+                }
+            }
             response.sendRedirect("Contacts");
-        } catch (FileUploadException e) {
+        } catch (Exception e) {//error page
             LOG.error(e.getMessage());
-            e.printStackTrace();
         }
     }
 }

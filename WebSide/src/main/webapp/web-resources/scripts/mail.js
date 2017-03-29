@@ -4,6 +4,7 @@ form.template.addEventListener("change", fillContent);
 function fillContent() {
     var selectedOption = form.template.options[form.template.selectedIndex];
     form.content.value = selectedOption.attributes.label.textContent;
+    form.content.disabled = selectedOption.attributes.label.textContent != '';
 }
 var sendMail = document.getElementById("sendMail");
 sendMail.addEventListener("click", function () {

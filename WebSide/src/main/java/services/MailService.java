@@ -1,5 +1,7 @@
 package services;
 
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.stringtemplate.v4.ST;
 import utilities.LetterTemplate;
 import utilities.MailSender;
@@ -12,17 +14,18 @@ public class MailService {
         String message = "";
         ContactService contactService = new ContactService();
         List<String> names = contactService.findNamesByEmails(emails);
-        for (int i = 0; i < emails.length; i++) {
-            if (templateName.equals("")) {
-                message = content;
-            } else {
-                message = buildMessage(templateName, names.get(i));
+        if (!CollectionUtils.isEmpty(names))
+            for (int i = 0; i < emails.length; i++) {
+                if (StringUtils.isNotEmpty(templateName.trim())) {
+                    message = content;
+                } else {
+                    message = buildMessage(templateName, names.get(i));
+                }
+                MailSender.sendMail(emails[i], message, subject);
             }
-            MailSender.sendMail(emails[i], message, subject);
-        }
     }
 
-    public String buildMessage(String templateName, String name) {
+    private String buildMessage(String templateName, String name) {
         LetterTemplate letterTemplate = new LetterTemplate(templateName);
         ST messageTemplate = letterTemplate.getTemplate();
         messageTemplate.add("name", name);

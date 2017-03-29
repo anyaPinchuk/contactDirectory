@@ -1,9 +1,6 @@
 package services;
 
-import dao.AddressDAO;
 import dao.PhotoDAO;
-import entities.Address;
-import entities.Contact;
 import entities.Photo;
 import exceptions.GenericDAOException;
 import org.apache.log4j.Logger;

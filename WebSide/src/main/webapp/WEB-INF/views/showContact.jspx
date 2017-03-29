@@ -16,7 +16,7 @@
     <div class="center">
         <div>
             <div class="form-group">
-                <img id='photo' src="image?name=${contact.photo.name}"
+                <img id='photo' src="image?name=${contact.photo.name};${contact.id}"
                      width="200px" height="200px"/>
             </div>
             <div>

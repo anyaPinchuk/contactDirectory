@@ -1,9 +1,9 @@
 package services;
 
 import entities.Attachment;
-import entities.Contact;
 import entities.Photo;
 import exceptions.GenericDAOException;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.log4j.Logger;
 import utilities.FileUploadDocuments;
 
@@ -14,7 +14,9 @@ public class UpdateEntityService {
     private AttachmentService attachmentService = new AttachmentService();
 
     public void updateAttachments(List<Attachment> listForUpdate, Long contact_id) throws GenericDAOException {
+        if (CollectionUtils.isEmpty(listForUpdate)) return;
         List<Attachment> attachments = attachmentService.findAllById(contact_id);
+        if (CollectionUtils.isEmpty(attachments)) return;
         listForUpdate.forEach(obj -> {
             obj.setContact_id(contact_id);
             if (attachments.contains(obj)) {
@@ -34,17 +36,18 @@ public class UpdateEntityService {
     }
 
 
-    public void updatePhoto(Long contact_id, String fileName) throws GenericDAOException {
-        if (fileName == null) return;
+    public Long updatePhoto(Long contact_id, String fileName) throws GenericDAOException {
+        if (fileName == null) return 0L;
         PhotoService photoService = new PhotoService();
         Photo obj = photoService.findById(contact_id);
-        if (obj == null){
-            photoService.insert(fileName, contact_id);
+        if (obj == null) {
+            return photoService.insert(fileName, contact_id);
         } else {
             FileUploadDocuments.deleteDocument(obj.getName(), true, null);
             obj.setName(fileName);
             photoService.updatePhoto(contact_id, obj);
         }
+        return 0L;
     }
 
 }

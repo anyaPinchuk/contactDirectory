@@ -5,6 +5,7 @@ import entities.Address;
 import entities.Contact;
 import exceptions.GenericDAOException;
 import exceptions.UniqueDAOException;
+import org.apache.commons.lang3.StringUtils;
 
 import java.sql.*;
 import java.sql.Date;
@@ -74,34 +75,36 @@ public class ContactDAO extends AbstractDAO<Contact> {
         StringBuilder builder = new StringBuilder("SELECT * FROM contact c ");
         if (address != null) {
             builder.append("inner join address a on c.id = a.contact_id ");
-            if (!address.getCountry().equals(""))
+            if (StringUtils.isNotEmpty(address.getCountry().trim()))
                 builder.append("and a.country = ? ");
-            if (!address.getCity().equals(""))
+            if (StringUtils.isNotEmpty(address.getCity().trim()))
                 builder.append("and a.city = ? ");
-            if (!address.getStreetAddress().equals(""))
+            if (StringUtils.isNotEmpty(address.getStreetAddress().trim()))
                 builder.append("and a.street_address = ? ");
-            if (!address.getIndex().equals(""))
+            if (StringUtils.isNotEmpty(address.getIndex().trim()))
                 builder.append("and a.index = ? ");
         }
         builder.append("where ");
-        if (!entity.getName().equals(""))
+        if (StringUtils.isNotEmpty(entity.getName().trim()))
             builder.append("c.name = ? and ");
-        if (!entity.getSurname().equals(""))
+        if (StringUtils.isNotEmpty(entity.getSurname().trim()))
             builder.append("c.surname = ? and ");
-        if (!entity.getThirdName().equals(""))
+        if (StringUtils.isNotEmpty(entity.getThirdName().trim()))
             builder.append("c.third_name = ? and ");
-        if (entity.getDateOfBirth() != null) {
-            builder.append("c.date_of_birth ");
-            if (dateCriteria.equals("after"))
+        if (entity.getDateOfBirth() != null && StringUtils.isNotEmpty(dateCriteria.trim())) {
+            if (dateCriteria.equals("after")) {
+                builder.append("c.date_of_birth ");
                 builder.append(" > ? and ");
-            else
+            } else {
+                builder.append("c.date_of_birth ");
                 builder.append(" < ? and ");
+            }
         }
-        if (!entity.getCitizenship().equals(""))
+        if (StringUtils.isNotEmpty(entity.getCitizenship().trim()))
             builder.append("c.citizenship = ? and ");
-        if (!entity.getGender().equals(""))
+        if (StringUtils.isNotEmpty(entity.getGender().trim()))
             builder.append("c.gender = ? and ");
-        if (!entity.getMaritalStatus().equals(""))
+        if (StringUtils.isNotEmpty(entity.getMaritalStatus().trim()))
             builder.append("c.marital_status = ? and ");
         builder.setLength(builder.length() - 4);
         return builder.toString();
@@ -132,7 +135,7 @@ public class ContactDAO extends AbstractDAO<Contact> {
                 statement.setDate(i, (Date) arg);
                 i++;
             } else if (arg instanceof String) {
-                if (!arg.equals("")) {
+                if (StringUtils.isNotEmpty(((String) arg).trim())) {
                     statement.setString(i, (String) arg);
                     i++;
                 }
@@ -328,6 +331,25 @@ public class ContactDAO extends AbstractDAO<Contact> {
             }
             return name;
         } catch (SQLException e) {
+            throw new GenericDAOException(e);
+        } finally {
+            connectionAwareExecutor.closeResultSet(resultSet);
+        }
+    }
+
+    public List<Contact> findByDate() throws GenericDAOException {
+        LOG.info("find by date Contact starting");
+        ResultSet resultSet = null;
+        List<Contact> contacts = new LinkedList<>();
+        try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM contact " +
+                "WHERE month(date_of_birth) = month(curdate()) and day(date_of_birth) = day(curdate())")) {
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                contacts.add(buildEntityFromResult(resultSet).get());
+            }
+            return contacts;
+        } catch (SQLException e) {
+            LOG.error("Contacts weren't found", e);
             throw new GenericDAOException(e);
         } finally {
             connectionAwareExecutor.closeResultSet(resultSet);

@@ -2,6 +2,7 @@ package commands;
 
 import dto.AddressDTO;
 import dto.ContactDTO;
+import org.apache.commons.lang3.StringUtils;
 import services.SearchService;
 
 import javax.servlet.ServletException;
@@ -10,7 +11,7 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SearchContactCommand extends FrontCommand{
+public class SearchContactCommand extends FrontCommand {
     @Override
     public void processGet() throws ServletException, IOException {
 
@@ -19,15 +20,14 @@ public class SearchContactCommand extends FrontCommand{
 
     @Override
     public void processPost() throws ServletException, IOException {
-        List<ContactDTO> contactList;
         ContactDTO contactDTO = new ContactDTO();
         contactDTO.setName(request.getParameter("firstName"));
         contactDTO.setSurname(request.getParameter("surname"));
         contactDTO.setThirdName(request.getParameter("thirdName"));
         //validator date and other fields
         String date = request.getParameter("dateOfBirth");
-        if (!date.equals("")){
-           contactDTO.setDateOfBirth(Date.valueOf(date));
+        if (StringUtils.isNotEmpty(date.trim())) {
+            contactDTO.setDateOfBirth(Date.valueOf(date));
         }
         contactDTO.setCitizenship(request.getParameter("citizenship"));
         contactDTO.setGender(request.getParameter("gender"));
@@ -40,9 +40,9 @@ public class SearchContactCommand extends FrontCommand{
         contactDTO.setAddress(address);
         String dateCriteria = request.getParameter("dateCriteria");
         SearchService searchService = new SearchService();
-        contactList = searchService.searchContacts(contactDTO, dateCriteria);
+        List<ContactDTO> contactList = searchService.searchContacts(contactDTO, dateCriteria);
         List<Integer> pageList = new ArrayList<>();
-        int pageCount = contactList.size() % 10 == 0 ? contactList.size() / 10 : contactList.size() / 10 + 1 ;
+        int pageCount = contactList.size() % 10 == 0 ? contactList.size() / 10 : contactList.size() / 10 + 1;
         for (int i = 1; i <= pageCount; i++) {
             pageList.add(i);
         }

@@ -6,15 +6,17 @@ import db.ConnectionAwareExecutor;
 import entities.Address;
 import entities.Contact;
 import exceptions.GenericDAOException;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class ContactService implements ServiceEntity{
+public class ContactService implements ServiceEntity {
     private static final Logger LOG = Logger.getLogger(ContactService.class);
     private ContactDAO contactDAO;
     private AddressDAO addressDAO;
@@ -40,7 +42,7 @@ public class ContactService implements ServiceEntity{
     public Contact findById(Long contact_id) {
         try (Connection connection = connectionAwareExecutor.connect()) {
             contactDAO.setConnection(connection);
-            return contactDAO.findById(contact_id).get();
+            return contactDAO.findById(contact_id).isPresent() ? contactDAO.findById(contact_id).get() : null;
         } catch (GenericDAOException | SQLException e) {
             LOG.error("error while processing get contact by id in ContactService");
         }
@@ -65,9 +67,9 @@ public class ContactService implements ServiceEntity{
         return count;
     }
 
-    public List<Contact> findByCriteria(Contact contact, Address address, String dateCriteria){
+    public List<Contact> findByCriteria(Contact contact, Address address, String dateCriteria) {
         LOG.info("find contacts by criteria starting");
-        List<Contact> contacts = null;
+        List<Contact> contacts = new ArrayList<>();
         try (Connection connection = connectionAwareExecutor.connect()) {
             contactDAO.setConnection(connection);
             contacts = contactDAO.findByCriteria(contact, address, dateCriteria);
@@ -78,11 +80,24 @@ public class ContactService implements ServiceEntity{
         return contacts;
     }
 
-    public List<String> findEmailsById(Long[] ids){
+    public List<Contact> findByDate() {
+        LOG.info("find contacts by date starting");
+        List<Contact> contacts = new ArrayList<>();
+        try (Connection connection = connectionAwareExecutor.connect()) {
+            contactDAO.setConnection(connection);
+            contacts = contactDAO.findByDate();
+        } catch (GenericDAOException | SQLException e) {
+            LOG.error("error while processing get contacts in ContactService");
+            e.printStackTrace();
+        }
+        return contacts;
+    }
+
+    public List<String> findEmailsById(Long[] ids) {
         List<String> emails = new ArrayList<>();
         try (Connection connection = connectionAwareExecutor.connect()) {
             contactDAO.setConnection(connection);
-            for (Long id: ids) {
+            for (Long id : ids) {
                 emails.add(contactDAO.findEmailById(id));
             }
         } catch (GenericDAOException | SQLException e) {
@@ -104,8 +119,7 @@ public class ContactService implements ServiceEntity{
         } catch (GenericDAOException | SQLException e) {
             connectionAwareExecutor.rollbackConnection(connection);
             LOG.error("error while processing update Contact in ContactService");
-        }
-        finally {
+        } finally {
             connectionAwareExecutor.closeConnection(connection);
         }
 
@@ -134,14 +148,17 @@ public class ContactService implements ServiceEntity{
         return null;
     }
 
-    public void deleteById(Long id) {
+    public Contact findAndDeleteById(Long id) {
         Connection connection = null;
-        try  {
+        Contact contact;
+        try {
             connection = connectionAwareExecutor.connect();
             connection.setAutoCommit(false);
             contactDAO.setConnection(connection);
+            contact = contactDAO.findById(id).get();
             contactDAO.deleteById(id);
             connection.commit();
+            return contact;
         } catch (GenericDAOException | SQLException e) {
             connectionAwareExecutor.rollbackConnection(connection);
             LOG.error("error while processing delete Contact in ContactService");
@@ -149,6 +166,7 @@ public class ContactService implements ServiceEntity{
         } finally {
             connectionAwareExecutor.closeConnection(connection);
         }
+        return null;
     }
 
     public ContactDAO getContactDAO() {
@@ -163,7 +181,7 @@ public class ContactService implements ServiceEntity{
         List<String> names = new ArrayList<>();
         try (Connection connection = connectionAwareExecutor.connect()) {
             contactDAO.setConnection(connection);
-            for (String email: emails) {
+            for (String email : emails) {
                 names.add(contactDAO.findByEmail(email));
             }
         } catch (GenericDAOException | SQLException e) {

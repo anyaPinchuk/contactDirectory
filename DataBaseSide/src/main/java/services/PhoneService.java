@@ -3,6 +3,7 @@ package services;
 import dao.PhoneDAO;
 import entities.PhoneNumber;
 import exceptions.GenericDAOException;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.log4j.Logger;
 
 import java.sql.Connection;
@@ -25,7 +26,7 @@ public class PhoneService implements ServiceEntity {
     }
 
     public void insertPhones(List<PhoneNumber> numbersForInsert, Long contactId) {
-        if (numbersForInsert.size() == 0) return;
+        if (CollectionUtils.isEmpty(numbersForInsert) || contactId == 0) return;
         Connection connection = null;
         try {
             connection = connectionAwareExecutor.connect();
@@ -76,7 +77,7 @@ public class PhoneService implements ServiceEntity {
         } catch (GenericDAOException | SQLException e) {
             connectionAwareExecutor.rollbackConnection(connection);
             LOG.error("error while processing get phones in phoneService");
-        }finally {
+        } finally {
             connectionAwareExecutor.closeConnection(connection);
         }
     }

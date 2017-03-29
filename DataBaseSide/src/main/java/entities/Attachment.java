@@ -18,6 +18,10 @@ public class Attachment {
         this.contact_id = contact_id;
     }
 
+    public Attachment(String fileName) {
+        this.fileName = fileName;
+    }
+
     public Long getContact_id() {
         return contact_id;
     }

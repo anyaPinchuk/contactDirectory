@@ -6,6 +6,7 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -48,9 +49,10 @@ public class FileUploadDocuments {
 
     public static byte[] readDocument(String fileName, boolean isImage, Long contact_id) {
         String uploadPath = getFileDirectory(isImage);
+        if (!StringUtils.isNotEmpty(uploadPath)) return null;
         byte[] array = null;
         try {
-            if (!"".equals(fileName)) {
+            if (StringUtils.isNotEmpty(fileName)) {
                 array = Files.readAllBytes(Paths.get(uploadPath + File.separator + "no_avatar.png"));
             } else array = Files.readAllBytes(Paths.get(uploadPath + File.separator + "contact" + contact_id +
                     File.separator + fileName));
@@ -58,6 +60,7 @@ public class FileUploadDocuments {
         } catch (Exception e) {
             try {
                 if (isImage) array = Files.readAllBytes(Paths.get(uploadPath + File.separator + "no_avatar.png"));
+                else array = "<h1>Unable to load content</h1>".getBytes();
             } catch (IOException e1) {
                 LOG.info(e.getMessage());
             }
@@ -68,6 +71,7 @@ public class FileUploadDocuments {
 
     public static boolean renameDocument(String fileName, String newFileName, Long contact_id) {
         String uploadPath = getFileDirectory(false);
+        if (!StringUtils.isNotEmpty(uploadPath)) return false;
         File file = new File(uploadPath + File.separator + "contact" + contact_id +
                 File.separator + fileName);
         return file.renameTo(new File(file.getParentFile(), newFileName));
@@ -75,6 +79,7 @@ public class FileUploadDocuments {
 
     public static boolean deleteDocument(String fileName, boolean isImage, Long contact_id) {
         String uploadPath = getFileDirectory(isImage);
+        if (!StringUtils.isNotEmpty(uploadPath)) return false;
         try {
             Files.delete(Paths.get(uploadPath + File.separator + "contact" + contact_id + File.separator + fileName));
         } catch (IOException e) {
@@ -84,35 +89,33 @@ public class FileUploadDocuments {
         return true;
     }
 
-    public static boolean saveDocument(HttpServletRequest request, FileItem item, Long contact_id, boolean isImage) {
+    public static String saveDocument(HttpServletRequest request, FileItem item, Long contact_id, Long id, boolean isImage) {
         if (!ServletFileUpload.isMultipartContent(request)) {
             LOG.error("Error: Form must has enctype=multipart/form-data.");
-            return false;
+            return null;
         }
         String uploadPath = getFileDirectory(isImage);
-        File uploadDir;
-        if (uploadPath != null) {
-            uploadPath += "\\contact" + contact_id;
-            uploadDir = new File(uploadPath);
-        } else {
-            LOG.error("Directory property is null");
-            return false;
-        }
-        if (!uploadDir.exists()) {
-            uploadDir.mkdir();
-        }
-        String filePath = null;
+        if (!StringUtils.isNotEmpty(uploadPath)) return null;
+        uploadPath += "\\contact" + contact_id;
+        File uploadDir = new File(uploadPath);
+        if (!uploadDir.exists()) uploadDir.mkdir();
         try {
-            String fileName = new File(item.getName()).getName();
-            filePath = uploadPath + File.separator + fileName;
-            File storeFile = new File(filePath);
+            String fileName = item.getName();
+            if (!isImage) {
+                String fileExtension = "";
+                int index = fileName.lastIndexOf(".");
+                if (index > 0) {
+                    fileExtension = fileName.substring(index + 1);
+                    fileName = id + "." + fileExtension;
+                }
+            }
+            File storeFile = new File(uploadPath + File.separator + fileName);
             item.write(storeFile);
-
+            return fileName;
         } catch (Exception ex) {
             LOG.error(ex.getMessage());
-            return false;
+            return null;
         }
-        return true;
     }
 
     public static void deleteDirectory(Long contact_id, boolean isImage) {
@@ -120,6 +123,7 @@ public class FileUploadDocuments {
             String filePath = "";
             if (isImage) filePath = getFileDirectory(true);
             else filePath = getFileDirectory(false);
+            if (!StringUtils.isNotEmpty(filePath)) return;
             FileUtils.deleteDirectory(new File(filePath + File.separator + "contact" + contact_id));
         } catch (IOException e) {
             LOG.error(e.getMessage());

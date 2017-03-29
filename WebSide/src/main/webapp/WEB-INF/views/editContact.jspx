@@ -16,7 +16,6 @@
     <form name='editContact' enctype="multipart/form-data" action="editContact"
           method="post">
         <div class="center">
-            <input type="hidden" value="${contact.address.id}" name="address_id"/>
             <input type="hidden" value="${contact.id}" name="id"/>
             <div>
                 <div class="form-group">

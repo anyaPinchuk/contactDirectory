@@ -9,10 +9,12 @@ import dto.PhotoDTO;
 import entities.*;
 import exceptions.GenericDAOException;
 import exceptions.MessageError;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.lang3.StringUtils;
 import services.*;
 import utilities.FileUploadDocuments;
 
@@ -23,34 +25,23 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class EditContactCommand extends FrontCommand {
-    private ContactConverter contactConverter;
-    private AddressConverter addressConverter;
-    private PhoneConverter phoneConverter;
-    private ContactService contactService;
-    private AddressService addressService;
-    private PhoneService phoneService;
-    private AttachmentService attachmentService;
-    private PhotoService photoService;
-
-    public EditContactCommand() {
-        contactConverter = new ContactConverter();
-        addressConverter = new AddressConverter();
-        phoneConverter = new PhoneConverter();
-        contactService = new ContactService();
-        addressService = new AddressService();
-        phoneService = new PhoneService();
-        photoService = new PhotoService();
-        attachmentService = new AttachmentService();
-    }
+    private static ContactConverter contactConverter = new ContactConverter();
+    private static AddressConverter addressConverter = new AddressConverter();
+    private static PhoneConverter phoneConverter = new PhoneConverter();
+    private static ContactService contactService = new ContactService();
+    private static AddressService addressService = new AddressService();
+    private static PhoneService phoneService = new PhoneService();
+    private static AttachmentService attachmentService = new AttachmentService();
+    private static PhotoService photoService = new PhotoService();
 
     @Override
     public void processGet() throws ServletException, IOException {
         LOG.info("get contact by id starting ");
         ContactDTO contactDTO = null;
-        String id_param = request.getParameter("id");
-        if (id_param == null) return;
-        Long id = Long.valueOf(id_param);
+        String paramId = request.getParameter("id");
+        if (!StringUtils.isNotEmpty(paramId)) forward("unknown");
         try {
+            Long id = Long.valueOf(paramId);
             Contact contact = contactService.findById(id);
             if (contact != null) {
                 contactDTO = contactConverter.toDTO(Optional.of(contact)).orElseThrow(() ->
@@ -71,7 +62,7 @@ public class EditContactCommand extends FrontCommand {
                 List<Attachment> attachments = attachmentService.findAllById(contactDTO.getId());
                 request.setAttribute("attachments", attachments);
             }
-        } catch (GenericDAOException e) {
+        } catch (NumberFormatException | GenericDAOException e) {
             LOG.error("error while processing find contact from EditContactCommand");
             forward("unknown");
             new MessageError(e.getMessage(), e);
@@ -80,7 +71,7 @@ public class EditContactCommand extends FrontCommand {
             request.setAttribute("contact", contactDTO);
             forward("editContact");
         } else {
-            forward("contacts");
+            forward("unknown");
         }
     }
 
@@ -103,11 +94,11 @@ public class EditContactCommand extends FrontCommand {
         UpdateEntityService service = new UpdateEntityService();
         try {
             formItems = upload.parseRequest(request);
-            if (formItems != null && formItems.size() > 0) {
+            if (!CollectionUtils.isEmpty(formItems)) {
                 String field, fieldName;
                 for (FileItem item : formItems) {
-                    if (item.isFormField()) {
-                        field = item.getString("UTF-8");
+                    field = item.getString("UTF-8");
+                    if (item.isFormField() && StringUtils.isNotEmpty(field.trim())) {
                         fieldName = item.getFieldName();
                         switch (fieldName) {
                             case "id": {
@@ -115,7 +106,7 @@ public class EditContactCommand extends FrontCommand {
                                     contact.setId(Long.parseLong(field));
                                     address.setId(contact.getId());
                                 } catch (NumberFormatException e) {
-
+                                    //to error page
                                 }
                                 break;
                             }
@@ -207,18 +198,19 @@ public class EditContactCommand extends FrontCommand {
                                 break;
                             }
                         }
-                    } else {
-                        if ((!item.getName().equals("") && !item.getFieldName().contains("attachment"))) {
-                            photoItem = item;
-                        } else if (item.getFieldName().contains("attachment")) {
-                            documents.add(item);
+                    } else if (!item.isFormField()) {
+                        if (!StringUtils.isNotEmpty(item.getName())) {
+                            if (!item.getFieldName().contains("attachment")) photoItem = item;
+                            else if (item.getFieldName().contains("attachment")) documents.add(item);
                         }
                     }
                 }
             }
             if (photoItem != null) {
-                service.updatePhoto(contact.getId(), photoItem.getName());
-                FileUploadDocuments.saveDocument(request, photoItem, contact.getId(), true);
+                Long photoId = service.updatePhoto(contact.getId(), photoItem.getName());
+                if (photoId != 0) {
+                    FileUploadDocuments.saveDocument(request, photoItem, contact.getId(), null, true);
+                }
             }
             phoneService.updatePhones(contact.getId(), numbersForUpdate);
             service.updateAttachments(attachmentsForUpdate, contact.getId());
@@ -226,16 +218,19 @@ public class EditContactCommand extends FrontCommand {
         } catch (FileUploadException | GenericDAOException e) {
             LOG.error(e.getMessage());
         }
-        if (documents.size() != 0) {
-            documents.forEach(obj -> {
-                if (!obj.getName().equals("")) {
-                    FileUploadDocuments.saveDocument(request, obj, contact.getId(), false);
-                }
-            });
-        }
         phoneService.insertPhones(numbersForInsert, contact.getId());
-        attachmentService.insertAttachments(attachmentsForInsert, contact.getId());
-        contactService.updateContact(contact, address);
+        List<Long> ids = attachmentService.insertAttachments(attachmentsForInsert, contact.getId());
+        if (!CollectionUtils.isEmpty(documents) && !CollectionUtils.isEmpty(ids)) {
+            for (int i = 0; i < documents.size(); i++) {
+                if (StringUtils.isNotEmpty(documents.get(i).getName())) {
+                    String fileName = FileUploadDocuments.saveDocument(request, documents.get(i), contact.getId(), ids.get(i), false);
+                    attachmentService.updateById(ids.get(i), new Attachment(fileName));
+                }
+            }
+        }
+        if (contact.getName() != null && contact.getSurname() != null && contact.getEmail() != null) {
+            contactService.updateContact(contact, address);
+        }
         response.sendRedirect("Contacts");
     }
 }

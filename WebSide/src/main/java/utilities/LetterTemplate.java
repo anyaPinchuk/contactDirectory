@@ -1,5 +1,6 @@
 package utilities;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
 import org.stringtemplate.v4.STGroupFile;
@@ -23,26 +24,27 @@ public class LetterTemplate {
     public static List<LetterTemplate> getTemplates() {
         List<LetterTemplate> templates = new ArrayList<>();
         Set<String> names = group.getTemplateNames();
-        names.forEach(name -> {
-            LetterTemplate letterTemplate = new LetterTemplate(name.substring(1));
-            ST template = letterTemplate.getTemplate();
-            Map<String, Object> attributes = template.getAttributes();
-            attributes.forEach((key, value) -> {
-                switch (key) {
-                    case "name":
-                        template.add("name", "<name>");
-                        break;
-                    case "date":
-                        template.add("date", "<date>");
-                        break;
-                    case "time":
-                        template.add("time", "<time>");
-                        break;
-                }
+        if (!CollectionUtils.isEmpty(names))
+            names.forEach(name -> {
+                LetterTemplate letterTemplate = new LetterTemplate(name.substring(1));
+                ST template = letterTemplate.getTemplate();
+                Map<String, Object> attributes = template.getAttributes();
+                attributes.forEach((key, value) -> {
+                    switch (key) {
+                        case "name":
+                            template.add("name", "<name>");
+                            break;
+                        case "date":
+                            template.add("date", "<date>");
+                            break;
+                        case "time":
+                            template.add("time", "<time>");
+                            break;
+                    }
+                });
+                letterTemplate.setContent(template.render());
+                templates.add(letterTemplate);
             });
-            letterTemplate.setContent(template.render());
-            templates.add(letterTemplate);
-        });
         return templates;
     }
 

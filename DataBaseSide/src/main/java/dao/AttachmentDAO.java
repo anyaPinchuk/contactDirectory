@@ -80,19 +80,30 @@ public class AttachmentDAO extends AbstractDAO<Attachment>{
     @Override
     public int updateById(Long id, Attachment entity) throws GenericDAOException {
         if (entity == null) return 0;
-            try (PreparedStatement statement = connection.prepareStatement("UPDATE attachment SET date_of_download = ?, " +
-                    "file_name = ?, comment = ?, contact_id = ? WHERE id = ?")) {
+            try (PreparedStatement statement = connection.prepareStatement("UPDATE attachment SET " +
+                    "file_name = ?, comment = ? WHERE id = ?")) {
                 LOG.info("updateById Attachment starting");
-                statement.setDate(1, entity.getDateOfDownload());
-                statement.setString(2, entity.getFileName());
-                statement.setString(3, entity.getComment());
-                statement.setLong(4, entity.getContact_id());
-                statement.setLong(5, id);
+                statement.setString(1, entity.getFileName());
+                statement.setString(2, entity.getComment());
+                statement.setLong(3, id);
                 return statement.executeUpdate();
             } catch (SQLException e) {
                 LOG.error("Attachment wasn't updated", e);
                 throw new GenericDAOException(e);
             }
+    }
+
+    public int updateFileNameById(Long id, String fileName) throws GenericDAOException {
+        try (PreparedStatement statement = connection.prepareStatement("UPDATE attachment SET " +
+                "file_name = ? WHERE id = ?")) {
+            LOG.info("updateById Attachment starting");
+            statement.setString(1, fileName);
+            statement.setLong(2, id);
+            return statement.executeUpdate();
+        } catch (SQLException e) {
+            LOG.error("Attachment wasn't updated", e);
+            throw new GenericDAOException(e);
+        }
     }
 
     @Override

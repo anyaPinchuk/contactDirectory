@@ -1,16 +1,17 @@
 package commands;
 
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import services.ContactService;
 import services.MailService;
 import utilities.LetterTemplate;
-import utilities.MailSender;
 
 import javax.servlet.ServletException;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-public class SendMailCommand extends FrontCommand{
+public class SendMailCommand extends FrontCommand {
     @Override
     public void processGet() throws ServletException, IOException {
 
@@ -19,25 +20,27 @@ public class SendMailCommand extends FrontCommand{
     @Override
     public void processPost() throws ServletException, IOException {
         String[] values = request.getParameterValues("chosenContacts");
-        if (values != null) {
+        if (!CollectionUtils.isEmpty(Arrays.asList(values))) {
             Long[] ids = Arrays.stream(values).map(Long::valueOf).toArray(Long[]::new);
             ContactService contactService = new ContactService();
             List<String> emails = contactService.findEmailsById(ids);
-            if (emails!=null){
+            List<LetterTemplate> templates = LetterTemplate.getTemplates();
+            if (!CollectionUtils.isEmpty(emails)) {
                 request.setAttribute("emails", emails);
             }
-            List<LetterTemplate> templates = LetterTemplate.getTemplates();
             request.setAttribute("templates", templates);
             forward("sendMail");
-        }
-        else {
+        } else {
             String[] emails = request.getParameterValues("emails");
             String subject = request.getParameter("subject");
             String templateName = request.getParameter("template");
             String content = request.getParameter("content");
             //valid
             MailService mailService = new MailService();
-            mailService.sendEmail(emails, subject, templateName, content);
+            if (!CollectionUtils.isEmpty(Arrays.asList(emails)) && StringUtils.isNotEmpty(subject.trim()) &&
+                   StringUtils.isNotEmpty(content.trim())){
+                mailService.sendEmail(emails, subject, templateName, content);
+            }
             response.sendRedirect("Contacts");
         }
 

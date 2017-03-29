@@ -3,18 +3,17 @@ package commands;
 import converters.AddressConverter;
 import converters.ContactConverter;
 import converters.PhoneConverter;
-import dao.PhotoDAO;
 import dto.ContactDTO;
 import dto.PhoneDTO;
 import dto.PhotoDTO;
 import entities.*;
 import exceptions.GenericDAOException;
 import exceptions.MessageError;
+import org.apache.commons.lang3.StringUtils;
 import services.*;
 
 import javax.servlet.ServletException;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -39,9 +38,10 @@ public class ShowContactCommand extends FrontCommand {
     public void processGet() throws ServletException, IOException {
         LOG.info("get contact by id starting ");
         ContactDTO contactDTO = null;
-        Long id = Long.valueOf(request.getParameter("id"));
-        Long address_id;
+        String paramId = request.getParameter("id");
+        if (!StringUtils.isNotEmpty(paramId)) forward("unknown");;
         try {
+            Long id = Long.valueOf(paramId);
             Contact contact = contactService.findById(id);
             if (contact != null) {
                 contactDTO = contactConverter.toDTO(Optional.of(contact)).orElseThrow(() ->
@@ -61,7 +61,8 @@ public class ShowContactCommand extends FrontCommand {
                 List<Attachment> attachments = attachmentService.findAllById(contactDTO.getId());
                 request.setAttribute("attachments", attachments);
             }
-        } catch (GenericDAOException e) {
+        } catch (NumberFormatException | GenericDAOException e) {
+            forward("unknown");
             LOG.error("error while processing find contact from ShowContactCommand");
             new MessageError(e.getMessage(), e);
         }
