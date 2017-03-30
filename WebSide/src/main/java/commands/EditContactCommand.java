@@ -50,8 +50,8 @@ public class EditContactCommand extends FrontCommand {
                 contactDTO.setAddress(addressConverter.toDTO(Optional.of(address)).orElseThrow(() ->
                         new GenericDAOException("address wasn't converted")));
                 List<PhoneNumber> numberList = phoneService.findAllById(id);
-                List<PhoneDTO> phoneDTOList = numberList.size() != 0 ? numberList.stream().map(number ->
-                        phoneConverter.toDTO(Optional.of(number)).get()).collect(Collectors.toList()) : null;
+                List<PhoneDTO> phoneDTOList = CollectionUtils.isEmpty(numberList) ? numberList.stream().map(number ->
+                        phoneConverter.toDTO(Optional.of(number)).get()).collect(Collectors.toList()) : new ArrayList<>();
                 contactDTO.setPhoneDTOList(phoneDTOList);
                 PhotoDTO photoDTO;
                 Photo photo = photoService.findById(id);
@@ -63,7 +63,7 @@ public class EditContactCommand extends FrontCommand {
                 request.setAttribute("attachments", attachments);
             }
         } catch (NumberFormatException | GenericDAOException e) {
-            LOG.error("error while parsing id or find contact from EditContactCommand");
+            LOG.error("error while parsing id contact from EditContactCommand");
             forward("unknown");
             new MessageError(e.getMessage(), e);
         }
@@ -208,10 +208,8 @@ public class EditContactCommand extends FrontCommand {
                 }
             }
             if (photoItem != null) {
-                Long photoId = service.updatePhoto(contact.getId(), photoItem.getName());
-                if (photoId != 0) {
-                    FileUploadDocuments.saveDocument(request, photoItem, contact.getId(), null, true);
-                }
+                service.updatePhoto(contact.getId(), photoItem.getName());
+                FileUploadDocuments.saveDocument(request, photoItem, contact.getId(), null, true);
             }
             phoneService.updatePhones(contact.getId(), numbersForUpdate);
             service.updateAttachments(attachmentsForUpdate, contact.getId());

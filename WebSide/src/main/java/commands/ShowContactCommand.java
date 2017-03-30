@@ -9,11 +9,14 @@ import dto.PhotoDTO;
 import entities.*;
 import exceptions.GenericDAOException;
 import exceptions.MessageError;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.CharUtils;
 import org.apache.commons.lang3.StringUtils;
 import services.*;
 
 import javax.servlet.ServletException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -33,7 +36,7 @@ public class ShowContactCommand extends FrontCommand {
         ContactDTO contactDTO = null;
         String paramId = request.getParameter("id");
         LOG.info("show contact starting with parameter id {}", paramId);
-        if (!StringUtils.isNotEmpty(paramId)) forward("unknown");;
+        if (!StringUtils.isNotEmpty(paramId.trim())) forward("unknown");;
         try {
             Long id = Long.valueOf(paramId);
             Contact contact = contactService.findById(id);
@@ -44,8 +47,8 @@ public class ShowContactCommand extends FrontCommand {
                 contactDTO.setAddress(addressConverter.toDTO(Optional.of(address)).orElseThrow(()
                         -> new GenericDAOException("address wasn't converted")));
                 List<PhoneNumber> numberList = phoneService.findAllById(contactDTO.getId());
-                List<PhoneDTO> phoneDTOList = numberList.size() != 0 ? numberList.stream().map(number ->
-                        phoneConverter.toDTO(Optional.of(number)).get()).collect(Collectors.toList()) : null;
+                List<PhoneDTO> phoneDTOList = CollectionUtils.isEmpty(numberList) ? numberList.stream().map(number ->
+                        phoneConverter.toDTO(Optional.of(number)).get()).collect(Collectors.toList()) : new ArrayList<>();
                 contactDTO.setPhoneDTOList(phoneDTOList);
                 Photo photo = photoService.findById(id);
                 if (photo != null) {

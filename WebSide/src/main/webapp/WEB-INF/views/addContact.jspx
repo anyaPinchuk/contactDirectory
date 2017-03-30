@@ -10,17 +10,18 @@
 
     </head>
     <body>
+    <a href="contacts"><button>Back to contacts</button></a>
     <form name='addContact' enctype="multipart/form-data" action="addContact"  method="post">
         <div class="center">
             <div>
                 <div class="form-group">
                     <label for="contactName">Enter name* </label>
-                    <input class="form-control turnOFF" required="required" id="contactName" type="text" name="name"
+                    <input class="form-control turnOFF" id="contactName" type="text" name="name"
                            placeholder="Input name"/>
                 </div>
                 <div class="form-group">
                     <label for="contactSurname">Enter surname* </label>
-                    <input class="form-control turnOFF" required="required" id="contactSurname" type="text"
+                    <input class="form-control turnOFF" id="contactSurname" type="text"
                            name="surname" placeholder="Input surname"/>
                 </div>
                 <div class="form-group">

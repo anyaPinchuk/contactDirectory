@@ -367,7 +367,7 @@ function editAttachment(id) {
     saveAttachmentBtn.style.display = "block";
     console.log(editDocInput);
     var strings = editDocInput.value.split(";");
-    form.nameFile.value = strings[1];
+    form.nameFile.value = strings[1].split(".")[0];
     form.commentFile.value = strings[3];
 }
 
@@ -390,13 +390,14 @@ function validateForm() {
 function saveAttachment(fileName, comment) {
     var oldValue = editDocInput.value;
     var strings = oldValue.split(";");
+    var extension = strings[1].split(".")[1];
     var tr = document.getElementById("fileRow" + strings[0]);
     if (editDocInput.name == "hiddenInfoForInsert") {
         editDocInput.value = strings[0] + ";" + strings[1] + ";" + strings[2] + ";" + comment;
     }
     else {
-        editDocInput.value = strings[0] + ";" + fileName + ";" + strings[2] + ";" + comment;
-        tr.childNodes[1].childNodes[0].innerHTML = fileName;
+        editDocInput.value = strings[0] + ";" + fileName + "." + extension + ";" + strings[2] + ";" + comment;
+        tr.childNodes[1].childNodes[0].innerHTML = fileName + "." + extension;
     }
     tr.childNodes[3].childNodes[0].innerHTML = comment;
     saveAttachmentBtn.style.display = "none";

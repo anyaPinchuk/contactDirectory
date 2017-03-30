@@ -16,11 +16,15 @@ public class PhoneService implements ServiceEntity {
     private static final Logger LOG = LoggerFactory.getLogger(ContactService.class);
 
     public List<PhoneNumber> findAllById(Long id) {
-        try (Connection connection = connectionAwareExecutor.connect()) {
+        Connection connection = null;
+        try {
+            connection = connectionAwareExecutor.connect();
             phoneDAO.setConnection(connection);
             return phoneDAO.findAllById(id);
-        } catch (GenericDAOException | SQLException e) {
+        } catch (GenericDAOException e) {
             LOG.error("error while processing get all phones by id in PhoneService");
+        }finally {
+            connectionAwareExecutor.closeConnection(connection);
         }
         return null;
     }

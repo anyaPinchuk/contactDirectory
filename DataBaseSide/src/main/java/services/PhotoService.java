@@ -14,11 +14,15 @@ public class PhotoService implements ServiceEntity {
     private static final Logger LOG = LoggerFactory.getLogger(ContactService.class);
 
     public Photo findById(Long id) {
-        try (Connection connection = connectionAwareExecutor.connect()) {
+        Connection connection = null;
+        try {
+            connection = connectionAwareExecutor.connect();
             photoDAO.setConnection(connection);
             return photoDAO.findById(id).isPresent() ? photoDAO.findById(id).get() : null;
-        } catch (GenericDAOException | SQLException e) {
+        } catch (GenericDAOException e) {
             LOG.error("error while processing get Photo by id in PhotoService");
+        }finally {
+            connectionAwareExecutor.closeConnection(connection);
         }
         return null;
     }

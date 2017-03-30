@@ -25,21 +25,29 @@ public class ContactService implements ServiceEntity {
 
     public List<Contact> findByParts(int start, int count) {
         List<Contact> contacts = null;
-        try (Connection connection = connectionAwareExecutor.connect()) {
+        Connection connection = null;
+        try {
+            connection = connectionAwareExecutor.connect();
             contactDAO.setConnection(connection);
             contacts = contactDAO.findByParts(start, count);
-        } catch (GenericDAOException | SQLException e) {
+        } catch (GenericDAOException e) {
             LOG.error("error while processing get contacts in ContactService");
+        }finally {
+            connectionAwareExecutor.closeConnection(connection);
         }
         return contacts;
     }
 
     public Contact findById(Long contact_id) {
-        try (Connection connection = connectionAwareExecutor.connect()) {
+        Connection connection = null;
+        try {
+            connection = connectionAwareExecutor.connect();
             contactDAO.setConnection(connection);
             return contactDAO.findById(contact_id).isPresent() ? contactDAO.findById(contact_id).get() : null;
-        } catch (GenericDAOException | SQLException e) {
+        } catch (GenericDAOException e) {
             LOG.error("error while processing get contact by id in ContactService");
+        }finally {
+            connectionAwareExecutor.closeConnection(connection);
         }
         return null;
     }
@@ -64,37 +72,47 @@ public class ContactService implements ServiceEntity {
 
     public List<Contact> findByCriteria(Contact contact, Address address, String dateCriteria) {
         List<Contact> contacts = new ArrayList<>();
-        try (Connection connection = connectionAwareExecutor.connect()) {
+        Connection connection = null;
+        try {
+            connection = connectionAwareExecutor.connect();
             contactDAO.setConnection(connection);
             contacts = contactDAO.findByCriteria(contact, address, dateCriteria);
-        } catch (GenericDAOException | SQLException e) {
-            LOG.error("error while processing get contacts in ContactService");
-            e.printStackTrace();
+        } catch (GenericDAOException e) {
+            LOG.error("error while processing get contacts by criteria in ContactService");
+        }finally {
+            connectionAwareExecutor.closeConnection(connection);
         }
         return contacts;
     }
 
     public List<Contact> findByDate() {
         List<Contact> contacts = new ArrayList<>();
-        try (Connection connection = connectionAwareExecutor.connect()) {
+        Connection connection = null;
+        try {
+            connection = connectionAwareExecutor.connect();
             contactDAO.setConnection(connection);
             contacts = contactDAO.findByDate();
-        } catch (GenericDAOException | SQLException e) {
+        } catch (GenericDAOException e) {
             LOG.error("error while processing get contacts in ContactService");
-            e.printStackTrace();
+        }finally {
+            connectionAwareExecutor.closeConnection(connection);
         }
         return contacts;
     }
 
     public List<String> findEmailsById(Long[] ids) {
         List<String> emails = new ArrayList<>();
-        try (Connection connection = connectionAwareExecutor.connect()) {
+        Connection connection = null;
+        try {
+            connection = connectionAwareExecutor.connect();
             contactDAO.setConnection(connection);
             for (Long id : ids) {
                 emails.add(contactDAO.findEmailById(id));
             }
-        } catch (GenericDAOException | SQLException e) {
+        } catch (GenericDAOException e) {
             LOG.error("error while processing get contact by id in ContactService");
+        }finally {
+            connectionAwareExecutor.closeConnection(connection);
         }
         return emails;
     }
@@ -170,13 +188,17 @@ public class ContactService implements ServiceEntity {
 
     public List<String> findNamesByEmails(String[] emails) {
         List<String> names = new ArrayList<>();
-        try (Connection connection = connectionAwareExecutor.connect()) {
+        Connection connection = null;
+        try {
+            connection = connectionAwareExecutor.connect();
             contactDAO.setConnection(connection);
             for (String email : emails) {
                 names.add(contactDAO.findByEmail(email));
             }
-        } catch (GenericDAOException | SQLException e) {
+        } catch (GenericDAOException e) {
             LOG.error("error while processing get contact by id in ContactService");
+        }finally {
+            connectionAwareExecutor.closeConnection(connection);
         }
         return names;
     }

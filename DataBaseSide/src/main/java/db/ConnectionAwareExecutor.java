@@ -1,6 +1,7 @@
 package db;
 
 import exceptions.GenericDAOException;
+import org.apache.tomcat.jdbc.pool.DataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,8 +11,9 @@ import java.util.Properties;
 
 
 public class ConnectionAwareExecutor {
-    private static final String DB_URL = "jdbc:mysql://";
     protected static final Logger LOG = LoggerFactory.getLogger(ConnectionAwareExecutor.class);
+    private static DataSource dataSource = null;
+    private static final String DB_URL = "jdbc:mysql://";
 
     private static Properties getEnvironmentProperties() throws IOException {
         Properties properties = new Properties();
@@ -20,22 +22,37 @@ public class ConnectionAwareExecutor {
     }
     public Connection connect() throws GenericDAOException {
         try {
-            Properties properties = getEnvironmentProperties();
-            String host = properties.getProperty("host");
-            int port = Integer.parseInt(properties.getProperty("port"));
-            String user = properties.getProperty("user");
-            String password = properties.getProperty("password");
-            String dbName = properties.getProperty("db_name");
-            String useSSL = properties.getProperty("useSSL");
-            String sqlUrl = DB_URL + host + ":" + port + "/" + dbName + "?useSSL=" + useSSL;
-
-            DriverManager.registerDriver(new com.mysql.jdbc.Driver());
-            Connection connection = DriverManager.getConnection(sqlUrl, user, password);
-
-            DatabaseMetaData metaData = connection.getMetaData();
-            LOG.info("dao Connected to " + metaData.getDatabaseProductName() + " " + metaData.getDatabaseProductVersion());
-            return connection;
-        } catch (SQLException | IOException e) {
+            if (dataSource != null)
+                return dataSource.getConnection();
+            else {
+                try {
+                    dataSource = new DataSource();
+                    Properties properties = ConnectionAwareExecutor.getEnvironmentProperties();
+                    String host = properties.getProperty("host");
+                    int port = Integer.parseInt(properties.getProperty("port"));
+                    String user = properties.getProperty("user");
+                    String password = properties.getProperty("password");
+                    String dbName = properties.getProperty("db_name");
+                    String sqlUrl = DB_URL + host + ":" + port + "/" + dbName;
+                    dataSource.setDriverClassName("com.mysql.jdbc.Driver");
+                    dataSource.setUrl(sqlUrl);
+                    dataSource.setUsername(user);
+                    dataSource.setPassword(password);
+                    dataSource.setInitialSize(5);
+                    dataSource.setMaxActive(10);
+                    dataSource.setMaxWait(10000);
+                    dataSource.setValidationInterval(30000);
+                    dataSource.setTimeBetweenEvictionRunsMillis(30000);
+                    dataSource.setRemoveAbandonedTimeout(60);
+                    dataSource.setMinEvictableIdleTimeMillis(30000);
+                    dataSource.setMaxIdle(5);
+                    dataSource.setMinIdle(2);
+                } catch (IOException e) {
+                    LOG.error("error while creating pool connections to DB");
+                }
+                return dataSource.getConnection();
+            }
+        } catch (SQLException e) {
             LOG.error("error while connecting to DB");
             throw new GenericDAOException(e);
         }
@@ -70,6 +87,4 @@ public class ConnectionAwareExecutor {
             LOG.error(e.getMessage());
         }
     }
-
-
 }

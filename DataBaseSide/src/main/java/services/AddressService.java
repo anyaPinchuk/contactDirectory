@@ -14,11 +14,15 @@ public class AddressService implements ServiceEntity {
     private static final Logger LOG = LoggerFactory.getLogger(AddressService.class);
 
     public Address findById(Long id) {
-        try (Connection connection = connectionAwareExecutor.connect()) {
+        Connection connection = null;
+        try {
+            connection = connectionAwareExecutor.connect();
             addressDAO.setConnection(connection);
             return addressDAO.findById(id).isPresent() ? addressDAO.findById(id).get(): null;
-        } catch (GenericDAOException | SQLException e) {
+        } catch (GenericDAOException e) {
             LOG.error("error while processing get address by id in AddressService");
+        }finally {
+            connectionAwareExecutor.closeConnection(connection);
         }
         return null;
     }

@@ -8,6 +8,14 @@ p {
     white-space: pre;
 }
 
+.pages{
+    overflow-x: scroll;
+    overflow-y: hidden;
+    height: 80px;
+    width: 80px;
+    white-space:nowrap
+}
+
 .vertical-group{
     display: flex;
     flex-direction: row;

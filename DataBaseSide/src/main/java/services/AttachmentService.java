@@ -18,11 +18,15 @@ public class AttachmentService implements ServiceEntity {
     private static final Logger LOG = LoggerFactory.getLogger(ContactService.class);
 
     public List<Attachment> findAllById(Long id) {
-        try (Connection connection = connectionAwareExecutor.connect()) {
+        Connection connection = null;
+        try {
+            connection = connectionAwareExecutor.connect();
             attachmentDAO.setConnection(connection);
             return attachmentDAO.findAllById(id);
-        } catch (GenericDAOException | SQLException e) {
+        } catch (GenericDAOException e) {
             LOG.error("error while processing get all attachments by id in attachmentService");
+        }finally {
+            connectionAwareExecutor.closeConnection(connection);
         }
         return null;
     }
@@ -70,11 +74,15 @@ public class AttachmentService implements ServiceEntity {
     }
 
     public Attachment findById(Long id) {
-        try (Connection connection = connectionAwareExecutor.connect()) {
+        Connection connection = null;
+        try {
+            connection = connectionAwareExecutor.connect();
             attachmentDAO.setConnection(connection);
             return attachmentDAO.findById(id).isPresent() ? attachmentDAO.findById(id).get() : null;
-        } catch (GenericDAOException | SQLException e) {
+        } catch (GenericDAOException e) {
             LOG.error("error while processing get attachment by id in attachmentService");
+        }finally {
+            connectionAwareExecutor.closeConnection(connection);
         }
         return null;
     }

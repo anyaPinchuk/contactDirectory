@@ -24,10 +24,10 @@ public class DocumentCommand extends FrontCommand {
                 contact_id = Long.valueOf(strings[1]);
                 bytes = FileUploadDocuments.readDocument(strings[0], false, contact_id);
                 String MIMEType = Files.probeContentType(Paths.get(FileUploadDocuments.getFileDirectory(false) +
-                        strings[0]));
-                if (MIMEType.equals("application/vnd.openxmlformats-officedocument.wordprocessingml.document"))
+                       strings[0]));
+                if ("application/vnd.openxmlformats-officedocument.wordprocessingml.document".equals(MIMEType))
                     response.setContentType(MIMEType);
-            } catch (ArrayIndexOutOfBoundsException | NumberFormatException e) {
+            } catch (Exception e) {
                 bytes = "<h1>Unable to load content</h1>".getBytes();
                 LOG.error("Error getting document");
             }
