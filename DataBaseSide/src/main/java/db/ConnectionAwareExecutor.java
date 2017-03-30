@@ -20,6 +20,7 @@ public class ConnectionAwareExecutor {
         properties.loadFromXML(ConnectionAwareExecutor.class.getClassLoader().getResourceAsStream("environment.xml"));
         return properties;
     }
+
     public Connection connect() throws GenericDAOException {
         try {
             if (dataSource != null)
