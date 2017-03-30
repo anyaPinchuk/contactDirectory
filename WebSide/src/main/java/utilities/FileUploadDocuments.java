@@ -69,11 +69,24 @@ public class FileUploadDocuments {
 
     public static boolean renameDocument(String fileName, String newFileName, Long contactId) {
         LOG.info("rename document {} on {} at contact{} starting", fileName, newFileName, contactId);
+        if (!StringUtils.isNotEmpty(fileName.trim()) && !StringUtils.isNotEmpty(newFileName.trim())) return false;
+        String fileExtension = "";
+        String modifiedFileName = "";
+        int index = fileName.lastIndexOf('.');
+        if (index > 0) {
+            fileExtension = fileName.substring(index + 1);
+            index = newFileName.lastIndexOf('.');
+            if (index > 0)
+                modifiedFileName = newFileName.substring(0, index) + fileExtension;
+        }
         String uploadPath = getFileDirectory(false);
         if (!StringUtils.isNotEmpty(uploadPath)) return false;
-        File file = new File(uploadPath + File.separator + "contact" + contactId +
-                File.separator + fileName);
-        return file.renameTo(new File(file.getParentFile(), newFileName));
+        if (StringUtils.isNotEmpty(modifiedFileName)) {
+            File file = new File(uploadPath + File.separator + "contact" + contactId +
+                    File.separator + modifiedFileName);
+            return file.renameTo(new File(file.getParentFile(), newFileName));
+        }
+        return false;
     }
 
     public static boolean deleteDocument(String fileName, boolean isImage, Long contact_id) {
@@ -120,7 +133,7 @@ public class FileUploadDocuments {
     }
 
     public static void deleteDirectory(Long contactId, boolean isImage) {
-        LOG.info("delete directory by contact_id {} starting",  contactId);
+        LOG.info("delete directory by contact_id {} starting", contactId);
         try {
             String filePath = "";
             if (isImage) filePath = getFileDirectory(true);
