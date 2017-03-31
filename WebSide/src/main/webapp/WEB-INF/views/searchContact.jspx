@@ -4,7 +4,7 @@
     <head><title>Search</title>
         <link href="${pageContext.request.contextPath}/web-resources/bootstrap/css/bootstrap.css" rel="stylesheet"
               type="text/css" media="screen"/>
-        <link href="${pageContext.request.contextPath}/web-resources/bootstrap/css/bootstrap.css" rel="stylesheet"
+        <link href="${pageContext.request.contextPath}/web-resources/css/index.css" rel="stylesheet"
               type="text/css" media="screen"/>
     </head>
     <body>
@@ -59,12 +59,14 @@
             <label>Index: </label>
             <input class="form-control input-lg" type="text" name="indexCode" placeholder="Input index"/><br/>
         </div>
-        <button type="button" id="searchContactBtn">Search</button>
+        <button type="button" class="btn btn-primary" id="searchContactBtn">Search</button>
     </form>
+    <div id="notifyDiv" class="notifier">MESSAGE</div>
     <script src="${pageContext.request.contextPath}/web-resources/scripts/search.js">//hhh</script>
     <script type="text/javascript" src="${pageContext.request.contextPath}/web-resources/bootstrap/js/bootstrap.min.js">
         //hiii
     </script>
+    <script src="${pageContext.request.contextPath}/web-resources/scripts/main.js">//hi</script>
     </body>
     </html>
 </jsp:root>

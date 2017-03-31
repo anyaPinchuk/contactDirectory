@@ -10,8 +10,12 @@
 
     </head>
     <body>
-    <a href="contacts"><button>Back to contacts</button></a>
-    <form name='addContact' enctype="multipart/form-data" action="addContact"  method="post">
+    <a href="contacts">
+        <button class="btn btn-link"><img
+                src="${pageContext.request.contextPath}/web-resources/img/to_back.png"/>Back to contacts
+        </button>
+    </a>
+    <form name='addContact' enctype="multipart/form-data" action="addContact" method="post">
         <div class="center">
             <div>
                 <div class="form-group">
@@ -31,13 +35,13 @@
                 </div>
                 <div class="form-group">
                     <label for="contactEmail">Enter email address* </label>
-                    <input class="form-control turnOFF" id="contactEmail" type="email" required="required" name="email"
+                    <input class="form-control turnOFF" id="contactEmail" type="email" name="email"
                            pattern="^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$" placeholder="Input email"/>
                 </div>
                 <div class="form-group">
                     <label for="contactDate">Enter date of birth </label>
                     <input class="form-control turnOFF" id="contactDate" type="text" placeholder="DD-MM-YYYY"
-                            name="dateOfBirth"/>
+                           name="dateOfBirth"/>
                 </div>
                 <div class="form-group">
                     <label for="contactGender">Choose gender </label>
@@ -78,7 +82,7 @@
                     <input class="form-control turnOFF" id="contactIndex" type="text" name="index"
                            placeholder="Input index"/><br/>
                 </div>
-                <button id="addContact" type="submit" onclick="validateForm()" class="btn btn-primary">Add contact</button>
+                <button id="addContact" type="button" class="btn btn-primary">Add contact</button>
             </div>
             <div class="tables">
                 <div>
@@ -101,7 +105,8 @@
                 <div>
                     <div class="vertical-group">
                         <button id="attachmentBtn" type="button" class="btn btn-success padding">Add attachment</button>
-                        <button type="button" id="attachmentDelete" class="btn btn-link padding">Delete chosen<br/> attachments
+                        <button type="button" id="attachmentDelete"
+                                class="btn btn-link padding">Delete chosen<br/> attachments
                         </button>
                     </div>
                     <table class="table-bordered" id="attachments">
@@ -113,28 +118,29 @@
                             <th>Comment</th>
                         </tr>
                         </tbody>
-                    </table><br/>
+                    </table>
+                    <br/>
                     <div style="visibility:hidden;" id="forHiddenFiles"></div>
                 </div>
             </div>
         </div>
     </form>
     <div id="myModal" class="modal-content">
-        <span class="close">Cancel</span>
-        <form name="addPhone">
+        <span class="close"><img src="${pageContext.request.contextPath}/web-resources/img/cross.png"/>Cancel</span>
+        <div class="addPhone">
             <div class="form-group">
                 <label for="countryCode">Enter coutry code, for example: 375</label>
-                <input class="form-control" type="number" id="countryCode" required="required"
+                <input class="form-control" type="number" id="countryCode"
                        placeholder="Input country code" name="countryCode"/>
             </div>
             <div class="form-group">
                 <label for="operatorCode">Enter operator code, for example: 29</label>
-                <input class="form-control" type="number" id="operatorCode" required="required"
+                <input class="form-control" type="number" id="operatorCode"
                        placeholder="Input operator code" name="operatorCode"/>
             </div>
             <div class="form-group">
                 <label for="number">Enter coutry code, for example: 1234567</label>
-                <input class="form-control" type="number" id="number" required="required"
+                <input class="form-control" type="number" id="number"
                        placeholder="Input number" name="number"/>
             </div>
             <div class="form-group">
@@ -148,15 +154,16 @@
                 <label for="comment">Enter comment</label>
                 <input type="text" class="form-control" id="comment" placeholder="Input comment" name="comment"/>
             </div>
-        </form>
+        </div>
         <button type="button" class="btn btn-primary" id="addPhone">Add phone</button>
     </div>
     <div id="myModalAttachment" class="modal-content">
-        <span class="close">Cancel</span>
+        <span class="close"><img src="${pageContext.request.contextPath}/web-resources/img/cross.png"/>Cancel</span>
         <div class="form-group">
             <label id="labelFile">Choose file </label>
-            <input accept="application/msword, text/plain, application/pdf, application/xml, .docx, image/*" class="form-control"
-                   type="file"  name="attachment-0" id="attachment0"/>
+            <input accept="application/msword, text/plain, application/pdf, application/xml, .docx, image/*"
+                   class="form-control"
+                   type="file" name="attachment-0" id="attachment0"/>
         </div>
         <div class="form-group">
             <label>Input comment</label>
@@ -164,10 +171,12 @@
         </div>
         <button id="addAttachmentBtn" type="button" class="btn btn-success" onclick="addAttachment()">Add</button>
     </div>
+    <div id="notifyDiv" class="notifier"></div>
     <script src="${pageContext.request.contextPath}/web-resources/scripts/addContact.js">//hi</script>
     <script type="text/javascript" src="${pageContext.request.contextPath}/web-resources/bootstrap/js/bootstrap.min.js">
         //hiii
     </script>
+    <script src="${pageContext.request.contextPath}/web-resources/scripts/main.js">//hi</script>
     </body>
     </html>
 </jsp:root>

@@ -8,6 +8,8 @@ btn.addEventListener("click", function () {
 span.addEventListener("click", function () {
     modal.style.display = "none";
 });
+
+var form = document.forms.addContact;
 /////////////////////////////
 var addPhoneButton = document.getElementById("addPhone");
 addPhoneButton.addEventListener("click", addPhone);
@@ -34,7 +36,6 @@ var i = 0;
 var object = {};
 
 function addPhone() {
-    var form = document.forms.addPhone;
     object.countryCode = form.countryCode.value;
     object.operatorCode = form.operatorCode.value;
     object.number = form.number.value;
@@ -221,11 +222,16 @@ if (document.querySelectorAll(".fileRows").length == 0) {
 if (document.querySelectorAll(".rows").length == 0) {
     table.style.visibility = "hidden";
 }
+var addContact = document.getElementById("addContact");
+
+addContact.addEventListener("click", validateForm);
+
 function validateForm() {
     var date = document.getElementById("contactDate");
-    if (!date.value.match(/^(0?[1-9]|[12][0-9]|3[01])[\-](0?[1-9]|1[012])[\-]\d{4}$/)){
-    } else {
-        var strings = date.value.split("-");
-        date.value = strings[2] +  "-" + strings[1] + "-" + strings[0];
+    var element = document.getElementById("notifyDiv");
+    if (validDate(element,date) && validate(element,form.thirdName, form.citizenship, form.status, form.webSite, form.job,
+            form.country, form.city, form.address, form.index) && !isEmpty(element,form.name) &&
+        !isEmpty(element,form.surname) && validEmail(element, form.email)) {
+        form.submit();
     }
 }

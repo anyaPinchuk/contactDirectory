@@ -1,7 +1,7 @@
 <html xmlns:jsp="http://java.sun.com/JSP/Page"
       xmlns:c="http://java.sun.com/jsp/jstl/core">
 <head>
-    <title>Unknown page</title>
+    <title>UnknownCommand</title>
     <link href="${pageContext.request.contextPath}/web-resources/bootstrap/css/bootstrap.css" rel="stylesheet"
           type="text/css" media="screen"/>
 </head>
@@ -9,7 +9,6 @@
 <jsp:directive.page contentType="text/html" pageEncoding="UTF-8"/>
 <jsp:output omit-xml-declaration="yes"/>
 <body>
-<h1 class="text-danger">This page doesn't exist<br/>
-    You passed thhe wrong <abbr>URL</abbr></h1>
+
 </body>
 </html>

@@ -51,21 +51,24 @@
                 </tbody>
             </table>
         </form>
-        <div class = "pages">
-            <a id="prev" onclick="showPrevPage">
-                <button class="btn btn-default">prev</button>
-            </a>
-            <c:forEach var="page" items="${sessionScope.pageList}">
-                <a href="contacts?page=${page}">
-                    <button class="btn btn-default">${page}</button>
+        <div class="center">
+            <div class="pages">
+                <a id="prev" onclick="showPrevPage">
+                    <button class="btn btn-default"><img src="${pageContext.request.contextPath}/web-resources/img/left.png"/></button>
                 </a>
-            </c:forEach>
-            <a id="next" onclick="showNextPage">
-                <button class="btn btn-default">next</button>
-            </a>
+                <c:forEach var="page" items="${sessionScope.pageList}">
+                    <a href="contacts?page=${page}">
+                        <button class="btn btn-default">${page}</button>
+                    </a>
+                </c:forEach>
+                <a id="next" onclick="showNextPage">
+                    <button class="btn btn-default"><img src="${pageContext.request.contextPath}/web-resources/img/right.png"/></button>
+                </a>
+            </div>
         </div>
     </div>
-    <script src="${pageContext.request.contextPath}/web-resources/scripts/index.js">//hhh</script>
+    <script src="${pageContext.request.contextPath}/web-resources/scripts/contacts.js">//hhh</script>
+    <script src="${pageContext.request.contextPath}/web-resources/scripts/main.js">//hi</script>
     <script type="text/javascript" src="${pageContext.request.contextPath}/web-resources/bootstrap/js/bootstrap.min.js">
         //hiii
     </script>

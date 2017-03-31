@@ -28,12 +28,14 @@
                 <label>Subject </label>
                 <textarea rows="5" cols="40" class="form-control" name="content" placeholder="Text">text</textarea>
             </div>
-            <button class="btn btn-primary" id="sendMail">Send</button>
+            <button class="btn btn-primary" type="button" id="sendMail">Send</button>
     </form>
     </div>
+    <div id="notifyDiv" class="notifier">MESSAGE</div>
     <script type="text/javascript" src="${pageContext.request.contextPath}/web-resources/scripts/mail.js">
         //hiii
     </script>
+    <script src="${pageContext.request.contextPath}/web-resources/scripts/main.js">//hi</script>
     </body>
     </html>
 </jsp:root>

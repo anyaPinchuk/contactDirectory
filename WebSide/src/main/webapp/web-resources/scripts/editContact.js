@@ -1,5 +1,7 @@
 var editInput;
-var form;
+var form = document.forms.editContact;
+var editContact = document.getElementById("saveContact");
+editContact.addEventListener("click", validateForm);
 var addPhoneButton;
 var savePhoneButton;
 //--------pop Up window photo----------//
@@ -67,7 +69,6 @@ spanPhone.onclick = function () {
 var phones = new Array();
 var i = 0;
 var object = {};
-form = document.forms[0];
 
 function addPhone() {
     if (document.querySelectorAll(".rows").length == 0) {
@@ -372,18 +373,20 @@ function editAttachment(id) {
 }
 
 function validateForm() {
+    var element = document.getElementById("notifyDiv");
     var input = document.getElementById("contactPhoto");
     var photo = document.getElementById("photo");
     var date = document.getElementById("contactDate");
-    if (!date.value.match(/^(0?[1-9]|[12][0-9]|3[01])[\-](0?[1-9]|1[012])[\-]\d{4}$/)) {
-    } else {
-        var strings = date.value.split("-");
-        date.value = strings[2] + "-" + strings[1] + "-" + strings[0];
+    if (photo.value != null) {
+        var nameOfImage = photo.value.split("=");
+        if (input.files[0].name != nameOfImage[1]) {
+            input.value = "";
+        }
     }
-    var nameOfImage = photo.split("=");
-    if (input.files[0].name != nameOfImage[1]) {
-        input.value = "";
-        return true;
+    if (validDate(element, date) && validate(element, form.thirdName, form.citizenship, form.status, form.webSite,
+            form.job, form.country, form.city, form.address, form.index) && !isEmpty(element, form.name)
+        && !isEmpty(element, form.surname) && validEmail(element,form.email)) {
+        form.submit();
     }
 }
 
