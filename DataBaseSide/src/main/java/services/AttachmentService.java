@@ -93,7 +93,7 @@ public class AttachmentService implements ServiceEntity {
             connection = connectionAwareExecutor.connect();
             connection.setAutoCommit(false);
             attachmentDAO.setConnection(connection);
-            if (StringUtils.isNotEmpty(attachment.getComment())) {
+            if (StringUtils.isEmpty(attachment.getComment())) {
                 attachmentDAO.updateFileNameById(id, attachment.getFileName());
             } else attachmentDAO.updateById(id, attachment);
             connection.commit();

@@ -8,6 +8,7 @@
               type="text/css" media="screen"/>
     </head>
     <body>
+    <jsp:include page="${pageContext.request.contextPath}/WEB-INF/views/header.jspx"/>
     <form name="searchForm" action="searchContact" method="post">
         <div class="form-group">
             <label>Name: </label>
@@ -59,9 +60,10 @@
             <label>Index: </label>
             <input class="form-control input-lg" type="text" name="indexCode" placeholder="Input index"/><br/>
         </div>
-        <button type="button" class="btn btn-primary" id="searchContactBtn">Search</button>
+        <button type="button" class="btn" id="searchContactBtn">Search</button>
+        <a href="contacts"><button class="btn">Cancel</button></a>
     </form>
-    <div id="notifyDiv" class="notifier">MESSAGE</div>
+    <div id="notifyDiv" class="notifier"></div>
     <script src="${pageContext.request.contextPath}/web-resources/scripts/search.js">//hhh</script>
     <script type="text/javascript" src="${pageContext.request.contextPath}/web-resources/bootstrap/js/bootstrap.min.js">
         //hiii

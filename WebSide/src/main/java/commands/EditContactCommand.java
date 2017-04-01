@@ -15,12 +15,17 @@ import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import services.*;
 import utilities.FileUploadDocuments;
+import utilities.Validator;
 
 import javax.servlet.ServletException;
 import java.io.File;
 import java.io.IOException;
+import java.sql.Date;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -50,8 +55,10 @@ public class EditContactCommand extends FrontCommand {
                 contactDTO.setAddress(addressConverter.toDTO(Optional.of(address)).orElseThrow(() ->
                         new GenericDAOException("address wasn't converted")));
                 List<PhoneNumber> numberList = phoneService.findAllById(id);
-                List<PhoneDTO> phoneDTOList = CollectionUtils.isEmpty(numberList) ? numberList.stream().map(number ->
-                        phoneConverter.toDTO(Optional.of(number)).get()).collect(Collectors.toList()) : new ArrayList<>();
+                List<PhoneDTO> phoneDTOList = CollectionUtils.isNotEmpty(numberList) ?
+                        numberList.stream().map(number ->
+                                phoneConverter.toDTO(Optional.of(number)).get()).collect(Collectors.toList())
+                        : new ArrayList<>();
                 contactDTO.setPhoneDTOList(phoneDTOList);
                 PhotoDTO photoDTO;
                 Photo photo = photoService.findById(id);
@@ -65,7 +72,6 @@ public class EditContactCommand extends FrontCommand {
         } catch (NumberFormatException | GenericDAOException e) {
             LOG.error("error while parsing id contact from EditContactCommand");
             forward("unknown");
-            new MessageError(e.getMessage(), e);
         }
         if (contactDTO != null) {
             request.setAttribute("contact", contactDTO);
@@ -78,6 +84,8 @@ public class EditContactCommand extends FrontCommand {
     @Override
     public void processPost() throws ServletException, IOException {
         LOG.info("update contact command starting ");
+        MessageError error = new MessageError();
+        Validator validator = new Validator(error);
         PhoneService phoneService = new PhoneService();
         AttachmentService attachmentService = new AttachmentService();
         ContactService contactService = new ContactService();
@@ -95,18 +103,17 @@ public class EditContactCommand extends FrontCommand {
         try {
             formItems = upload.parseRequest(request);
             if (!CollectionUtils.isEmpty(formItems)) {
-                String field, fieldName;
                 for (FileItem item : formItems) {
-                    field = item.getString("UTF-8");
+                    String field = item.getString("UTF-8");
                     if (item.isFormField() && StringUtils.isNotEmpty(field.trim())) {
-                        fieldName = item.getFieldName();
+                        String fieldName = item.getFieldName();
                         switch (fieldName) {
                             case "id": {
                                 try {
                                     contact.setId(Long.parseLong(field));
-                                    address.setId(contact.getId());
+                                    address.setContactId(contact.getId());
                                 } catch (NumberFormatException e) {
-                                    //to error page
+                                    error.addMessage("Wrong id of contact");
                                     LOG.error("error while parsing id {}", field);
                                 }
                                 break;
@@ -124,10 +131,19 @@ public class EditContactCommand extends FrontCommand {
                                 break;
                             }
                             case "dateOfBirth": {
-                                if (field.equals("")) {
+                                if (StringUtils.isEmpty(field.trim())) {
                                     contact.setDateOfBirth(null);
-                                } else
-                                    contact.setDateOfBirth(java.sql.Date.valueOf(field));
+                                } else {
+                                    DateTime dt = null;
+                                    DateTimeFormatter formatter = DateTimeFormat.forPattern("dd-MM-yyyy");
+                                    try {
+                                        dt = formatter.parseDateTime(field);
+                                    } catch (IllegalArgumentException e) {
+                                        LOG.info("wrong date format");
+                                        error.addMessage("Wrong date format");
+                                    }
+                                    contact.setDateOfBirth(dt == null ? null : new Date(dt.toDate().getTime()));
+                                }
                                 break;
                             }
                             case "gender": {
@@ -199,7 +215,7 @@ public class EditContactCommand extends FrontCommand {
                                 break;
                             }
                         }
-                    } else if (!item.isFormField()) {
+                    } else {
                         if (StringUtils.isNotEmpty(item.getName())) {
                             if (!item.getFieldName().contains("attachment")) photoItem = item;
                             else if (item.getFieldName().contains("attachment")) documents.add(item);
@@ -211,25 +227,31 @@ public class EditContactCommand extends FrontCommand {
                 service.updatePhoto(contact.getId(), photoItem.getName());
                 FileUploadDocuments.saveDocument(request, photoItem, contact.getId(), null, true);
             }
-            phoneService.updatePhones(contact.getId(), numbersForUpdate);
-            service.updateAttachments(attachmentsForUpdate, contact.getId());
-
+            if (validator.validAttachments(attachmentsForUpdate) && validator.validPhones(numbersForUpdate)) {
+                phoneService.updatePhones(contact.getId(), numbersForUpdate);
+                service.updateAttachments(attachmentsForUpdate, contact.getId());
+            }
         } catch (FileUploadException | GenericDAOException e) {
             LOG.error("error while uploading files or updating phones");
         }
-        phoneService.insertPhones(numbersForInsert, contact.getId());
-        List<Long> ids = attachmentService.insertAttachments(attachmentsForInsert, contact.getId());
-        if (!CollectionUtils.isEmpty(documents) && !CollectionUtils.isEmpty(ids)) {
-            for (int i = 0; i < documents.size(); i++) {
-                if (StringUtils.isNotEmpty(documents.get(i).getName())) {
-                    String fileName = FileUploadDocuments.saveDocument(request, documents.get(i), contact.getId(), ids.get(i), false);
-                    attachmentService.updateById(ids.get(i), new Attachment(fileName));
+        if (validator.validAttachments(attachmentsForInsert) && validator.validPhones(numbersForInsert)) {
+            phoneService.insertPhones(numbersForInsert, contact.getId());
+            List<Long> ids = attachmentService.insertAttachments(attachmentsForInsert, contact.getId());
+            if (CollectionUtils.isNotEmpty(documents) && CollectionUtils.isNotEmpty(ids)) {
+                for (int i = 0; i < documents.size(); i++) {
+                    if (StringUtils.isNotEmpty(documents.get(i).getName())) {
+                        String fileName = FileUploadDocuments.saveDocument(request, documents.get(i), contact.getId(), ids.get(i), false);
+                        attachmentService.updateById(ids.get(i), new Attachment(fileName));
+                    }
                 }
             }
         }
-        if (contact.getName() != null && contact.getSurname() != null && contact.getEmail() != null) {
+        if (validator.validContact(contact)) {
             contactService.updateContact(contact, address);
         }
-        response.sendRedirect("contacts");
+        if (CollectionUtils.isNotEmpty(error.getMessages())){
+            request.getSession().setAttribute("messageList", error.getMessages());
+            response.sendRedirect("errorPage");
+        } else response.sendRedirect("contacts");
     }
 }

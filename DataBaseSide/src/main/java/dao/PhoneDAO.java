@@ -81,12 +81,12 @@ public class PhoneDAO extends AbstractDAO<PhoneNumber>{
         LOG.info("update Phone starting By Id {}", id);
         if (entity == null) return 0;
             try (PreparedStatement statement = connection.prepareStatement("UPDATE phone_number SET country_code = ?, " +
-                    "operator_code = ?, number = ?, phone_type = ?, contact_id = ? WHERE id = ?")) {
+                    "operator_code = ?, number = ?, phone_type = ?, comment = ? WHERE id = ?")) {
                 statement.setString(1, entity.getCountryCode());
                 statement.setString(2, entity.getOperatorCode());
                 statement.setString(3, entity.getNumber());
                 statement.setString(4, entity.getNumberType());
-                statement.setLong(5,entity.getContactId());
+                statement.setString(5, entity.getComment());
                 statement.setLong(6, id);
                 return statement.executeUpdate();
             } catch (SQLException e) {

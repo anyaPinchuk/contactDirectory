@@ -2,12 +2,17 @@ package commands;
 
 import dto.AddressDTO;
 import dto.ContactDTO;
+import exceptions.MessageError;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import services.SearchService;
+import utilities.Validator;
 
 import javax.servlet.ServletException;
 import java.io.IOException;
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,15 +26,24 @@ public class SearchContactCommand extends FrontCommand {
     @Override
     public void processPost() throws ServletException, IOException {
         LOG.info("search contact command starting");
+        MessageError error = new MessageError();
+        Validator validator = new Validator(error);
         ContactDTO contactDTO = new ContactDTO();
         contactDTO.setName(request.getParameter("firstName"));
         contactDTO.setSurname(request.getParameter("surname"));
         contactDTO.setThirdName(request.getParameter("thirdName"));
-        //validator date and other fields
         String date = request.getParameter("dateOfBirth");
-        if (StringUtils.isNotEmpty(date.trim())) {
-            contactDTO.setDateOfBirth(Date.valueOf(date));
+        DateTimeFormatter formatter = DateTimeFormat.forPattern("dd-MM-yyyy");
+        DateTime dt = null;
+        try {
+            dt = formatter.parseDateTime(date);
+        } catch (IllegalArgumentException e) {
+            error.addMessage("Wrong date format");
+            request.getSession().setAttribute("messageList", error.getMessages());
+            response.sendRedirect("errorPage");
+            LOG.info("wrong date format");
         }
+        contactDTO.setDateOfBirth(dt);
         contactDTO.setCitizenship(request.getParameter("citizenship"));
         contactDTO.setGender(request.getParameter("gender"));
         contactDTO.setMaritalStatus(request.getParameter("status"));

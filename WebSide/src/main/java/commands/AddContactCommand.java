@@ -1,20 +1,27 @@
 package commands;
 
 import entities.*;
+import exceptions.MessageError;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import services.AttachmentService;
 import services.ContactService;
 import services.PhoneService;
 import utilities.FileUploadDocuments;
+import utilities.Validator;
 
 import javax.servlet.ServletException;
 import java.io.File;
 import java.io.IOException;
+import java.sql.*;
+import java.sql.Date;
 import java.util.*;
 
 public class AddContactCommand extends FrontCommand {
@@ -27,6 +34,8 @@ public class AddContactCommand extends FrontCommand {
     @Override
     public void processPost() throws ServletException, IOException {
         LOG.info("insert contact command starting ");
+        MessageError error = new MessageError();
+        Validator validator = new Validator(error);
         DiskFileItemFactory factory = new DiskFileItemFactory();
         factory.setRepository(new File(System.getProperty("java.io.tmpdir")));
         ServletFileUpload upload = new ServletFileUpload(factory);
@@ -40,12 +49,10 @@ public class AddContactCommand extends FrontCommand {
         try {
             formItems = upload.parseRequest(request);
             if (!CollectionUtils.isEmpty(formItems)) {
-                String field, fieldName;
-                // iterates over form's fields
                 for (FileItem item : formItems) {
-                    field = item.getString("UTF-8");
+                   String field = item.getString("UTF-8");
                     if (item.isFormField() && StringUtils.isNotEmpty(field.trim())) {
-                        fieldName = item.getFieldName();
+                     String fieldName = item.getFieldName();
                         switch (fieldName) {
                             case "name": {
                                 contact.setName(field);
@@ -60,10 +67,17 @@ public class AddContactCommand extends FrontCommand {
                                 break;
                             }
                             case "dateOfBirth": {
-                                if (field.equals("")) {
-                                    contact.setDateOfBirth(null);
-                                } else
-                                    contact.setDateOfBirth(java.sql.Date.valueOf(field));
+                                if (StringUtils.isNotEmpty(field.trim())) {
+                                    DateTime dt = null;
+                                    DateTimeFormatter formatter = DateTimeFormat.forPattern("dd-MM-yyyy");
+                                    try {
+                                        dt = formatter.parseDateTime(field);
+                                    } catch (IllegalArgumentException e) {
+                                        LOG.info("wrong date format");
+                                        error.addMessage("Wrong date format");
+                                    }
+                                    contact.setDateOfBirth(dt == null ? null : new Date(dt.toDate().getTime()));
+                                }
                                 break;
                             }
                             case "gender": {
@@ -129,22 +143,29 @@ public class AddContactCommand extends FrontCommand {
             AttachmentService attachmentService = new AttachmentService();
             PhoneService phoneService = new PhoneService();
             Long contactId = 0L;
-            if (StringUtils.isNotEmpty(contact.getName().trim()) && StringUtils.isNotEmpty(contact.getSurname().trim()) &&
-                    StringUtils.isNotEmpty(contact.getEmail().trim())) {
+            if (validator.validContact(contact)) {
                 contactId = contactService.insertContact(contact, address);
             }
-            phoneService.insertPhones(numbersForInsert, contactId);
-            List<Long> ids = attachmentService.insertAttachments(attachments, contactId);
-            if (!CollectionUtils.isEmpty(documents) && !CollectionUtils.isEmpty(ids)) {
-                for(int i = 0; i < documents.size(); i++){
-                    if (StringUtils.isNotEmpty(documents.get(i).getName())) {
-                        String fileName = FileUploadDocuments.saveDocument(request, documents.get(i), contactId, ids.get(i), false);
-                        attachmentService.updateById(ids.get(i), new Attachment(fileName));
+            if (validator.validAttachments(attachments) && validator.validPhones(numbersForInsert)){
+                phoneService.insertPhones(numbersForInsert, contactId);
+                List<Long> ids = attachmentService.insertAttachments(attachments, contactId);
+                if (!CollectionUtils.isEmpty(documents) && !CollectionUtils.isEmpty(ids)) {
+                    for(int i = 0; i < documents.size(); i++){
+                        if (StringUtils.isNotEmpty(documents.get(i).getName())) {
+                            String fileName = FileUploadDocuments.saveDocument(request, documents.get(i), contactId, ids.get(i), false);
+                            attachmentService.updateById(ids.get(i), new Attachment(fileName));
+                        }
                     }
                 }
             }
-            response.sendRedirect("contacts");
-        } catch (Exception e) {//error page
+            if (CollectionUtils.isNotEmpty(error.getMessages())){
+                request.getSession().setAttribute("messageList", error.getMessages());
+                response.sendRedirect("errorPage");
+            }
+            else response.sendRedirect("contacts");
+        } catch (Exception e) {
+            request.setAttribute("messageList", error.getMessages());
+            forward("errorPage");
             LOG.error(e.getMessage());
         }
     }

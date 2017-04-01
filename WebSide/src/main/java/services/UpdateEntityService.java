@@ -14,19 +14,17 @@ public class UpdateEntityService {
     private AttachmentService attachmentService = new AttachmentService();
 
     public void updateAttachments(List<Attachment> listForUpdate, Long contact_id) throws GenericDAOException {
-        if (CollectionUtils.isEmpty(listForUpdate)) return;
         List<Attachment> attachments = attachmentService.findAllById(contact_id);
         if (CollectionUtils.isEmpty(attachments)) return;
         listForUpdate.forEach(obj -> {
+            String oldName = attachmentService.findById(obj.getId()).getFileName();
             obj.setContactId(contact_id);
             if (attachments.contains(obj)) {
-                if (FileUploadDocuments.renameDocument(attachmentService.findById(obj.getId()).getFileName(),
-                        obj.getFileName(), contact_id)) {
-                    attachmentService.updateById(obj.getId(), obj);
-                    attachments.remove(obj);
-                } else {
-                    LOG.info("the attachment file was not renamed");
+                attachments.remove(obj);
+                if (!oldName.equals(obj.getFileName())) {
+                    FileUploadDocuments.renameDocument(oldName, obj.getFileName(), contact_id);
                 }
+                attachmentService.updateById(obj.getId(), obj);
             }
         });
         attachments.forEach(object -> {
@@ -37,11 +35,11 @@ public class UpdateEntityService {
 
 
     public void updatePhoto(Long contact_id, String fileName) throws GenericDAOException {
-        if (fileName == null) return ;
+        if (fileName == null) return;
         PhotoService photoService = new PhotoService();
         Photo obj = photoService.findById(contact_id);
         if (obj == null) {
-           photoService.insert(fileName, contact_id);
+            photoService.insert(fileName, contact_id);
         } else {
             FileUploadDocuments.deleteDocument(obj.getName(), true, contact_id);
             obj.setName(fileName);

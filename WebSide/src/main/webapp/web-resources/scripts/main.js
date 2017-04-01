@@ -31,7 +31,6 @@ function validDate(element, date) {
 }
 
 function validEmail(element, email) {
-    alert(email.value);
     if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email.value)) {
         markInputAsWrong(email);
         showMessage(element, "Wrong email, use right format<br> like address@example.com");
@@ -43,22 +42,23 @@ function validEmail(element, email) {
 }
 
 function markInputAsWrong(input) {
-    input.style.borderColor = "red";
+    input.style.borderColor = "rgba(238, 91, 91, 0.73)";
 }
 
 function markInputAsRight(input) {
-    input.style.borderColor = "blue";
+    input.style.borderColor = "rgba(0, 136, 204, 0.76)";
 }
 
 
 function isEmpty(element, field) {
     if (field.value == "") {
+        showMessage(element, "This field can't be empty");
         markInputAsWrong(field);
         return true;
     }
     else {
         if (!checkFieldOnSpace(field.value)) {
-            showMessage(element, "field consists of spaces");
+            showMessage(element, "Field consists of spaces");
             markInputAsWrong(field);
             return true;
         } else {

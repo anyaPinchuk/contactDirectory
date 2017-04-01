@@ -16,7 +16,17 @@ btnPhoto.onclick = function () {
 span.onclick = function () {
     modalPhoto.style.display = "none";
 };
-//////////////////////////////////
+/////////////////////////////////////////////////
+addPhoneButton = document.getElementById("addPhone");
+savePhoneButton = document.getElementById("savePhone");
+showEditFormBtn = document.getElementById("showEditFormBtn");
+
+//-------------Handlers--------//
+
+addPhoneButton.addEventListener("click", addPhone);
+var deletePhoneBtn = document.getElementById("deletePhone");
+deletePhoneBtn.addEventListener("click", deletePhone);
+
 var attachmentDelete = document.getElementById("attachmentDelete");
 attachmentDelete.addEventListener("click", deleteChosenAttachments);
 var addAttachmentBtn = document.getElementById("addAttachmentBtn");
@@ -39,10 +49,7 @@ document.getElementsByClassName("close")[2].addEventListener("click", function (
     document.getElementById("myModalAttachment").style.display = "none";
 });
 
-/////////////////////////////////////////////////
-addPhoneButton = document.getElementById("addPhone");
-savePhoneButton = document.getElementById("savePhone");
-showEditFormBtn = document.getElementById("showEditFormBtn");
+
 
 //--------pop Up window phone----------//
 
@@ -55,7 +62,7 @@ btn.onclick = function () {
     form.countryCode.value = "";
     form.operatorCode.value = "";
     form.number.value = "";
-    form.type.options[0].selected = "true";
+    form.type.value = "mobile";
     form.comment.value = "";
     addPhoneButton.style.display = "block";
     savePhoneButton.style.display = "none";
@@ -195,11 +202,7 @@ function deletePhone() {
         table.style.display = "none";
     }
 }
-//-------------Handlers--------//
 
-addPhoneButton.addEventListener("click", addPhone);
-var deletePhoneBtn = document.getElementById("deletePhone");
-deletePhoneBtn.addEventListener("click", deletePhone);
 
 
 ////-------------photo------------///
@@ -356,7 +359,6 @@ if (document.querySelectorAll(".rows").length == 0) {
 
 var editDocInput;
 function editAttachment(id) {
-    var inputDocumentID = id;
     var myModalAttachment = document.getElementById("myModalAttachment");
     myModalAttachment.style.display = "block";
     editDocInput = document.getElementById("hiddenFileInfo" + id);

@@ -13,6 +13,8 @@
         <c:set var="contact" value="${requestScope.contact}"/>
     </head>
     <body>
+    <jsp:include page="${pageContext.request.contextPath}/WEB-INF/views/header.jspx"/>
+    <a href="contacts"><button class="btn">Back to contacts</button></a>
     <div class="center">
         <div>
             <div class="form-group">

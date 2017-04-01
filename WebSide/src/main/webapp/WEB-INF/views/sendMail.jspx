@@ -9,6 +9,7 @@
               type="text/css" media="screen"/>
     </head>
     <body>
+    <jsp:include page="${pageContext.request.contextPath}/WEB-INF/views/header.jspx"/>
     <div>
         <form name="sendEmail" method="post" action="sendMail">
             <c:forEach var="email" items="${requestScope.emails}">
@@ -28,7 +29,8 @@
                 <label>Subject </label>
                 <textarea rows="5" cols="40" class="form-control" name="content" placeholder="Text">text</textarea>
             </div>
-            <button class="btn btn-primary" type="button" id="sendMail">Send</button>
+            <button class="btn" type="button" id="sendMail">Send</button>
+            <a href="contacts"><button class="btn">Cancel</button></a>
     </form>
     </div>
     <div id="notifyDiv" class="notifier">MESSAGE</div>

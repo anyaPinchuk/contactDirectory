@@ -23,7 +23,7 @@ public class PhoneService implements ServiceEntity {
             return phoneDAO.findAllById(id);
         } catch (GenericDAOException e) {
             LOG.error("error while processing get all phones by id in PhoneService");
-        }finally {
+        } finally {
             connectionAwareExecutor.closeConnection(connection);
         }
         return null;
@@ -55,16 +55,16 @@ public class PhoneService implements ServiceEntity {
     public void updatePhones(Long contact_id, List<PhoneNumber> phoneNumbersForUpdate) {
         Connection connection = null;
         try {
+            List<PhoneNumber> numbers = phoneDAO.findAllById(contact_id);
+            if (CollectionUtils.isEmpty(numbers)) return;
             connection = connectionAwareExecutor.connect();
             phoneDAO.setConnection(connection);
-            List<PhoneNumber> numbers = phoneDAO.findAllById(contact_id);
             connection.setAutoCommit(false);
             phoneNumbersForUpdate.forEach(obj -> {
                 try {
-                    obj.setContactId(contact_id);
                     if (numbers.contains(obj)) {
-                        phoneDAO.updateById(obj.getId(), obj);
                         numbers.remove(obj);
+                        phoneDAO.updateById(obj.getId(), obj);
                     }
                 } catch (GenericDAOException e) {
                     LOG.error("error while processing update phones in phoneService");

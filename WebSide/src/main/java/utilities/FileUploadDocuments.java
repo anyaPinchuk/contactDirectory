@@ -77,7 +77,7 @@ public class FileUploadDocuments {
             fileExtension = fileName.substring(index + 1);
             index = newFileName.lastIndexOf('.');
             if (index > 0)
-                modifiedFileName = newFileName.substring(0, index) + fileExtension;
+                modifiedFileName = newFileName.substring(0, index) + "." + fileExtension;
         }
         String uploadPath = getFileDirectory(false);
         if (!StringUtils.isNotEmpty(uploadPath)) return false;
@@ -104,10 +104,7 @@ public class FileUploadDocuments {
 
     public static String saveDocument(HttpServletRequest request, FileItem item, Long contactId, Long id, boolean isImage) {
         LOG.info("save document id={} by contact_id {} starting", id, contactId);
-        if (!ServletFileUpload.isMultipartContent(request)) {
-            LOG.error("Error: Form must has enctype=multipart/form-data.");
-            return null;
-        }
+        if (item == null) return null;
         String uploadPath = getFileDirectory(isImage);
         if (!StringUtils.isNotEmpty(uploadPath)) return null;
         uploadPath += "\\contact" + contactId;

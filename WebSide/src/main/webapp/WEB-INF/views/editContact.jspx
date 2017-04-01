@@ -1,5 +1,5 @@
 <jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" xmlns="http://www.w3.org/1999/xhtml" version="2.0"
-          xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:fmt="http://java.sun.com/jsp/jstl/fmt">
+          xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:joda="http://www.joda.org/joda/time/tags">
     <jsp:directive.page contentType="text/html" pageEncoding="UTF-8" />
     <html>
     <head>
@@ -11,16 +11,18 @@
             //hiii
         </script>
         <c:set var="contact" value="${requestScope.contact}"/>
+        <c:set var="date"><joda:format value='${contact.dateOfBirth}' pattern='dd-MM-yyyy'/></c:set>
     </head>
     <body>
+    <jsp:include page="${pageContext.request.contextPath}/WEB-INF/views/header.jspx"/>
     <form name='editContact' enctype="multipart/form-data" action="editContact" method="post">
         <div class="center">
             <input type="hidden" value="${contact.id}" name="id"/>
+            <div class="form-group">
+                <img id='photo' src="image?name=${contact.photo.name};${contact.id}"
+                     width="200px" height="200px"/>
+            </div>
             <div>
-                <div class="form-group">
-                    <img id='photo' src="image?name=${contact.photo.name};${contact.id}"
-                         width="200px" height="200px"/>
-                </div>
                 <div class="form-group">
                     <label for="contactName">Enter name* </label>
                     <input class="form-control input-lg" id="contactName" type="text" name="name"
@@ -44,7 +46,7 @@
                 </div>
                 <div class="form-group">
                     <label for="contactDate">Enter date of birth </label>
-                    <input class="form-control" value="${contact.dateOfBirth}" id="contactDate" type="text"
+                    <input class="form-control" value="${date}" id="contactDate" type="text"
                            placeholder="DD-MM-YYYY" name="dateOfBirth"/>
                 </div>
                 <div class="form-group">
@@ -93,14 +95,14 @@
                     <input class="form-control input-lg" id="contactIndex" type="text" name="index"
                            value="${contact.address.index}" placeholder="Input index"/><br/>
                 </div>
-                <button id="saveContact" type="button" class="btn btn-primary">Save contact</button>
+                <button id="saveContact" type="button" class="button">Save contact</button>
 
             </div>
             <div class="tables">
                 <div>
                     <div class="vertical-group">
-                        <button id="myBtn" type="button" class="btn btn-success padding">Add phone</button>
-                        <button type="button" id="deletePhone" class="btn btn-link padding">Delete chosen<br/> phones
+                        <button id="myBtn" type="button" class="button padding">Add phone</button>
+                        <button type="button" id="deletePhone" class="button padding">Delete phones
                         </button>
                     </div>
                     <table class="table-bordered" id="phones">
@@ -134,8 +136,8 @@
                 </div>
                 <div>
                     <div class="vertical-group">
-                        <button id="attachmentBtn" type="button" class="btn btn-success padding">Add attachment</button>
-                        <button type="button" id="attachmentDelete" class="btn btn-link padding">Delete chosen<br/> attachments</button>
+                        <button id="attachmentBtn" type="button" class="button padding">Add attachment</button>
+                        <button type="button" id="attachmentDelete" class="button padding">Delete attachments</button>
                     </div>
                     <table class="table-bordered" id="attachments">
                         <tbody id="tbodyAttach">
@@ -154,7 +156,7 @@
                                 <td>
                                     <a href="document?name=${attachment.fileName};${contact.id}">${attachment.fileName}</a>
                                 </td>
-                                <td><p><fmt:formatDate value="${attachment.dateOfDownload}" pattern="dd.MM.yyyy"/></p></td>
+                                <td><p><joda:format value="${attachment.dateOfDownload}" pattern="dd-MM-yyyy"/></p></td>
                                 <td><p> ${attachment.comment}</p></td>
                             </tr>
                             <tr id="hiddenFileInfoRow${attachment.id}" style="visibility: hidden">
@@ -169,13 +171,13 @@
             </div>
         </div>
         <div id="myModalPhoto" class="modal-content">
-            <span class="close"><img src="${pageContext.request.contextPath}/web-resources/img/cross.png"/>Cancel</span>
+            <span class="close">Cancel<img src="${pageContext.request.contextPath}/web-resources/img/cross.png"/></span>
             <div>
                 <label for="contactPhoto">Choose photo </label>
                 <input accept="image/gif, image/jpeg, image/png" class="form-control turnOFF" id="contactPhoto"
                        type="file" name="photo"/>
             </div>
-            <button id="savePhotoBtn" type="button" class="btn btn-success" onclick="savePhoto(photo)">Save</button>
+            <button id="savePhotoBtn" type="button" class="button" onclick="savePhoto(photo)">Save</button>
         </div>
         <div id="myModal" class="modal-content">
             <span class="close"><img src="${pageContext.request.contextPath}/web-resources/img/cross.png"/>Cancel</span>
@@ -197,17 +199,16 @@
             <div class="form-group">
                 <label for="type">Choose type of number</label>
                 <select id="type" class="form-control" name="type">
-                    <option value="Mobile">Mobile</option>
-                    <option value="Home">Home</option>
+                    <option value="mobile">Mobile</option>
+                    <option value="home">Home</option>
                 </select>
             </div>
             <div class="form-group">
                 <label for="comment">Enter comment</label>
                 <input type="text" class="form-control" id="comment" placeholder="Input comment" name="comment"/>
             </div>
-            <button type="button" class="btn btn-primary" id="addPhone">Add phone</button>
-            <button type="button" class="btn btn-primary" id="savePhone">Save phone
-            </button>
+            <button type="button" class="button" id="addPhone">Add phone</button>
+            <button type="button" class="button" id="savePhone">Save phone</button>
         </div>
         <div id="myModalAttachment" class="modal-content">
             <span class="close"><img src="${pageContext.request.contextPath}/web-resources/img/cross.png"/>Cancel</span>
@@ -224,12 +225,12 @@
                 <label>Input comment</label>
                 <input type="text" class="form-control" id="commentFile" placeholder="Input comment" name="commentFile"/>
             </div>
-            <button id="addAttachmentBtn" type="button" class="btn btn-success" onclick="addAttachment()">Add</button>
-            <button id="saveAttachmentBtn" type="button" class="btn btn-success">Save</button>
+            <button id="addAttachmentBtn" type="button" class="button" onclick="addAttachment()">Add</button>
+            <button id="saveAttachmentBtn" type="button" class="button">Save</button>
         </div>
 
     </form>
-    <div id="notifyDiv" class="notifier">MESSAGE</div>
+    <div id="notifyDiv" class="notifier"></div>
     <script type="text/javascript" src="${pageContext.request.contextPath}/web-resources/scripts/editContact.js">
         //hiii
     </script>

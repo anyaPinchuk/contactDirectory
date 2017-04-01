@@ -47,7 +47,7 @@ public class ShowContactCommand extends FrontCommand {
                 contactDTO.setAddress(addressConverter.toDTO(Optional.of(address)).orElseThrow(()
                         -> new GenericDAOException("address wasn't converted")));
                 List<PhoneNumber> numberList = phoneService.findAllById(contactDTO.getId());
-                List<PhoneDTO> phoneDTOList = CollectionUtils.isEmpty(numberList) ? numberList.stream().map(number ->
+                List<PhoneDTO> phoneDTOList = CollectionUtils.isNotEmpty(numberList) ? numberList.stream().map(number ->
                         phoneConverter.toDTO(Optional.of(number)).get()).collect(Collectors.toList()) : new ArrayList<>();
                 contactDTO.setPhoneDTOList(phoneDTOList);
                 Photo photo = photoService.findById(id);
@@ -61,7 +61,6 @@ public class ShowContactCommand extends FrontCommand {
         } catch (NumberFormatException | GenericDAOException e) {
             forward("unknown");
             LOG.error("error while processing show contact from ShowContactCommand");
-            new MessageError(e.getMessage(), e);
         }
         request.setAttribute("contact", contactDTO);
         forward("showContact");

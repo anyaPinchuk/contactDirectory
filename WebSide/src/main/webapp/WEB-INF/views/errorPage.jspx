@@ -1,7 +1,7 @@
 <html xmlns:jsp="http://java.sun.com/JSP/Page"
       xmlns:c="http://java.sun.com/jsp/jstl/core">
 <head>
-    <title>UnknownCommand</title>
+    <title>Unknown page</title>
     <link href="${pageContext.request.contextPath}/web-resources/bootstrap/css/bootstrap.css" rel="stylesheet"
           type="text/css" media="screen"/>
 </head>
@@ -9,6 +9,12 @@
 <jsp:directive.page contentType="text/html" pageEncoding="UTF-8"/>
 <jsp:output omit-xml-declaration="yes"/>
 <body>
-
+<div>
+    <c:forEach var="message" items="${sessionScope.messageList}">
+        <div>
+            <p>${message}</p>
+        </div>
+    </c:forEach>
+</div>
 </body>
 </html>
