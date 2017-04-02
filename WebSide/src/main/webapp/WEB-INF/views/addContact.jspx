@@ -7,123 +7,158 @@
               media="screen"/>
         <link href="${pageContext.request.contextPath}/web-resources/bootstrap/css/bootstrap.css" rel="stylesheet"
               type="text/css" media="screen"/>
-
+        <script src="${pageContext.request.contextPath}/web-resources/scripts/pane.js">//hi</script>
     </head>
     <body>
     <jsp:include page="${pageContext.request.contextPath}/WEB-INF/views/header.jspx"/>
+    <div class="caption"><h3>Adding a contact</h3></div>
+    <p class="comment">Fields marked with * are required</p>
     <form name='addContact' enctype="multipart/form-data" action="addContact" method="post">
-        <div class="center">
-            <div>
-                <p class="comment">Fields marked with * are required</p>
-                <div class="form-group">
-                    <label for="contactName">Enter name* </label>
-                    <input class="form-control turnOFF" id="contactName" type="text" name="name"
-                           placeholder="Input name"/>
-                </div>
-                <div class="form-group">
-                    <label for="contactSurname">Enter surname* </label>
-                    <input class="form-control turnOFF" id="contactSurname" type="text"
-                           name="surname" placeholder="Input surname"/>
-                </div>
-                <div class="form-group">
-                    <label for="contactThirdname">Enter third name </label>
-                    <input class="form-control turnOFF" id="contactThirdname" type="text" name="thirdName"
-                           placeholder="Input third name"/>
-                </div>
-                <div class="form-group">
-                    <label for="contactEmail">Enter email address* </label>
-                    <input class="form-control turnOFF" id="contactEmail" type="email" name="email"
-                           pattern="^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$" placeholder="Input email"/>
-                </div>
-                <div class="form-group">
-                    <label for="contactDate">Enter date of birth </label>
-                    <input class="form-control turnOFF" id="contactDate" type="text" placeholder="DD-MM-YYYY"
-                           name="dateOfBirth"/>
-                </div>
-                <div class="form-group">
-                    <label for="contactGender">Choose gender </label>
-                    <select class="form-control turnOFF" id="contactGender" name="gender">
-                        <option value="man">Male</option>
-                        <option value="woman">Female</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="contactCitizenship">Enter citizenship </label>
-                    <input class="form-control turnOFF" id="contactCitizenship" type="text" name="citizenship"
-                           placeholder="Input citizenship"/>
-                </div>
-                <div class="form-group">
-                    <label for="contactStatus">Enter marital status </label>
-                    <input class="form-control  turnOFF" id="contactStatus" type="text" name="status"
-                           placeholder="Input marital status"/>
-                </div>
-                <div class="form-group">
-                    <label for="contactSite">Enter web-site </label>
-                    <input class="form-control turnOFF" id="contactSite" type="text" name="webSite"
-                           placeholder="Input web-site"/>
-                </div>
+        <div class="main_form">
+            <div class="list_of_tabs">
+                <ul class="nav nav-tabs my_ul">
+                    <li class="active" id="main" onclick="showPane(this)"><a data-toggle="tab">Main</a></li>
+                    <li onclick="showPane(this)" id="sub"><a data-toggle="tab">About</a></li>
+                    <li onclick="showPane(this)" id="address"><a data-toggle="tab">Address</a></li>
+                    <li onclick="showPane(this)" id="phone"><a data-toggle="tab">Phones</a></li>
+                    <li onclick="showPane(this)" id="attachment"><a data-toggle="tab">Attachments</a></li>
+                </ul>
 
-                <div class="form-group">
-                    <label for="contactJob">Enter company </label>
-                    <input class="form-control turnOFF" id="contactJob" type="text" name="job"
-                           placeholder="Input company"/>
+                <div class="tab-content center main_div">
+                    <div id="main_info" class="tab-pane in active">
+                        <div class="form-group">
+                            <label for="contactName">Enter name* </label>
+                            <input class="form-control turnOFF" id="contactName" type="text" name="name"
+                                   placeholder="Input name"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="contactSurname">Enter surname* </label>
+                            <input class="form-control turnOFF" id="contactSurname" type="text"
+                                   name="surname" placeholder="Input surname"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="contactThirdname">Enter third name </label>
+                            <input class="form-control turnOFF" id="contactThirdname" type="text" name="thirdName"
+                                   placeholder="Input third name"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="contactEmail">Enter email address* </label>
+                            <input class="form-control turnOFF" id="contactEmail" type="email" name="email"
+                                   pattern="^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$" placeholder="Input email"/>
+                        </div>
+                    </div>
+                    <div id="sub_info" class="tab-pane fade">
+                        <div class="form-group">
+                            <label for="contactDate">Enter date of birth </label>
+                            <input class="form-control turnOFF" id="contactDate" type="text" placeholder="DD-MM-YYYY"
+                                   name="dateOfBirth"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="contactGender">Choose gender </label>
+                            <select class="form-control turnOFF" id="contactGender" name="gender">
+                                <option value="man">Male</option>
+                                <option value="woman">Female</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="contactCitizenship">Enter citizenship </label>
+                            <input class="form-control turnOFF" id="contactCitizenship" type="text" name="citizenship"
+                                   placeholder="Input citizenship"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="contactStatus">Enter marital status </label>
+                            <input class="form-control  turnOFF" id="contactStatus" type="text" name="status"
+                                   placeholder="Input marital status"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="contactSite">Enter web-site </label>
+                            <input class="form-control turnOFF" id="contactSite" type="text" name="webSite"
+                                   placeholder="Input web-site"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="contactJob">Enter company </label>
+                            <input class="form-control turnOFF" id="contactJob" type="text" name="job"
+                                   placeholder="Input company"/>
+                        </div>
+                    </div>
+                    <div id="address_info" class="tab-pane fade">
+                        <div class="form-group">
+                            <label>Enter address </label>
+                            <input class="form-control turnOFF" id="contactCountry" type="text" name="country"
+                                   placeholder="Input country"/><br/>
+                            <input class="form-control turnOFF" id="contactCity" type="text" name="city"
+                                   placeholder="Input city"/><br/>
+                            <input class="form-control turnOFF" id="contactAddress" type="text" name="address"
+                                   placeholder="Input address"/><br/>
+                            <input class="form-control turnOFF" id="contactIndex" type="text" name="index"
+                                   placeholder="Input index"/><br/>
+                        </div>
+                    </div>
+                    <div id="phone_info" class="tab-pane fade">
+                        <div>
+                            <div>
+                                <button id="myBtn" type="button" class="button padding">
+                                    <img class="margin_right"
+                                         src="${pageContext.request.contextPath}/web-resources/img/plus1.png"/>Add phone
+                                </button>
+                                <button type="button" id="deletePhone" class="button padding">
+                                    <img class="margin_right"
+                                         src="${pageContext.request.contextPath}/web-resources/img/minus.png"/>Delete phones
+                                </button>
+                            </div>
+                            <table class="table_blur" id="phones">
+                                <tbody id="tbody">
+                                <tr>
+                                    <th>Chosen</th>
+                                    <th>Number</th>
+                                    <th>Type</th>
+                                    <th>Comment</th>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div id="attachment_info" class="tab-pane fade">
+                        <div>
+                            <div>
+                                <button id="attachmentBtn" type="button" class="button padding">
+                                    <img class="margin_right"
+                                         src="${pageContext.request.contextPath}/web-resources/img/plus1.png"/>Add attachment
+                                </button>
+                                <button type="button" id="attachmentDelete" class="button padding">
+                                    <img class="margin_right"
+                                         src="${pageContext.request.contextPath}/web-resources/img/minus.png"/>Delete attachments
+                                </button>
+                            </div>
+                            <table class="table_blur" id="attachments">
+                                <tbody id="tbodyAttach">
+                                <tr>
+                                    <th>Chosen</th>
+                                    <th>File name</th>
+                                    <th>Date of upload</th>
+                                    <th>Comment</th>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <br/>
+                            <div style="visibility:hidden;" id="forHiddenFiles"></div>
+                        </div>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label>Enter address </label>
-                    <input class="form-control turnOFF" id="contactCountry" type="text" name="country"
-                           placeholder="Input country"/><br/>
-                    <input class="form-control turnOFF" id="contactCity" type="text" name="city"
-                           placeholder="Input city"/><br/>
-                    <input class="form-control turnOFF" id="contactAddress" type="text" name="address"
-                           placeholder="Input address"/><br/>
-                    <input class="form-control turnOFF" id="contactIndex" type="text" name="index"
-                           placeholder="Input index"/><br/>
-                </div>
-                <button id="addContact" type="button" class="button">Add contact</button>
-                <a href="contacts"><button class="button">Cancel</button></a>
             </div>
-            <div class="tables">
-                <div>
-                    <div class="vertical-group">
-                        <button id="myBtn" type="button" class="button padding">Add phone</button>
-                        <button type="button" id="deletePhone" class="button padding">Delete phones
-                        </button>
-                    </div>
-                    <table class="table-bordered" id="phones">
-                        <tbody id="tbody">
-                        <tr>
-                            <th>Chosen</th>
-                            <th>Number</th>
-                            <th>Type</th>
-                            <th>Comment</th>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div>
-                    <div class="vertical-group">
-                        <button id="attachmentBtn" type="button" class="button">Add attachment</button>
-                        <button type="button" id="attachmentDelete" class="button padding">Delete attachments
-                        </button>
-                    </div>
-                    <table class="table-bordered" id="attachments">
-                        <tbody id="tbodyAttach">
-                        <tr>
-                            <th>Chosen</th>
-                            <th>File name</th>
-                            <th>Date of upload</th>
-                            <th>Comment</th>
-                        </tr>
-                        </tbody>
-                    </table>
-                    <br/>
-                    <div style="visibility:hidden;" id="forHiddenFiles"></div>
-                </div>
+            <div class="group_buttons">
+                <button id="addContact" type="button" class="button margin_right">Add contact</button>
+                <a href="contacts">
+                    <button type="button" class="button margin_right">Cancel</button>
+                </a>
             </div>
         </div>
     </form>
+
+    <div id="notifyDiv" class="notifier">message</div>
+
     <div id="myModal" class="modal-content">
-        <span class="close"><img src="${pageContext.request.contextPath}/web-resources/img/cross.png"/>Cancel</span>
+        <span class="close">Cancel<img src="${pageContext.request.contextPath}/web-resources/img/cross.png"/></span>
         <div class="addPhone">
             <div class="form-group">
                 <label for="countryCode">Enter coutry code, for example: 375</label>
@@ -154,25 +189,26 @@
         </div>
         <button type="button" class="button" id="addPhone">Add phone</button>
     </div>
-    <div id="myModalAttachment" class="modal-content">
-        <span class="close"><img src="${pageContext.request.contextPath}/web-resources/img/cross.png"/>Cancel</span>
-        <div class="form-group">
-            <label id="labelFile">Choose file </label>
-            <input accept="application/msword, text/plain, application/pdf, application/xml, .docx, image/*"
-                   class="form-control"
-                   type="file" name="attachment-0" id="attachment0"/>
-        </div>
-        <div class="form-group">
-            <label>Input comment</label>
-            <input type="text" class="form-control" id="commentFile" placeholder="Input comment" name="commentFile"/>
+    <div class="modal-content" id="myModalAttachment">
+        <span class="close">Cancel<img src="${pageContext.request.contextPath}/web-resources/img/cross.png"/></span>
+        <div class="addAttachment">
+            <div class="form-group">
+                <label id="labelFile">Choose file </label>
+                <input accept="application/msword, text/plain, application/pdf, application/xml, .docx, image/*"
+                       class="form-control"
+                       type="file" name="attachment-0" id="attachment0"/>
+            </div>
+            <div class="form-group">
+                <label>Input comment</label>
+                <input type="text" class="form-control" id="commentFile" placeholder="Input comment"
+                       name="commentFile"/>
+            </div>
         </div>
         <button id="addAttachmentBtn" type="button" class="button" onclick="addAttachment()">Add</button>
     </div>
-    <div id="notifyDiv" class="notifier"></div>
     <script src="${pageContext.request.contextPath}/web-resources/scripts/addContact.js">//hi</script>
     <script type="text/javascript" src="${pageContext.request.contextPath}/web-resources/bootstrap/js/bootstrap.min.js">
-        //hiii
-    </script>
+        //hiii</script>
     <script src="${pageContext.request.contextPath}/web-resources/scripts/main.js">//hi</script>
     </body>
     </html>

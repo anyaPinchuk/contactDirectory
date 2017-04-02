@@ -1062,7 +1062,7 @@ legend small {
     color: #999999;
 }
 
-label,
+
 input,
 button,
 select,
@@ -3209,10 +3209,10 @@ button.close {
 .btn {
     display: inline-block;
     *display: inline;
-    padding: 4px 12px;
+    padding: 6px 12px;
     margin-bottom: 0;
     *margin-left: .3em;
-    font-size: 14px;
+    font-size: 20px;
     line-height: 20px;
     color: #333333;
     text-align: center;
@@ -3958,7 +3958,6 @@ input[type="submit"].btn.btn-mini {
 }
 
 .nav {
-    margin-bottom: 20px;
     margin-left: 0;
     list-style: none;
 }
@@ -4068,9 +4067,6 @@ input[type="submit"].btn.btn-mini {
     line-height: 14px;
 }
 
-.nav-tabs {
-    border-bottom: 1px solid #ddd;
-}
 
 .nav-tabs > li {
     margin-bottom: -1px;
@@ -4096,9 +4092,9 @@ input[type="submit"].btn.btn-mini {
 .nav-tabs > .active > a:focus {
     color: #555555;
     cursor: default;
-    background-color: #ffffff;
-    border: 1px solid #ddd;
-    border-bottom-color: transparent;
+    background: linear-gradient( to bottom, #d8ecf1, #c5deec, #e2f1ef);
+    border-bottom: 1px solid #ddd;
+    border-bottom-color: #e2f1ef;
 }
 
 .nav-pills > li > a {

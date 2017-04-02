@@ -15,6 +15,7 @@
     </head>
     <body>
     <jsp:include page="${pageContext.request.contextPath}/WEB-INF/views/header.jspx"/>
+    <div class="caption"><h3>Editing a contact</h3></div>
     <form name='editContact' enctype="multipart/form-data" action="editContact" method="post">
         <div class="center">
             <input type="hidden" value="${contact.id}" name="id"/>
@@ -96,16 +97,19 @@
                            value="${contact.address.index}" placeholder="Input index"/><br/>
                 </div>
                 <button id="saveContact" type="button" class="button">Save contact</button>
+                <a href="contacts"><button type="button" class="button">Cancel</button></a>
 
             </div>
             <div class="tables">
                 <div>
                     <div class="vertical-group">
-                        <button id="myBtn" type="button" class="button padding">Add phone</button>
-                        <button type="button" id="deletePhone" class="button padding">Delete phones
+                        <button id="myBtn" type="button" class="button padding">
+                            <img class="margin_right" src="${pageContext.request.contextPath}/web-resources/img/plus1.png"/>Add phone</button>
+                        <button type="button" id="deletePhone" class="button padding">
+                            <img class="margin_right" src="${pageContext.request.contextPath}/web-resources/img/minus.png"/>Delete phones
                         </button>
                     </div>
-                    <table class="table-bordered" id="phones">
+                    <table class="table_blur" id="phones">
                         <tbody id="tbody">
                         <tr>
                             <th>Chosen</th>
@@ -125,7 +129,7 @@
                                 <td><p>${phone.numberType}</p></td>
                                 <td><p> ${phone.comment}</p></td>
                             </tr>
-                            <tr id="hiddenRow${phone.id}">
+                            <tr class="hidden" id="hiddenRow${phone.id}">
                                 <td><input type="hidden"  class="hiddens"
                                            value="${phone.id};${phone.countryCode};${phone.operatorCode};${phone.number};${phone.numberType};${phone.comment}"
                                            id="hidden${phone.id}" name="hiddensForUpdate"/></td>
@@ -136,10 +140,12 @@
                 </div>
                 <div>
                     <div class="vertical-group">
-                        <button id="attachmentBtn" type="button" class="button padding">Add attachment</button>
-                        <button type="button" id="attachmentDelete" class="button padding">Delete attachments</button>
+                        <button id="attachmentBtn" type="button" class="button padding">
+                            <img class="margin_right" src="${pageContext.request.contextPath}/web-resources/img/plus1.png"/>Add attachment</button>
+                        <button type="button" id="attachmentDelete" class="button padding">
+                            <img class="margin_right" src="${pageContext.request.contextPath}/web-resources/img/minus.png"/>Delete attachments</button>
                     </div>
-                    <table class="table-bordered" id="attachments">
+                    <table class="table_blur" id="attachments">
                         <tbody id="tbodyAttach">
                         <tr>
                             <th>Chosen</th>
@@ -159,7 +165,7 @@
                                 <td><p><joda:format value="${attachment.dateOfDownload}" pattern="dd-MM-yyyy"/></p></td>
                                 <td><p> ${attachment.comment}</p></td>
                             </tr>
-                            <tr id="hiddenFileInfoRow${attachment.id}" style="visibility: hidden">
+                            <tr class="hidden" id="hiddenFileInfoRow${attachment.id}">
                                 <td><input type="hidden" name="hiddenInfoForUpdate" id="hiddenFileInfo${attachment.id}"
                                            value="${attachment.id};${attachment.fileName};${attachment.dateOfDownload};${attachment.comment}"/></td>
                             </tr>
@@ -172,7 +178,7 @@
         </div>
         <div id="myModalPhoto" class="modal-content">
             <span class="close">Cancel<img src="${pageContext.request.contextPath}/web-resources/img/cross.png"/></span>
-            <div>
+            <div class="addPhoto">
                 <label for="contactPhoto">Choose photo </label>
                 <input accept="image/gif, image/jpeg, image/png" class="form-control turnOFF" id="contactPhoto"
                        type="file" name="photo"/>
@@ -180,7 +186,7 @@
             <button id="savePhotoBtn" type="button" class="button" onclick="savePhoto(photo)">Save</button>
         </div>
         <div id="myModal" class="modal-content">
-            <span class="close"><img src="${pageContext.request.contextPath}/web-resources/img/cross.png"/>Cancel</span>
+            <span class="close">Cancel<img src="${pageContext.request.contextPath}/web-resources/img/cross.png"/></span>
             <div class="form-group">
                 <label for="countryCode">Enter coutry code, for example: 375</label>
                 <input class="form-control" type="number" id="countryCode"
@@ -211,7 +217,7 @@
             <button type="button" class="button" id="savePhone">Save phone</button>
         </div>
         <div id="myModalAttachment" class="modal-content">
-            <span class="close"><img src="${pageContext.request.contextPath}/web-resources/img/cross.png"/>Cancel</span>
+            <span class="close">Cancel<img src="${pageContext.request.contextPath}/web-resources/img/cross.png"/></span>
             <div class="form-group">
                 <label id="labelFile">Choose file </label>
                 <input accept="application/msword, text/plain, application/pdf, application/xml, .docx, image/*" class="form-control"

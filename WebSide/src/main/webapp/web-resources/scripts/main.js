@@ -106,3 +106,4 @@ function draw(element, flag, timePassed) {
         element.style.opacity = 1 - timePassed / 2000;
     }
 }
+

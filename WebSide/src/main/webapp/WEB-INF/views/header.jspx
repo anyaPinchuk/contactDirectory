@@ -1,11 +1,12 @@
 <div id="header">
-    <div><img id='logo' src="${pageContext.request.contextPath}/web-resources/img/logo.png"/></div>
+    <div><a href="contacts"><img id='logo' src="${pageContext.request.contextPath}/web-resources/img/logo.png"/></a></div>
     <div>
         <a href="addContact">
-            <button class="btn_link"><img src="${pageContext.request.contextPath}/web-resources/img/plus.png"/>Add contact</button>
+            <button class="button"><img class="margin_right" src="${pageContext.request.contextPath}/web-resources/img/plus.png"/>
+                Add contact</button>
         </a>
         <a href="searchContact">
-            <button class="btn_link"><img src="${pageContext.request.contextPath}/web-resources/img/loop.png"/>Search contact</button>
+            <button class="button"><img class="margin_right" src="${pageContext.request.contextPath}/web-resources/img/loop.png"/>Search contact</button>
         </a>
     </div>
 </div>

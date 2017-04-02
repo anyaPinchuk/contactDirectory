@@ -10,15 +10,15 @@
               type="text/css" media="screen"/>
     </head>
     <body>
-
     <jsp:include page="${pageContext.request.contextPath}/WEB-INF/views/header.jspx"/>
+    <div class="caption"><h3>All contacts</h3></div>
     <div>
         <div class="vertical-group">
             <a id="showContactBtn" href="javascript: showContact();">
-                <button class="btn_link">Show contact</button>
+                <button class="button padding"><img class="margin_right" src="${pageContext.request.contextPath}/web-resources/img/contact.png"/>Show contact</button>
             </a>
-            <button id="sendMailBtn" class="btn_link">Send email</button>
-            <button id="deleteContactBtn" class="btn_link">Delete chosen contacts</button>
+            <button id="sendMailBtn" class="button padding"><img class="margin_right" src="${pageContext.request.contextPath}/web-resources/img/mail.png"/>Send email</button>
+            <button id="deleteContactBtn" class="button padding"><img class="margin_right" src="${pageContext.request.contextPath}/web-resources/img/minus1.png"/>Delete chosen contacts</button>
         </div>
         <form method="post" action="deleteContact" name="deleteContact">
             <table class="table-bordered table">
