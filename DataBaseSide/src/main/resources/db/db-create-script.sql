@@ -32,12 +32,12 @@ CREATE TABLE IF NOT EXISTS `anya_pinchuk`.`address` (
   `city` VARCHAR(45) NULL DEFAULT NULL,
   `street_address` VARCHAR(45) NULL DEFAULT NULL,
   `index` VARCHAR(45) NULL DEFAULT NULL,
-  `contactId` INT(11) NOT NULL,
+  contact_id INT(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC),
-  INDEX `fk_address_contact1_idx` (`contactId` ASC),
+  INDEX `fk_address_contact1_idx` (contact_id ASC),
   CONSTRAINT `fk_address_contact1`
-  FOREIGN KEY (`contactId`)
+  FOREIGN KEY (contact_id)
   REFERENCES `anya_pinchuk`.`contact` (`id`)
     ON DELETE CASCADE
     ON UPDATE NO ACTION)

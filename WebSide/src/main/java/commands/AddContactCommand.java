@@ -4,7 +4,6 @@ import entities.*;
 import exceptions.MessageError;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.lang3.StringUtils;
@@ -20,7 +19,6 @@ import utilities.Validator;
 import javax.servlet.ServletException;
 import java.io.File;
 import java.io.IOException;
-import java.sql.*;
 import java.sql.Date;
 import java.util.*;
 
@@ -148,14 +146,15 @@ public class AddContactCommand extends FrontCommand {
             }
             if (validator.validAttachments(attachments) && validator.validPhones(numbersForInsert)){
                 phoneService.insertPhones(numbersForInsert, contactId);
-                List<Long> ids = attachmentService.insertAttachments(attachments, contactId);
-                if (!CollectionUtils.isEmpty(documents) && !CollectionUtils.isEmpty(ids)) {
+                if (!CollectionUtils.isEmpty(documents) && attachments.size() == documents.size()) {
                     for(int i = 0; i < documents.size(); i++){
                         if (StringUtils.isNotEmpty(documents.get(i).getName())) {
-                            String fileName = FileUploadDocuments.saveDocument(request, documents.get(i), contactId, ids.get(i), false);
-                            attachmentService.updateById(ids.get(i), new Attachment(fileName));
+                            String fileName = FileUploadDocuments.saveDocument(documents.get(i), contactId, false);
+                            attachments.get(i).setFileName(fileName);
+                            attachmentService.insertAttachment(attachments.get(i), contactId);
                         }
                     }
+
                 }
             }
             if (CollectionUtils.isNotEmpty(error.getMessages())){

@@ -24,6 +24,9 @@ public class Validator {
 
     public boolean validPhones(List<PhoneNumber> numbers) {
         for (PhoneNumber obj : numbers) {
+            if (StringUtils.isEmpty(obj.getNumberType().trim())) {
+                return false;
+            }
             try {
                 Long.parseLong(obj.getCountryCode());
                 Long.parseLong(obj.getOperatorCode());
@@ -32,16 +35,13 @@ public class Validator {
                 error.addMessage("Phone can only have number characters");
                 return false;
             }
-            if (StringUtils.isEmpty(obj.getComment().trim()) || StringUtils.isEmpty(obj.getNumberType().trim())) {
-                return false;
-            }
         }
         return true;
     }
 
     public boolean validAttachments(List<Attachment> attachments) {
         for (Attachment obj : attachments) {
-            if (StringUtils.isEmpty(obj.getComment().trim()) || StringUtils.isEmpty(obj.getFileName().trim())) {
+            if (StringUtils.isEmpty(obj.getFileName().trim())) {
                 return false;
             }
         }

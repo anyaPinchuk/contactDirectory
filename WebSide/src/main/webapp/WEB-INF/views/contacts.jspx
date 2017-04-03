@@ -13,7 +13,7 @@
     <jsp:include page="${pageContext.request.contextPath}/WEB-INF/views/header.jspx"/>
     <div class="caption"><h3>All contacts</h3></div>
     <div>
-        <div class="vertical-group">
+        <div class="vertical-group-end">
             <a id="showContactBtn" href="javascript: showContact();">
                 <button class="button padding"><img class="margin_right" src="${pageContext.request.contextPath}/web-resources/img/contact.png"/>Show contact</button>
             </a>

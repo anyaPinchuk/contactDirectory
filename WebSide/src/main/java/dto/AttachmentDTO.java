@@ -1,19 +1,17 @@
 package dto;
 
-
-import java.sql.Blob;
-import java.util.Date;
+import org.joda.time.DateTime;
 
 public class AttachmentDTO extends DTO {
     private Long id;
-    private Date dateOfDownload;
+    private DateTime dateOfDownload;
     private String fileName;
     private String comment;
 
     public AttachmentDTO() {
     }
 
-    public AttachmentDTO(Long id, Date dateOfDownload, String fileName, String comment) {
+    public AttachmentDTO(Long id, DateTime dateOfDownload, String fileName, String comment) {
         this.id = id;
         this.dateOfDownload = dateOfDownload;
         this.fileName = fileName;
@@ -28,11 +26,11 @@ public class AttachmentDTO extends DTO {
         this.id = id;
     }
 
-    public Date getDateOfDownload() {
+    public DateTime getDateOfDownload() {
         return dateOfDownload;
     }
 
-    public void setDateOfDownload(Date dateOfDownload) {
+    public void setDateOfDownload(DateTime dateOfDownload) {
         this.dateOfDownload = dateOfDownload;
     }
 

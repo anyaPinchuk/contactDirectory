@@ -96,7 +96,7 @@
                     </div>
                     <div id="phone_info" class="tab-pane fade">
                         <div>
-                            <div>
+                            <div class="format_left">
                                 <button id="myBtn" type="button" class="button padding">
                                     <img class="margin_right"
                                          src="${pageContext.request.contextPath}/web-resources/img/plus1.png"/>Add phone
@@ -120,7 +120,7 @@
                     </div>
                     <div id="attachment_info" class="tab-pane fade">
                         <div>
-                            <div>
+                            <div class="format_left">
                                 <button id="attachmentBtn" type="button" class="button padding">
                                     <img class="margin_right"
                                          src="${pageContext.request.contextPath}/web-resources/img/plus1.png"/>Add attachment
@@ -155,7 +155,9 @@
         </div>
     </form>
 
-    <div id="notifyDiv" class="notifier">message</div>
+    <div id="notifyDiv" class="notifier">
+        <img src="${pageContext.request.contextPath}/web-resources/img/exclaim.png"/>
+        <div class="message">message</div></div>
 
     <div id="myModal" class="modal-content">
         <span class="close">Cancel<img src="${pageContext.request.contextPath}/web-resources/img/cross.png"/></span>
@@ -187,24 +189,30 @@
                 <input type="text" class="form-control" id="comment" placeholder="Input comment" name="comment"/>
             </div>
         </div>
-        <button type="button" class="button" id="addPhone">Add phone</button>
+        <div class="group_buttons">
+            <button type="button" class="button" id="addPhone">Add phone</button>
+        </div>
     </div>
     <div class="modal-content" id="myModalAttachment">
         <span class="close">Cancel<img src="${pageContext.request.contextPath}/web-resources/img/cross.png"/></span>
         <div class="addAttachment">
-            <div class="form-group">
-                <label id="labelFile">Choose file </label>
-                <input accept="application/msword, text/plain, application/pdf, application/xml, .docx, image/*"
-                       class="form-control"
-                       type="file" name="attachment-0" id="attachment0"/>
-            </div>
-            <div class="form-group">
-                <label>Input comment</label>
-                <input type="text" class="form-control" id="commentFile" placeholder="Input comment"
-                       name="commentFile"/>
+            <div class="addAttachment">
+                <div class="form-group">
+                    <label id="labelFile">Choose file </label>
+                    <input accept="application/msword, text/plain, application/pdf, application/xml, .docx, image/*"
+                           class="form-control"
+                           type="file" name="attachment-0" id="attachment0"/>
+                </div>
+                <div class="form-group">
+                    <label>Input comment</label>
+                    <input type="text" class="form-control" id="commentFile" placeholder="Input comment"
+                           name="commentFile"/>
+                </div>
             </div>
         </div>
-        <button id="addAttachmentBtn" type="button" class="button" onclick="addAttachment()">Add</button>
+        <div class="group_buttons">
+            <button id="addAttachmentBtn" type="button" class="button" onclick="addAttachment()">Add</button>
+        </div>
     </div>
     <script src="${pageContext.request.contextPath}/web-resources/scripts/addContact.js">//hi</script>
     <script type="text/javascript" src="${pageContext.request.contextPath}/web-resources/bootstrap/js/bootstrap.min.js">

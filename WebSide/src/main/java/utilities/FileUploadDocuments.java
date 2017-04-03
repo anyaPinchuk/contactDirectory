@@ -14,6 +14,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Properties;
+import java.util.Random;
 
 public class FileUploadDocuments {
     private static final Logger LOG = LoggerFactory.getLogger(FileUploadDocuments.class);
@@ -83,8 +84,8 @@ public class FileUploadDocuments {
         if (!StringUtils.isNotEmpty(uploadPath)) return false;
         if (StringUtils.isNotEmpty(modifiedFileName)) {
             File file = new File(uploadPath + File.separator + "contact" + contactId +
-                    File.separator + modifiedFileName);
-            return file.renameTo(new File(file.getParentFile(), newFileName));
+                    File.separator + fileName);
+            return file.renameTo(new File(file.getParentFile(), modifiedFileName));
         }
         return false;
     }
@@ -102,22 +103,24 @@ public class FileUploadDocuments {
         return true;
     }
 
-    public static String saveDocument(HttpServletRequest request, FileItem item, Long contactId, Long id, boolean isImage) {
-        LOG.info("save document id={} by contact_id {} starting", id, contactId);
+    public static String saveDocument(FileItem item, Long contactId, boolean isImage) {
+        LOG.info("save document by contact_id {} starting", contactId);
         if (item == null) return null;
         String uploadPath = getFileDirectory(isImage);
         if (!StringUtils.isNotEmpty(uploadPath)) return null;
         uploadPath += "\\contact" + contactId;
         File uploadDir = new File(uploadPath);
         if (!uploadDir.exists()) uploadDir.mkdir();
+        Random random = new Random();
         try {
             String fileName = item.getName();
-            if (!isImage) {
+            File existingFile = new File(uploadPath + File.separator + fileName);
+            if (existingFile.exists()){
                 String fileExtension = "";
                 int index = fileName.lastIndexOf(".");
                 if (index > 0) {
                     fileExtension = fileName.substring(index + 1);
-                    fileName = id + "." + fileExtension;
+                    fileName = fileName +random.nextInt(1000) + "." + fileExtension;
                 }
             }
             File storeFile = new File(uploadPath + File.separator + fileName);

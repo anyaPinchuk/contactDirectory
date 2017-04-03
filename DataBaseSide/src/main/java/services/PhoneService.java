@@ -54,11 +54,11 @@ public class PhoneService implements ServiceEntity {
 
     public void updatePhones(Long contact_id, List<PhoneNumber> phoneNumbersForUpdate) {
         Connection connection = null;
+        if (contact_id == 0) return;
         try {
-            List<PhoneNumber> numbers = phoneDAO.findAllById(contact_id);
-            if (CollectionUtils.isEmpty(numbers)) return;
             connection = connectionAwareExecutor.connect();
             phoneDAO.setConnection(connection);
+            List<PhoneNumber> numbers = phoneDAO.findAllById(contact_id);
             connection.setAutoCommit(false);
             phoneNumbersForUpdate.forEach(obj -> {
                 try {

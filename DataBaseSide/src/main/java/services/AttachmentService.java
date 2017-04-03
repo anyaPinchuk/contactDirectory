@@ -31,22 +31,20 @@ public class AttachmentService implements ServiceEntity {
         return null;
     }
 
-    public List<Long> insertAttachments(List<Attachment> attachmentsForInsert, Long contactId) {
-        List<Long> ids = new ArrayList<>();
-        if (CollectionUtils.isEmpty(attachmentsForInsert) || contactId == 0) return ids;
+    public Long insertAttachment(Attachment attachment, Long contactId) {
+        if (contactId == 0) return null;
+        Long id = null;
         Connection connection = null;
         try {
             connection = connectionAwareExecutor.connect();
             connection.setAutoCommit(false);
             attachmentDAO.setConnection(connection);
-            attachmentsForInsert.forEach(obj -> {
-                obj.setContactId(contactId);
+            attachment.setContactId(contactId);
                 try {
-                    ids.add(attachmentDAO.insert(obj));
+                    id = attachmentDAO.insert(attachment);
                 } catch (GenericDAOException e) {
-                    LOG.error("error while processing insert attachments in AttachmentService");
+                    LOG.error("error while processing insert attachment in AttachmentService");
                 }
-            });
             connection.commit();
         } catch (GenericDAOException | SQLException e) {
             connectionAwareExecutor.rollbackConnection(connection);
@@ -54,7 +52,7 @@ public class AttachmentService implements ServiceEntity {
         } finally {
             connectionAwareExecutor.closeConnection(connection);
         }
-        return ids;
+        return id;
     }
 
     public void deleteById(Long id) {

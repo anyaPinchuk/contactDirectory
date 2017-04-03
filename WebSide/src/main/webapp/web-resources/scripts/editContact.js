@@ -286,14 +286,14 @@ function addFileInfoInTable(i, fileName, date, comment) {
     var td3 = document.createElement("td");
     var p2 = document.createElement('p');
     if (Number(date.getDate()) < 10) {
-        p2.innerHTML = "0" + date.getDate() + ".";
+        p2.innerHTML = "0" + date.getDate() + "-";
     } else {
-        p2.innerHTML = "" + date.getDate() + ".";
+        p2.innerHTML = "" + date.getDate() + "-";
     }
     if (Number(date.getMonth() + 1) < 10) {
-        p2.innerHTML += "0" + (date.getMonth() + 1) + ".";
+        p2.innerHTML += "0" + (date.getMonth() + 1) + "-";
     } else {
-        p2.innerHTML += (date.getMonth() + 1) + ".";
+        p2.innerHTML += (date.getMonth() + 1) + "-";
     }
     p2.innerHTML += date.getFullYear();
     td3.appendChild(p2);
@@ -368,7 +368,6 @@ function editAttachment(id) {
     }
     addAttachmentBtn.style.display = "none";
     saveAttachmentBtn.style.display = "block";
-    console.log(editDocInput);
     var strings = editDocInput.value.split(";");
     form.nameFile.value = strings[1].split(".")[0];
     form.commentFile.value = strings[3];

@@ -4,16 +4,18 @@ import entities.Attachment;
 import entities.Photo;
 import exceptions.GenericDAOException;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import utilities.FileUploadDocuments;
 
 import java.util.List;
 
 public class UpdateEntityService {
-    private Logger LOG = Logger.getLogger(UpdateEntityService.class);
+    private Logger LOG = LoggerFactory.getLogger(UpdateEntityService.class);
     private AttachmentService attachmentService = new AttachmentService();
 
     public void updateAttachments(List<Attachment> listForUpdate, Long contact_id) throws GenericDAOException {
+        LOG.info("update attachments by id {} starting", contact_id);
         List<Attachment> attachments = attachmentService.findAllById(contact_id);
         if (CollectionUtils.isEmpty(attachments)) return;
         listForUpdate.forEach(obj -> {

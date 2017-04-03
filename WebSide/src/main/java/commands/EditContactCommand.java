@@ -1,8 +1,10 @@
 package commands;
 
 import converters.AddressConverter;
+import converters.AttachmentConverter;
 import converters.ContactConverter;
 import converters.PhoneConverter;
+import dto.AttachmentDTO;
 import dto.ContactDTO;
 import dto.PhoneDTO;
 import dto.PhotoDTO;
@@ -32,6 +34,7 @@ import java.util.stream.Collectors;
 public class EditContactCommand extends FrontCommand {
     private static ContactConverter contactConverter = new ContactConverter();
     private static AddressConverter addressConverter = new AddressConverter();
+    private static AttachmentConverter attachmentConverter = new AttachmentConverter();
     private static PhoneConverter phoneConverter = new PhoneConverter();
     private static ContactService contactService = new ContactService();
     private static AddressService addressService = new AddressService();
@@ -67,7 +70,11 @@ public class EditContactCommand extends FrontCommand {
                     contactDTO.setPhoto(photoDTO);
                 }
                 List<Attachment> attachments = attachmentService.findAllById(contactDTO.getId());
-                request.setAttribute("attachments", attachments);
+                List<AttachmentDTO> attachmentDTOList = CollectionUtils.isNotEmpty(attachments) ?
+                        attachments.stream().map(attachment ->
+                                attachmentConverter.toDTO(Optional.of(attachment)).get()).collect(Collectors.toList())
+                        : new ArrayList<>();
+                request.setAttribute("attachments", attachmentDTOList);
             }
         } catch (NumberFormatException | GenericDAOException e) {
             LOG.error("error while parsing id contact from EditContactCommand");
@@ -209,9 +216,8 @@ public class EditContactCommand extends FrontCommand {
                             case "hiddenInfoForUpdate": {
                                 String[] objects = field.split(";");
                                 String comment = objects.length == 3 ? "" : objects[3];
-                                java.sql.Date date = java.sql.Date.valueOf(objects[2]);
                                 Long id = Long.parseLong(objects[0]);
-                                attachmentsForUpdate.add(new Attachment(id, date, objects[1], comment, null));
+                                attachmentsForUpdate.add(new Attachment(id, null, objects[1], comment, null));
                                 break;
                             }
                         }
@@ -225,7 +231,7 @@ public class EditContactCommand extends FrontCommand {
             }
             if (photoItem != null) {
                 service.updatePhoto(contact.getId(), photoItem.getName());
-                FileUploadDocuments.saveDocument(request, photoItem, contact.getId(), null, true);
+                FileUploadDocuments.saveDocument(photoItem, contact.getId(), true);
             }
             if (validator.validAttachments(attachmentsForUpdate) && validator.validPhones(numbersForUpdate)) {
                 phoneService.updatePhones(contact.getId(), numbersForUpdate);
@@ -236,12 +242,12 @@ public class EditContactCommand extends FrontCommand {
         }
         if (validator.validAttachments(attachmentsForInsert) && validator.validPhones(numbersForInsert)) {
             phoneService.insertPhones(numbersForInsert, contact.getId());
-            List<Long> ids = attachmentService.insertAttachments(attachmentsForInsert, contact.getId());
-            if (CollectionUtils.isNotEmpty(documents) && CollectionUtils.isNotEmpty(ids)) {
+            if (CollectionUtils.isNotEmpty(documents) && attachmentsForInsert.size() == documents.size()) {
                 for (int i = 0; i < documents.size(); i++) {
                     if (StringUtils.isNotEmpty(documents.get(i).getName())) {
-                        String fileName = FileUploadDocuments.saveDocument(request, documents.get(i), contact.getId(), ids.get(i), false);
-                        attachmentService.updateById(ids.get(i), new Attachment(fileName));
+                        String fileName = FileUploadDocuments.saveDocument(documents.get(i), contact.getId(), false);
+                        attachmentsForInsert.get(i).setFileName(fileName);
+                        attachmentService.insertAttachment(attachmentsForInsert.get(i), contact.getId());
                     }
                 }
             }
@@ -249,7 +255,7 @@ public class EditContactCommand extends FrontCommand {
         if (validator.validContact(contact)) {
             contactService.updateContact(contact, address);
         }
-        if (CollectionUtils.isNotEmpty(error.getMessages())){
+        if (CollectionUtils.isNotEmpty(error.getMessages())) {
             request.getSession().setAttribute("messageList", error.getMessages());
             response.sendRedirect("errorPage");
         } else response.sendRedirect("contacts");

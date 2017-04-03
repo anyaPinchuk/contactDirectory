@@ -70,7 +70,7 @@ function isEmpty(element, field) {
 
 
 function showMessage(element, msg) {
-    element.innerHTML = msg;
+    document.querySelector(".notifier .message").innerHTML = msg;
     showDiv(element, true);
 
 }
