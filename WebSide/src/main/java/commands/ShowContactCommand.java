@@ -8,9 +8,7 @@ import dto.PhoneDTO;
 import dto.PhotoDTO;
 import entities.*;
 import exceptions.GenericDAOException;
-import exceptions.MessageError;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.CharUtils;
 import org.apache.commons.lang3.StringUtils;
 import services.*;
 
@@ -36,7 +34,7 @@ public class ShowContactCommand extends FrontCommand {
         ContactDTO contactDTO = null;
         String paramId = request.getParameter("id");
         LOG.info("show contact starting with parameter id {}", paramId);
-        if (!StringUtils.isNotEmpty(paramId.trim())) forward("unknown");;
+        if (StringUtils.isEmpty(paramId.trim())) forward("unknown");
         try {
             Long id = Long.valueOf(paramId);
             Contact contact = contactService.findById(id);

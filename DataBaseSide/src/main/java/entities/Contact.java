@@ -14,6 +14,7 @@ public class Contact {
     private String job;
 
     public Contact() {
+        this.id = 0L;
     }
 
     public Contact(String name, String surname) {

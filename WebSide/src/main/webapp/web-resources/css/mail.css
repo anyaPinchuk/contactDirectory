@@ -1,0 +1,25 @@
+.mailForm::after{
+    background: url("/web-resources/img/email.jpg");
+    background-size: 100%;
+    opacity: 0.3;
+    content: "";
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    position: absolute;
+    z-index: -1;
+}
+.mailForm{
+    display: block;
+    position: relative;
+    width: 60%;
+    height: 68%;
+}
+
+.center_div{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10%;
+}

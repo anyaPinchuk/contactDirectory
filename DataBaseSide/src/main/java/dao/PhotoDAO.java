@@ -16,12 +16,7 @@ import java.util.Optional;
 public class PhotoDAO extends AbstractDAO<Photo> {
 
     @Override
-    public List<Photo> findAll() throws GenericDAOException {
-        return null;
-    }
-
-    @Override
-    public List<Photo> findAllById(Long contact_id) throws GenericDAOException {
+    public List<Photo> findAllById(Long contactId) throws GenericDAOException {
         return null;
     }
 
@@ -49,24 +44,6 @@ public class PhotoDAO extends AbstractDAO<Photo> {
         String name = resultSet.getString("name");
         Long contactId = resultSet.getLong("contact_id");
         return Optional.of(new Photo(id, name, contactId));
-    }
-
-    @Override
-    public Optional<? extends Photo> findByField(Object field) throws GenericDAOException {
-        LOG.info("find photo starting By field {}", field);
-        ResultSet resultSet = null;
-        try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM photo WHERE name = ? LIMIT 1")) {
-            statement.setString(1, (String) field);
-            resultSet = statement.executeQuery();
-            if (resultSet.next())
-                return buildEntityFromResult(resultSet);
-        } catch (SQLException e) {
-            LOG.error("Photo wasn't found", e);
-            throw new GenericDAOException(e);
-        } finally {
-            connectionAwareExecutor.closeResultSet(resultSet);
-        }
-        return Optional.empty();
     }
 
     @Override

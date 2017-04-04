@@ -31,7 +31,7 @@ public class ContactsCommand extends FrontCommand {
         int currentPage = 1;
         String pageFromClient = request.getParameter("page");
         int countRows = contactService.getCountRows();
-        if (StringUtils.isNotEmpty(pageFromClient) && !pageFromClient.equals("1")) {
+        if (StringUtils.isNotEmpty(pageFromClient) && !"1".equals(pageFromClient)) {
             try {
                 int temp = Integer.valueOf(pageFromClient);
                 if (countRows / count >= temp - 1) {
@@ -45,7 +45,7 @@ public class ContactsCommand extends FrontCommand {
         List<Integer> pageList = new ArrayList<>();
         List<Contact> contacts = contactService.findByParts(start, count);
 
-        if (!CollectionUtils.isEmpty(contacts)) {
+        if (CollectionUtils.isNotEmpty(contacts)) {
             int pageCount = countRows % count == 0 ? countRows / count : countRows / count + 1;
             for (int i = 1; i <= pageCount; i++) {
                 pageList.add(i);

@@ -13,25 +13,21 @@ import java.util.List;
 import java.util.Optional;
 
 public class AttachmentDAO extends AbstractDAO<Attachment>{
-    @Override
-    public List<Attachment> findAll() throws GenericDAOException {
-        return null;
-    }
 
-    public List<Attachment> findAllById(Long idContact) throws GenericDAOException {
-            LOG.info("findAll Attachment starting by id {}", idContact);
+    public List<Attachment> findAllById(Long contactId) throws GenericDAOException {
+            LOG.info("findAll Attachment starting by id {}", contactId);
             ResultSet resultSet = null;
             List<Attachment> attachments = new LinkedList<>();
             try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM attachment" +
                     " WHERE contact_id = ?")) {
-                statement.setLong(1, idContact);
+                statement.setLong(1, contactId);
                 resultSet = statement.executeQuery();
                 while (resultSet.next()) {
                     Long id = resultSet.getLong("id");
                     java.sql.Date dateOfDownload = resultSet.getDate("date_of_download");
                     String fileName = resultSet.getString("file_name");
                     String comment = resultSet.getString("comment");
-                    attachments.add(new Attachment(id, dateOfDownload, fileName, comment, idContact));
+                    attachments.add(new Attachment(id, dateOfDownload, fileName, comment, contactId));
                 }
                 return attachments;
             } catch (SQLException e) {
@@ -68,11 +64,6 @@ public class AttachmentDAO extends AbstractDAO<Attachment>{
         String comment = resultSet.getString("comment");
         Long contact_id = resultSet.getLong("contact_id");
         return Optional.of(new Attachment(id, dateOfDownload, fileName, comment, contact_id));
-    }
-
-    @Override
-    public Optional<? extends Attachment> findByField(Object field) throws GenericDAOException {
-        return null;
     }
 
     @Override

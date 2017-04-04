@@ -1,3 +1,6 @@
+var deleteContactBtn = document.getElementById("deleteContactBtn");
+var sendMailBtn = document.getElementById("sendMailBtn");
+
 function showContact() {
     var inputs = document.getElementsByTagName("input");
     var id = null;
@@ -11,8 +14,6 @@ function showContact() {
         document.location.href = "showContact?id=" + id;
     }
 }
-var deleteContactBtn = document.getElementById("deleteContactBtn");
-var sendMailBtn = document.getElementById("sendMailBtn");
 
 sendMailBtn.addEventListener("click", function () {
     var form = document.forms[0];
@@ -45,10 +46,13 @@ function deleteContacts() {
     }
 }
 
+//-------------- Pagination ---------------//
+
 var next = document.getElementById("next");
 var prev = document.getElementById("prev");
 next.addEventListener("click", showNextPage);
 prev.addEventListener("click", showPrevPage);
+
 function showPrevPage() {
     var strings = document.location.href.split("/");
     var last = strings[strings.length - 1];

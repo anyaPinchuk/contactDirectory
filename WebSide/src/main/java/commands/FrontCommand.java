@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public abstract class FrontCommand {
-    protected ServletContext context;
+    private ServletContext context;
     protected HttpServletRequest request;
     protected HttpServletResponse response;
     protected static final Logger LOG = LoggerFactory.getLogger("commands");
@@ -32,7 +32,5 @@ public abstract class FrontCommand {
         target = String.format("/WEB-INF/views/%s.jspx", target);
         RequestDispatcher dispatcher = context.getRequestDispatcher(target);
         dispatcher.forward(request, response);
-
     }
-
 }

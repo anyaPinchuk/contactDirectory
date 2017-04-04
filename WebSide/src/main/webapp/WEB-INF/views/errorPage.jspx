@@ -1,9 +1,11 @@
 <html xmlns:jsp="http://java.sun.com/JSP/Page"
       xmlns:c="http://java.sun.com/jsp/jstl/core">
 <head>
-    <title>Unknown page</title>
+    <title>Error page</title>
     <link href="${pageContext.request.contextPath}/web-resources/bootstrap/css/bootstrap.css" rel="stylesheet"
           type="text/css" media="screen"/>
+    <link href="${pageContext.request.contextPath}/web-resources/css/index.css" rel="stylesheet" type="text/css"
+          media="screen"/>
 </head>
 
 <jsp:directive.page contentType="text/html" pageEncoding="UTF-8"/>
@@ -11,7 +13,7 @@
 <body>
 <div>
     <c:forEach var="message" items="${sessionScope.messageList}">
-        <div>
+        <div class="error_message"><img src="${pageContext.request.contextPath}/web-resources/img/error.png"/>
             <p>${message}</p>
         </div>
     </c:forEach>

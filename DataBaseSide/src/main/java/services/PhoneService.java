@@ -52,13 +52,13 @@ public class PhoneService implements ServiceEntity {
         }
     }
 
-    public void updatePhones(Long contact_id, List<PhoneNumber> phoneNumbersForUpdate) {
+    public void updatePhones(Long contactId, List<PhoneNumber> phoneNumbersForUpdate) {
         Connection connection = null;
-        if (contact_id == 0) return;
+        if (contactId == 0) return;
         try {
             connection = connectionAwareExecutor.connect();
             phoneDAO.setConnection(connection);
-            List<PhoneNumber> numbers = phoneDAO.findAllById(contact_id);
+            List<PhoneNumber> numbers = phoneDAO.findAllById(contactId);
             connection.setAutoCommit(false);
             phoneNumbersForUpdate.forEach(obj -> {
                 try {

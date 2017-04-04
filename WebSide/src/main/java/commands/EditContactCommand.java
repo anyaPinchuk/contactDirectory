@@ -112,7 +112,7 @@ public class EditContactCommand extends FrontCommand {
             if (!CollectionUtils.isEmpty(formItems)) {
                 for (FileItem item : formItems) {
                     String field = item.getString("UTF-8");
-                    if (item.isFormField() && StringUtils.isNotEmpty(field.trim())) {
+                    if (item.isFormField()) {
                         String fieldName = item.getFieldName();
                         switch (fieldName) {
                             case "id": {
@@ -148,6 +148,8 @@ public class EditContactCommand extends FrontCommand {
                                     } catch (IllegalArgumentException e) {
                                         LOG.info("wrong date format");
                                         error.addMessage("Wrong date format");
+                                        response.sendRedirect("errorPage");
+                                        return;
                                     }
                                     contact.setDateOfBirth(dt == null ? null : new Date(dt.toDate().getTime()));
                                 }
@@ -237,6 +239,11 @@ public class EditContactCommand extends FrontCommand {
                 phoneService.updatePhones(contact.getId(), numbersForUpdate);
                 service.updateAttachments(attachmentsForUpdate, contact.getId());
             }
+            if (CollectionUtils.isNotEmpty(error.getMessages())){
+                request.getSession().setAttribute("messageList", error.getMessages());
+                response.sendRedirect("errorPage");
+                return;
+            }
         } catch (FileUploadException | GenericDAOException e) {
             LOG.error("error while uploading files or updating phones");
         }
@@ -251,6 +258,11 @@ public class EditContactCommand extends FrontCommand {
                     }
                 }
             }
+        }
+        if (CollectionUtils.isNotEmpty(error.getMessages())){
+            request.getSession().setAttribute("messageList", error.getMessages());
+            response.sendRedirect("errorPage");
+            return;
         }
         if (validator.validContact(contact)) {
             contactService.updateContact(contact, address);

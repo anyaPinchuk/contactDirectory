@@ -3,13 +3,11 @@ package commands;
 import dto.AddressDTO;
 import dto.ContactDTO;
 import exceptions.MessageError;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import services.SearchService;
-import utilities.Validator;
 
 import javax.servlet.ServletException;
 import java.io.IOException;
@@ -19,7 +17,6 @@ import java.util.List;
 public class SearchContactCommand extends FrontCommand {
     @Override
     public void processGet() throws ServletException, IOException {
-
         forward("searchContact");
     }
 
@@ -27,21 +24,23 @@ public class SearchContactCommand extends FrontCommand {
     public void processPost() throws ServletException, IOException {
         LOG.info("search contact command starting");
         MessageError error = new MessageError();
-        Validator validator = new Validator(error);
         ContactDTO contactDTO = new ContactDTO();
         contactDTO.setName(request.getParameter("firstName"));
         contactDTO.setSurname(request.getParameter("surname"));
         contactDTO.setThirdName(request.getParameter("thirdName"));
         String date = request.getParameter("dateOfBirth");
-        DateTimeFormatter formatter = DateTimeFormat.forPattern("dd-MM-yyyy");
         DateTime dt = null;
-        try {
-            dt = formatter.parseDateTime(date);
-        } catch (IllegalArgumentException e) {
-            error.addMessage("Wrong date format");
-            request.getSession().setAttribute("messageList", error.getMessages());
-            response.sendRedirect("errorPage");
-            LOG.info("wrong date format");
+        DateTimeFormatter formatter = DateTimeFormat.forPattern("dd-MM-yyyy");
+        if (StringUtils.isNotEmpty(date.trim())){
+            try {
+                dt = formatter.parseDateTime(date);
+            } catch (IllegalArgumentException e) {
+                error.addMessage("Wrong date format");
+                request.getSession().setAttribute("messageList", error.getMessages());
+                response.sendRedirect("errorPage");
+                LOG.info("wrong date format");
+                return;
+            }
         }
         contactDTO.setDateOfBirth(dt);
         contactDTO.setCitizenship(request.getParameter("citizenship"));

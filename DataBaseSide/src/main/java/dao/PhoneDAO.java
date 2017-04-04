@@ -10,18 +10,14 @@ import java.util.List;
 import java.util.Optional;
 
 public class PhoneDAO extends AbstractDAO<PhoneNumber>{
-    @Override
-    public List<PhoneNumber> findAll() throws GenericDAOException {
-        return null;
-    }
 
-    public List<PhoneNumber> findAllById(Long idContact) throws GenericDAOException {
-            LOG.info("findAll Phones starting by id {}", idContact);
+    public List<PhoneNumber> findAllById(Long contactId) throws GenericDAOException {
+            LOG.info("findAll Phones starting by id {}", contactId);
             ResultSet resultSet = null;
             List<PhoneNumber> numbers = new LinkedList<>();
             try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM phone_number" +
                     " WHERE contact_id = ?")) {
-                statement.setLong(1, idContact);
+                statement.setLong(1, contactId);
                 resultSet = statement.executeQuery();
                 while (resultSet.next()) {
                     Long id = resultSet.getLong("id");
@@ -30,7 +26,7 @@ public class PhoneDAO extends AbstractDAO<PhoneNumber>{
                     String number = resultSet.getString("number");
                     String numberType = resultSet.getString("phone_type");
                     String comment = resultSet.getString("comment");
-                    numbers.add(new PhoneNumber(id, countryCode, operatorCode, number, numberType, comment, idContact));
+                    numbers.add(new PhoneNumber(id, countryCode, operatorCode, number, numberType, comment, contactId));
                 }
                 return numbers;
             } catch (SQLException e) {
@@ -69,11 +65,6 @@ public class PhoneDAO extends AbstractDAO<PhoneNumber>{
         String comment = resultSet.getString("comment");
         Long contact_id = resultSet.getLong("contact_id");
         return Optional.of(new PhoneNumber(id, countryCode, operatorCode, number, numberType, comment, contact_id));
-    }
-
-    @Override
-    public Optional<? extends PhoneNumber> findByField(Object field) throws GenericDAOException {
-        return null;
     }
 
     @Override

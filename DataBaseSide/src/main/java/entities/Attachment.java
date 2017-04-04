@@ -7,6 +7,9 @@ public class Attachment {
     private String comment;
     private Long contactId;
 
+    public Attachment() {
+    }
+
     public Attachment(Long id, java.sql.Date dateOfDownload, String fileName, String comment, Long contact_id) {
         this.id = id;
         this.dateOfDownload = dateOfDownload;

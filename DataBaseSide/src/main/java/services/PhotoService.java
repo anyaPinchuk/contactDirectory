@@ -61,13 +61,13 @@ public class PhotoService implements ServiceEntity {
         return null;
     }
 
-    public void deleteById(Long address_id) {
+    public void deleteById(Long addressId) {
         Connection connection = null;
         try {
             connection = connectionAwareExecutor.connect();
             connection.setAutoCommit(false);
             photoDAO.setConnection(connection);
-            photoDAO.deleteById(address_id);
+            photoDAO.deleteById(addressId);
             connection.commit();
         } catch (GenericDAOException | SQLException e) {
             connectionAwareExecutor.rollbackConnection(connection);

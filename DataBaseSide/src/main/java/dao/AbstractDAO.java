@@ -16,13 +16,9 @@ public abstract class AbstractDAO<T> {
     protected ConnectionAwareExecutor connectionAwareExecutor = new ConnectionAwareExecutor();
     protected Connection connection;
 
-    public abstract List<T> findAll() throws GenericDAOException;
-
-    public abstract List<T> findAllById(Long contact_id) throws GenericDAOException;
+    public abstract List<T> findAllById(Long contactId) throws GenericDAOException;
 
     public abstract Optional<? extends T> findById(Long id) throws GenericDAOException;
-
-    public abstract Optional<? extends T> findByField(Object field) throws GenericDAOException;
 
     public abstract int updateById(Long id, T entity) throws GenericDAOException;
 

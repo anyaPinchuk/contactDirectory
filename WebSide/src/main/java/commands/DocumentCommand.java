@@ -6,7 +6,6 @@ import utilities.FileUploadDocuments;
 import javax.servlet.ServletException;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
 
 public class DocumentCommand extends FrontCommand {

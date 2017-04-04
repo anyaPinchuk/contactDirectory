@@ -1,5 +1,6 @@
 package commands;
 
+import exceptions.MessageError;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import services.ContactService;
@@ -20,29 +21,45 @@ public class SendMailCommand extends FrontCommand {
     @Override
     public void processPost() throws ServletException, IOException {
         LOG.info("send mail command starting");
+        MessageError error = new MessageError();
         String[] values = request.getParameterValues("chosenContacts");
-        if (!CollectionUtils.isEmpty(Arrays.asList(values))) {
-            Long[] ids = Arrays.stream(values).map(Long::valueOf).toArray(Long[]::new);
+        if (values != null) {
+            Long[] ids;
+            try {
+                ids = Arrays.stream(values).map(Long::valueOf).toArray(Long[]::new);
+            } catch (NumberFormatException e) {
+                error.addMessage("Wrong id values of chosen contacts");
+                request.getSession().setAttribute("messageList", error.getMessages());
+                response.sendRedirect("errorPage");
+                LOG.info("Wrong id values of chosen contacts");
+                return;
+            }
             ContactService contactService = new ContactService();
             List<String> emails = contactService.findEmailsById(ids);
             List<LetterTemplate> templates = LetterTemplate.getTemplates();
-            if (!CollectionUtils.isEmpty(emails)) {
+            if (CollectionUtils.isNotEmpty(emails)) {
                 request.setAttribute("emails", emails);
+                request.setAttribute("templates", templates);
+                forward("sendMail");
+            } else {
+                error.addMessage("Emails were not found");
+                request.getSession().setAttribute("messageList", error.getMessages());
+                response.sendRedirect("errorPage");
             }
-            request.setAttribute("templates", templates);
-            forward("sendMail");
         } else {
             String[] emails = request.getParameterValues("emails");
             String subject = request.getParameter("subject");
             String templateName = request.getParameter("template");
             String content = request.getParameter("content");
-            //valid
             MailService mailService = new MailService();
-            if (!CollectionUtils.isEmpty(Arrays.asList(emails)) && StringUtils.isNotEmpty(subject.trim()) &&
-                   StringUtils.isNotEmpty(content.trim())){
+            if (CollectionUtils.isNotEmpty(Arrays.asList(emails)) && StringUtils.isNotEmpty(content.trim())) {
                 mailService.sendEmail(emails, subject, templateName, content);
+                response.sendRedirect("Contacts");
+            } else {
+                error.addMessage("Content was not specified");
+                request.getSession().setAttribute("messageList", error.getMessages());
+                response.sendRedirect("errorPage");
             }
-            response.sendRedirect("Contacts");
         }
 
     }

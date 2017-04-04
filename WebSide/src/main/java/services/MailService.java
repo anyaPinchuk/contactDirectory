@@ -11,10 +11,10 @@ import java.util.List;
 public class MailService {
 
     public void sendEmail(String[] emails, String subject, String templateName, String content) {
-        String message = "";
+        String message;
         ContactService contactService = new ContactService();
         List<String> names = contactService.findNamesByEmails(emails);
-        if (!CollectionUtils.isEmpty(names))
+        if (CollectionUtils.isNotEmpty(names))
             for (int i = 0; i < emails.length; i++) {
                 if (StringUtils.isNotEmpty(templateName.trim())) {
                     message = content;

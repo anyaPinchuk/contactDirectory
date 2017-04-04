@@ -38,19 +38,18 @@ public class AddContactCommand extends FrontCommand {
         factory.setRepository(new File(System.getProperty("java.io.tmpdir")));
         ServletFileUpload upload = new ServletFileUpload(factory);
         upload.setHeaderEncoding("UTF-8");
-        List<FileItem> formItems = null;
-        List<FileItem> documents = new ArrayList<>();
+        List<FileItem> formItems, documents = new ArrayList<>();
         List<PhoneNumber> numbersForInsert = new ArrayList<>();
         Contact contact = new Contact();
         Address address = new Address();
         List<Attachment> attachments = new ArrayList<>();
         try {
             formItems = upload.parseRequest(request);
-            if (!CollectionUtils.isEmpty(formItems)) {
+            if (CollectionUtils.isNotEmpty(formItems)) {
                 for (FileItem item : formItems) {
-                   String field = item.getString("UTF-8");
+                    String field = item.getString("UTF-8");
                     if (item.isFormField() && StringUtils.isNotEmpty(field.trim())) {
-                     String fieldName = item.getFieldName();
+                        String fieldName = item.getFieldName();
                         switch (fieldName) {
                             case "name": {
                                 contact.setName(field);
@@ -132,10 +131,15 @@ public class AddContactCommand extends FrontCommand {
                                 break;
                             }
                         }
-                    } else if (!item.isFormField()){
+                    } else if (!item.isFormField()) {
                         documents.add(item);
                     }
                 }
+            }
+            if (CollectionUtils.isNotEmpty(error.getMessages())) {
+                request.getSession().setAttribute("messageList", error.getMessages());
+                response.sendRedirect("errorPage");
+                return;
             }
             ContactService contactService = new ContactService();
             AttachmentService attachmentService = new AttachmentService();
@@ -144,26 +148,30 @@ public class AddContactCommand extends FrontCommand {
             if (validator.validContact(contact)) {
                 contactId = contactService.insertContact(contact, address);
             }
-            if (validator.validAttachments(attachments) && validator.validPhones(numbersForInsert)){
+            if (CollectionUtils.isNotEmpty(error.getMessages())) {
+                request.getSession().setAttribute("messageList", error.getMessages());
+                response.sendRedirect("errorPage");
+                return;
+            }
+            if (validator.validAttachments(attachments) && validator.validPhones(numbersForInsert)) {
                 phoneService.insertPhones(numbersForInsert, contactId);
-                if (!CollectionUtils.isEmpty(documents) && attachments.size() == documents.size()) {
-                    for(int i = 0; i < documents.size(); i++){
+                if (CollectionUtils.isNotEmpty(documents) && contactId != 0 && attachments.size() == documents.size()) {
+                    for (int i = 0; i < documents.size(); i++) {
                         if (StringUtils.isNotEmpty(documents.get(i).getName())) {
                             String fileName = FileUploadDocuments.saveDocument(documents.get(i), contactId, false);
                             attachments.get(i).setFileName(fileName);
                             attachmentService.insertAttachment(attachments.get(i), contactId);
                         }
                     }
-
                 }
             }
-            if (CollectionUtils.isNotEmpty(error.getMessages())){
+            if (CollectionUtils.isNotEmpty(error.getMessages())) {
                 request.getSession().setAttribute("messageList", error.getMessages());
                 response.sendRedirect("errorPage");
-            }
-            else response.sendRedirect("contacts");
+            } else response.sendRedirect("contacts");
         } catch (Exception e) {
-            request.setAttribute("messageList", error.getMessages());
+            error.addMessage("error while processing add contact command");
+            request.getSession().setAttribute("messageList", error.getMessages());
             forward("errorPage");
             LOG.error(e.getMessage());
         }

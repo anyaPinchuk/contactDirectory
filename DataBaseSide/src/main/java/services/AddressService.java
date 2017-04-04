@@ -27,14 +27,6 @@ public class AddressService implements ServiceEntity {
         return null;
     }
 
-    public AddressDAO getAddressDAO() {
-        return addressDAO;
-    }
-
-    public void setAddressDAO(AddressDAO addressDAO) {
-        this.addressDAO = addressDAO;
-    }
-
     public void deleteById(Long address_id) {
         Connection connection = null;
         try {

@@ -1,25 +1,34 @@
-//-------------Handlers--------//
+//-------------Global Variables------------------//
+
+var form = document.forms.addContact;
 var modal = document.getElementById('myModal');
 var btn = document.getElementById("myBtn");
 var span = document.getElementsByClassName("close")[0];
+var addPhoneButton = document.getElementById("addPhone");
+var deletePhoneBtn = document.getElementById("deletePhone");
+var attachmentDelete = document.getElementById("attachmentDelete");
+var attachmentBtn = document.getElementById("attachmentBtn");
+var table = document.getElementById('phones');
+var indexOfFile = 0;
+var tableAttach = document.getElementById("attachments");
+var i = 0;
+var object = {};
+var addContact = document.getElementById("addContact");
+
+//-------------Handlers--------//
+
+addContact.addEventListener("click", validateForm);
+
 btn.addEventListener("click", function () {
     modal.style.display = "block";
 });
 span.addEventListener("click", function () {
     modal.style.display = "none";
 });
-
-var form = document.forms.addContact;
-/////////////////////////////
-var addPhoneButton = document.getElementById("addPhone");
 addPhoneButton.addEventListener("click", addPhone);
-var deletePhoneBtn = document.getElementById("deletePhone");
 deletePhoneBtn.addEventListener("click", deletePhone);
 
-////////////////attachment
-var attachmentDelete = document.getElementById("attachmentDelete");
 attachmentDelete.addEventListener("click", deleteChosenAttachments);
-var attachmentBtn = document.getElementById("attachmentBtn");
 attachmentBtn.addEventListener("click", function () {
     document.getElementById("myModalAttachment").style.display = "block";
 });
@@ -27,13 +36,7 @@ document.getElementsByClassName("close")[1].addEventListener("click", function (
     document.getElementById("myModalAttachment").style.display = "none";
 });
 
-//--------pop Up window----------//
-
-
-///------ phones --------///
-var phones = new Array();
-var i = 0;
-var object = {};
+//------ functions for work with phones --------//
 
 function addPhone() {
     object.countryCode = form.countryCode.value;
@@ -42,12 +45,10 @@ function addPhone() {
     object.type = form.type.value;
     object.comment = form.comment.value;
     if (object.countryCode != "" || object.operatorCode != "" || object.number != "") {
-        phones.push(object);
         addPhoneInTable(object, i++);
     }
 }
 
-var table = document.getElementById('phones');
 table.style.visibility = "hidden";
 
 function addPhoneInTable(object, i) {
@@ -113,9 +114,7 @@ function deletePhone() {
     }
 }
 
-//----------------Attachment--------//
-var indexOfFile = 0;
-var tableAttach = document.getElementById("attachments");
+//----------------function for work with Attachments--------//
 
 function addAttachment() {
     tableAttach.style.visibility = "visible";
@@ -132,7 +131,6 @@ function addAttachment() {
     addFileInfoInTable(indexOfFile - 1, attachment.files[0].name, new Date(), comment);
     document.getElementById("myModalAttachment").style.display = "none";
 }
-
 
 function addFileInfoInTable(i, fileName, date, comment) {
     var tbody = document.getElementById("tbodyAttach");
@@ -197,7 +195,7 @@ function deleteChosenAttachments() {
     var tbody = document.getElementById('tbodyAttach');
     var rows = document.querySelectorAll(".fileRows");
     for (var i = 0; ; i++) {
-        if (i == rows.length) {
+        if (i === rows.length) {
             break;
         }
         var checkbox = rows[i].childNodes[0].childNodes[0];
@@ -222,16 +220,12 @@ if (document.querySelectorAll(".fileRows").length == 0) {
 if (document.querySelectorAll(".rows").length == 0) {
     table.style.visibility = "hidden";
 }
-var addContact = document.getElementById("addContact");
-
-addContact.addEventListener("click", validateForm);
 
 function validateForm() {
     var date = document.getElementById("contactDate");
     var element = document.getElementById("notifyDiv");
-    if (validDate(element,date) && validate(element,form.thirdName, form.citizenship, form.status, form.webSite, form.job,
-            form.country, form.city, form.address, form.index) && !isEmpty(element,form.name) &&
-        !isEmpty(element,form.surname) && validEmail(element, form.email)) {
+    if (validDate(element, date) && validate(element, form.thirdName, form.citizenship, form.status, form.webSite,
+            form.job, form.country, form.city, form.address, form.index) && !isEmpty(element, form.name) && !isEmpty(element, form.surname) && validEmail(element, form.email)) {
         form.submit();
     }
 }

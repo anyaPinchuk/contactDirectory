@@ -38,12 +38,12 @@ public class ContactService implements ServiceEntity {
         return contacts;
     }
 
-    public Contact findById(Long contact_id) {
+    public Contact findById(Long contactId) {
         Connection connection = null;
         try {
             connection = connectionAwareExecutor.connect();
             contactDAO.setConnection(connection);
-            return contactDAO.findById(contact_id).isPresent() ? contactDAO.findById(contact_id).get() : null;
+            return contactDAO.findById(contactId).isPresent() ? contactDAO.findById(contactId).get() : null;
         } catch (GenericDAOException e) {
             LOG.error("error while processing get contact by id in ContactService");
         }finally {
@@ -165,7 +165,7 @@ public class ContactService implements ServiceEntity {
             connection = connectionAwareExecutor.connect();
             connection.setAutoCommit(false);
             contactDAO.setConnection(connection);
-            contact = contactDAO.findById(id).get();
+            contact = contactDAO.findById(id).isPresent() ? contactDAO.findById(id).get() : new Contact();
             contactDAO.deleteById(id);
             connection.commit();
             return contact;

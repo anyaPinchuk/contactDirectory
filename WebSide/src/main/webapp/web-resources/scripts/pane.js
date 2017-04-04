@@ -1,3 +1,8 @@
+/**
+ * show pane block by clicking on nav-tab
+ * @param pane
+ */
+
 function showPane(pane) {
     var div;
     pane.className = "active";

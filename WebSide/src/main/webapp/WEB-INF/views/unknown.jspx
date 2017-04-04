@@ -10,6 +10,6 @@
 <jsp:output omit-xml-declaration="yes"/>
 <body>
 <h1 class="text-danger">This page doesn't exist<br/>
-    You passed thhe wrong <abbr>URL</abbr></h1>
+    You passed the wrong <abbr>URL</abbr></h1>
 </body>
 </html>

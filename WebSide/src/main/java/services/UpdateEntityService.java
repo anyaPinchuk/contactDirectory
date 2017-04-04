@@ -14,38 +14,38 @@ public class UpdateEntityService {
     private Logger LOG = LoggerFactory.getLogger(UpdateEntityService.class);
     private AttachmentService attachmentService = new AttachmentService();
 
-    public void updateAttachments(List<Attachment> listForUpdate, Long contact_id) throws GenericDAOException {
-        LOG.info("update attachments by id {} starting", contact_id);
-        List<Attachment> attachments = attachmentService.findAllById(contact_id);
+    public void updateAttachments(List<Attachment> listForUpdate, Long contactId) throws GenericDAOException {
+        LOG.info("update attachments by id {} starting", contactId);
+        List<Attachment> attachments = attachmentService.findAllById(contactId);
         if (CollectionUtils.isEmpty(attachments)) return;
         listForUpdate.forEach(obj -> {
             String oldName = attachmentService.findById(obj.getId()).getFileName();
-            obj.setContactId(contact_id);
+            obj.setContactId(contactId);
             if (attachments.contains(obj)) {
                 attachments.remove(obj);
-                if (!oldName.equals(obj.getFileName())) {
-                    FileUploadDocuments.renameDocument(oldName, obj.getFileName(), contact_id);
+                if (!obj.getFileName().equals(oldName)) {
+                    FileUploadDocuments.renameDocument(oldName, obj.getFileName(), contactId);
                 }
                 attachmentService.updateById(obj.getId(), obj);
             }
         });
         attachments.forEach(object -> {
             attachmentService.deleteById(object.getId());
-            FileUploadDocuments.deleteDocument(object.getFileName(), false, contact_id);
+            FileUploadDocuments.deleteDocument(object.getFileName(), false, contactId);
         });
     }
 
 
-    public void updatePhoto(Long contact_id, String fileName) throws GenericDAOException {
+    public void updatePhoto(Long contactId, String fileName) throws GenericDAOException {
         if (fileName == null) return;
         PhotoService photoService = new PhotoService();
-        Photo obj = photoService.findById(contact_id);
+        Photo obj = photoService.findById(contactId);
         if (obj == null) {
-            photoService.insert(fileName, contact_id);
+            photoService.insert(fileName, contactId);
         } else {
-            FileUploadDocuments.deleteDocument(obj.getName(), true, contact_id);
+            FileUploadDocuments.deleteDocument(obj.getName(), true, contactId);
             obj.setName(fileName);
-            photoService.updatePhoto(contact_id, obj);
+            photoService.updatePhoto(contactId, obj);
         }
     }
 

@@ -16,12 +16,7 @@ import java.util.Optional;
 public class AddressDAO extends AbstractDAO<Address> {
 
     @Override
-    public List<Address> findAll() throws GenericDAOException {
-        return null;
-    }
-
-    @Override
-    public List<Address> findAllById(Long contact_id) throws GenericDAOException {
+    public List<Address> findAllById(Long contactId) throws GenericDAOException {
         return null;
     }
 
@@ -51,11 +46,6 @@ public class AddressDAO extends AbstractDAO<Address> {
         String index = resultSet.getString("index");
         Long contactId = resultSet.getLong("contact_id");
         return Optional.of(new Address(id, country, city, streetAddress, index, contactId));
-    }
-
-    @Override
-    public Optional<? extends Address> findByField(Object field) throws GenericDAOException {
-        return null;
     }
 
     @Override

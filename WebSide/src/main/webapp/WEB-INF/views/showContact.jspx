@@ -6,11 +6,11 @@
     <head>
         <link href="${pageContext.request.contextPath}/web-resources/css/index.css" rel="stylesheet" type="text/css"
               media="screen"/>
+        <link href="${pageContext.request.contextPath}/web-resources/css/tables.css" rel="stylesheet" type="text/css"
+              media="screen"/>
         <link href="${pageContext.request.contextPath}/web-resources/bootstrap/css/bootstrap.css" rel="stylesheet"
               type="text/css" media="screen"/>
-        <script type="text/javascript" src="${pageContext.request.contextPath}/web-resources/scripts/pane.js">
-            //hiii
-        </script>
+        <script type="text/javascript" src="${pageContext.request.contextPath}/web-resources/scripts/pane.js">//script</script>
 
         <c:set var="contact" value="${requestScope.contact}"/>
     </head>
@@ -21,8 +21,8 @@
     <div class="photo-group">
         <img id='photo' src="image?name=${contact.photo.name};${contact.id}"
              width="200px" height="200px"/>
-        <p class="fio">${contact.name} ${contact.surname}</p>
-    </div>
+        <p class="fio">${contact.name}<br/><br/> ${contact.surname}</p>
+    </div><br/>
     <div class="main_form">
         <div class="list_of_tabs">
             <ul class="nav nav-tabs my_ul">
@@ -86,7 +86,7 @@
                                 <th>Comment</th>
                             </tr>
                             <c:forEach items="${contact.phoneDTOList}" var="phone">
-                                <tr class="rows" id="row${phone.id}">
+                                <tr>
                                     <td>
                                         <p>+${phone.countryCode} ${phone.operatorCode} ${phone.number}</p>
                                     </td>
@@ -129,9 +129,7 @@
             <button class="button">Back to contacts</button>
         </a>
     </div>
-    <script type="text/javascript" src="${pageContext.request.contextPath}/web-resources/bootstrap/js/bootstrap.min.js">
-        //hiii
-    </script>
+    <script type="text/javascript" src="${pageContext.request.contextPath}/web-resources/bootstrap/js/bootstrap.min.js">//script</script>
     </body>
 
     </html>

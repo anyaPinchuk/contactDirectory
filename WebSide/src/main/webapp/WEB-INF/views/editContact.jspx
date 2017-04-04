@@ -7,10 +7,9 @@
               media="screen"/>
         <link href="${pageContext.request.contextPath}/web-resources/bootstrap/css/bootstrap.css" rel="stylesheet"
               type="text/css" media="screen"/>
-        <script type="text/javascript" src="${pageContext.request.contextPath}/web-resources/scripts/handlers.js">
-            //hiii
-        </script>
-        <script src="${pageContext.request.contextPath}/web-resources/scripts/pane.js">//hi</script>
+        <link href="${pageContext.request.contextPath}/web-resources/css/tables.css" rel="stylesheet" type="text/css"
+              media="screen"/>
+        <script src="${pageContext.request.contextPath}/web-resources/scripts/pane.js">//script</script>
         <c:set var="contact" value="${requestScope.contact}"/>
         <c:set var="date"><joda:format value='${contact.dateOfBirth}' pattern='dd-MM-yyyy'/></c:set>
     </head>
@@ -22,7 +21,7 @@
         <div class="photo-group">
             <img id='photo' src="image?name=${contact.photo.name};${contact.id}"
                  width="200px" height="200px"/>
-            <p class="fio">${contact.name} ${contact.surname}</p>
+            <p class="fio">${contact.name}<br/><br/> ${contact.surname}</p>
         </div>
         <div class="main_form">
             <div class="list_of_tabs">
@@ -283,13 +282,9 @@
         <img src="${pageContext.request.contextPath}/web-resources/img/exclaim.png"/>
         <div class="message">message</div>
     </div>
-    <script type="text/javascript" src="${pageContext.request.contextPath}/web-resources/scripts/editContact.js">
-        //hiii
-    </script>
-    <script type="text/javascript" src="${pageContext.request.contextPath}/web-resources/bootstrap/js/bootstrap.min.js">
-        //hiii
-    </script>
-    <script src="${pageContext.request.contextPath}/web-resources/scripts/main.js">//hi</script>
+    <script type="text/javascript" src="${pageContext.request.contextPath}/web-resources/scripts/editContact.js">//script</script>
+    <script type="text/javascript" src="${pageContext.request.contextPath}/web-resources/bootstrap/js/bootstrap.min.js">//script</script>
+    <script src="${pageContext.request.contextPath}/web-resources/scripts/main.js">//script</script>
     </body>
     </html>
 </jsp:root>

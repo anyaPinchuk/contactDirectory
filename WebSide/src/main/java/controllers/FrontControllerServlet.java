@@ -53,7 +53,8 @@ public class FrontControllerServlet extends HttpServlet {
             String command = request.getRequestURI().substring(5);
             Class type = Class.forName(String.format(
                     "commands.%sCommand", command.substring(0, 1).toUpperCase() + command.substring(1)));
-            return (FrontCommand) type.asSubclass(FrontCommand.class).newInstance();
+            FrontCommand frontCommand = (FrontCommand) type.asSubclass(FrontCommand.class).newInstance();
+            return frontCommand;
         } catch (Exception e) {
             LOG.error("such URL doesn't exist, redirect to UnknownCommand", e);
             return new UnknownCommand();

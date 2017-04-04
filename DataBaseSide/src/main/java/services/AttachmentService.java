@@ -3,14 +3,12 @@ package services;
 import dao.AttachmentDAO;
 import entities.Attachment;
 import exceptions.GenericDAOException;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class AttachmentService implements ServiceEntity {
@@ -32,7 +30,6 @@ public class AttachmentService implements ServiceEntity {
     }
 
     public Long insertAttachment(Attachment attachment, Long contactId) {
-        if (contactId == 0) return null;
         Long id = null;
         Connection connection = null;
         try {
@@ -48,7 +45,7 @@ public class AttachmentService implements ServiceEntity {
             connection.commit();
         } catch (GenericDAOException | SQLException e) {
             connectionAwareExecutor.rollbackConnection(connection);
-            LOG.error("error while processing insert attachment in attachmentService");
+            LOG.error("insert attachment in attachmentService failed");
         } finally {
             connectionAwareExecutor.closeConnection(connection);
         }
@@ -76,7 +73,7 @@ public class AttachmentService implements ServiceEntity {
         try {
             connection = connectionAwareExecutor.connect();
             attachmentDAO.setConnection(connection);
-            return attachmentDAO.findById(id).isPresent() ? attachmentDAO.findById(id).get() : null;
+            return attachmentDAO.findById(id).isPresent() ? attachmentDAO.findById(id).get() : new Attachment();
         } catch (GenericDAOException e) {
             LOG.error("error while processing get attachment by id in attachmentService");
         }finally {

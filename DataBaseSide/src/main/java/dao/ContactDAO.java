@@ -13,25 +13,6 @@ import java.util.*;
 
 public class ContactDAO extends AbstractDAO<Contact> {
 
-    @Override
-    public List<Contact> findAll() throws GenericDAOException {
-        LOG.info("findAll Contact starting");
-        ResultSet resultSet = null;
-        List<Contact> contacts = new LinkedList<>();
-        try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM contact")) {
-            resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                contacts.add(buildEntityFromResult(resultSet).get());
-            }
-            return contacts;
-        } catch (SQLException e) {
-            LOG.error("Contacts weren't found", e);
-            throw new GenericDAOException(e);
-        } finally {
-            connectionAwareExecutor.closeResultSet(resultSet);
-        }
-    }
-
     public String findEmailById(Long id) throws GenericDAOException {
         LOG.info("findEmail by id {} starting", id);
         ResultSet resultSet = null;
@@ -55,12 +36,12 @@ public class ContactDAO extends AbstractDAO<Contact> {
         LOG.info("findAll Contact starting");
         ResultSet resultSet = null;
         List<Contact> contacts = new LinkedList<>();
-        String builder = "";
+        String builder;
         builder = buildQuery(entity, address, dateCriteria);
         try (PreparedStatement statement = setParametersForSearch(connection, builder, entity, address)) {
             resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                contacts.add(buildEntityFromResult(resultSet).get());
+                buildEntityFromResult(resultSet).ifPresent(contacts::add);
             }
             return contacts;
         } catch (SQLException e) {
@@ -170,7 +151,7 @@ public class ContactDAO extends AbstractDAO<Contact> {
         LOG.info("get count Rows Contact starting");
         ResultSet resultSet = null;
         int countRows;
-        try (PreparedStatement statement = connection.prepareStatement("SELECT count(*) FROM contact")) {
+        try (PreparedStatement statement = connection.prepareStatement("SELECT COUNT(*) FROM contact")) {
             resultSet = statement.executeQuery();
             resultSet.next();
             countRows = resultSet.getInt(1);
@@ -184,13 +165,13 @@ public class ContactDAO extends AbstractDAO<Contact> {
     }
 
     @Override
-    public List<Contact> findAllById(Long contact_id) throws GenericDAOException {
+    public List<Contact> findAllById(Long contactId) throws GenericDAOException {
         return null;
     }
 
     @Override
     public Optional<? extends Contact> findById(Long id) throws GenericDAOException {
-        LOG.info("findById Contact starting");
+        LOG.info("find By Id {} Contact starting", id);
         ResultSet resultSet = null;
         try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM contact WHERE id = ? LIMIT 1")) {
             statement.setLong(1, id);
@@ -224,12 +205,6 @@ public class ContactDAO extends AbstractDAO<Contact> {
     }
 
     @Override
-    public Optional<? extends Contact> findByField(Object field) throws GenericDAOException {
-        return null;
-    }
-
-
-    @Override
     public int updateById(Long id, Contact entity) throws GenericDAOException {
         LOG.info("updateById Contact starting by id {}", id);
         if (entity == null) return 0;
@@ -248,7 +223,7 @@ public class ContactDAO extends AbstractDAO<Contact> {
         }
     }
 
-    public PreparedStatement setParameters(Connection connection, String query, Contact entity) throws SQLException {
+    private PreparedStatement setParameters(Connection connection, String query, Contact entity) throws SQLException {
         LOG.info("set parameters starting");
         PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
         List<Object> parameters = new ArrayList<>();
@@ -287,7 +262,7 @@ public class ContactDAO extends AbstractDAO<Contact> {
     public Long insert(Contact entity) throws GenericDAOException {
         LOG.info("insert Contact starting");
         if (entity == null) return 0L;
-        String query = "";
+        String query;
         if (entity.getDateOfBirth() != null) {
             query = "INSERT INTO anya_pinchuk.contact (name, surname, third_name, date_of_birth, gender, citizenship," +
                     " marital_status, web_site, email, job) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -315,7 +290,7 @@ public class ContactDAO extends AbstractDAO<Contact> {
 
     @Override
     public int deleteById(Long id) throws GenericDAOException {
-        LOG.info("delete Contact starting ById {}", id);
+        LOG.info("delete Contact starting By Id {}", id);
         try (PreparedStatement statement = connection.prepareStatement("DELETE FROM contact WHERE id = ?")) {
             statement.setLong(1, id);
             return statement.executeUpdate();
