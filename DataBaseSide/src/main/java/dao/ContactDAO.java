@@ -76,10 +76,10 @@ public class ContactDAO extends AbstractDAO<Contact> {
         if (entity.getDateOfBirth() != null && StringUtils.isNotEmpty(dateCriteria.trim())) {
             if (dateCriteria.equals("after")) {
                 builder.append("c.date_of_birth ");
-                builder.append(" > ? and ");
+                builder.append(" >= ? and ");
             } else {
                 builder.append("c.date_of_birth ");
-                builder.append(" < ? and ");
+                builder.append(" <= ? and ");
             }
         }
         if (StringUtils.isNotEmpty(entity.getCitizenship().trim()))

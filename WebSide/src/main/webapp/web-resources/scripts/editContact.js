@@ -41,8 +41,8 @@ editContact.addEventListener("click", validateForm);
 attachmentDelete.addEventListener("click", deleteChosenAttachments);
 attachmentBtn.addEventListener("click", function () {
     var myModalAttachment = document.getElementById("myModalAttachment");
-    myModalAttachment.childNodes[2].style.display = "none";
-    document.getElementById("myModalAttachment").childNodes[1].style.display = "block";
+    document.querySelector("#file_name").style.display = "none";
+    document.querySelector("#file").style.display = "block";
     myModalAttachment.style.display = "block";
     form.nameFile.value = "";
     form.commentFile.value = "";
@@ -86,7 +86,6 @@ function addPhone() {
     object.type = form.type.value;
     object.comment = form.comment.value;
     if (object.countryCode != "" || object.operatorCode != "" || object.number != "") {
-        phones.push(object);
         addPhoneInTable(object, i++);
     }
 }
@@ -346,9 +345,11 @@ function editAttachment(id) {
     var myModalAttachment = document.getElementById("myModalAttachment");
     myModalAttachment.style.display = "block";
     editDocInput = document.getElementById("hiddenFileInfo" + id);
-    myModalAttachment.childNodes[1].style.display = "none";
+    console.log(editDocInput);
+    console.log(myModalAttachment);
+    document.querySelector("#file").style.display = "none";
     if (editDocInput.name != "hiddenInfoForInsert") {
-        myModalAttachment.childNodes[2].style.display = "block";
+        document.querySelector("#file_name").style.display = "block";
     }
     addAttachmentBtn.style.display = "none";
     saveAttachmentBtn.style.display = "block";

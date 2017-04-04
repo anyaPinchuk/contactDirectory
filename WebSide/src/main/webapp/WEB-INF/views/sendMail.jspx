@@ -40,7 +40,7 @@
             <div class="group_buttons">
                 <button class="button margin_right" type="button" id="sendMail">Send</button>
                 <a href="contacts">
-                    <button class="button margin_right">Cancel</button>
+                    <button type="button" class="button margin_right">Cancel</button>
                 </a>
             </div>
         </form>

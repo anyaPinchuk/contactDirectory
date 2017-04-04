@@ -254,13 +254,13 @@
                 <span class="close">Cancel<img
                         src="${pageContext.request.contextPath}/web-resources/img/cross.png"/></span>
             <div class="addAttachment">
-                <div class="form-group">
+                <div class="form-group" id="file">
                     <label id="labelFile">Choose file </label>
                     <input accept="application/msword, text/plain, application/pdf, application/xml, .docx, image/*"
                            class="form-control"
                            type="file" name="attachment-0" id="attachment0"/>
                 </div>
-                <div class="form-group" style="display:none;">
+                <div class="form-group" id="file_name" style="display:none;">
                     <label>Input file name</label>
                     <input type="text" class="form-control" id="nameFile" placeholder="Input file name"
                            name="nameFile"/>
