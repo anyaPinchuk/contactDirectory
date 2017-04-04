@@ -17,7 +17,6 @@
     <body>
     <jsp:include page="${pageContext.request.contextPath}/WEB-INF/views/header.jspx"/>
     <div class="caption"><h3>About contact</h3></div>
-
     <div class="photo-group">
         <img id='photo' src="image?name=${contact.photo.name};${contact.id}"
              width="200px" height="200px"/>
@@ -86,7 +85,7 @@
                                 <th>Comment</th>
                             </tr>
                             <c:forEach items="${contact.phoneDTOList}" var="phone">
-                                <tr>
+                                <tr class="rows_phones">
                                     <td>
                                         <p>+${phone.countryCode} ${phone.operatorCode} ${phone.number}</p>
                                     </td>
@@ -108,7 +107,7 @@
                                 <th>Comment</th>
                             </tr>
                             <c:forEach items="${requestScope.attachments}" var="attachment">
-                                <tr>
+                                <tr class="rows_attach">
                                     <td>
                                         <a href="document?name=${attachment.fileName};${contact.id}">${attachment.fileName}</a>
                                     </td>
@@ -126,11 +125,11 @@
     </div>
     <div class="group_buttons">
         <a href="contacts">
-            <button class="button">Back to contacts</button>
+            <button type="button" class="button">Back to contacts</button>
         </a>
     </div>
+    <script type="text/javascript" src="${pageContext.request.contextPath}/web-resources/scripts/showContact.js">//script</script>
     <script type="text/javascript" src="${pageContext.request.contextPath}/web-resources/bootstrap/js/bootstrap.min.js">//script</script>
     </body>
-
     </html>
 </jsp:root>

@@ -18,13 +18,17 @@ public class Validator {
     }
 
     public boolean validContact(Contact contact) {
-        return !(StringUtils.isEmpty(contact.getEmail().trim()) || StringUtils.isEmpty(contact.getName().trim()) ||
-                StringUtils.isEmpty(contact.getSurname().trim()));
+        if (StringUtils.isEmpty(contact.getEmail().trim()) || StringUtils.isEmpty(contact.getName().trim()) ||
+                StringUtils.isEmpty(contact.getSurname().trim())) {
+            error.addMessage("First name, second name and email can not be empty");
+            return false;
+        } else return true;
     }
 
     public boolean validPhones(List<PhoneNumber> numbers) {
         for (PhoneNumber obj : numbers) {
             if (StringUtils.isEmpty(obj.getNumberType().trim())) {
+                error.addMessage("Number type should be specified");
                 return false;
             }
             try {
@@ -41,7 +45,8 @@ public class Validator {
 
     public boolean validAttachments(List<Attachment> attachments) {
         for (Attachment obj : attachments) {
-            if (StringUtils.isEmpty(obj.getFileName().trim())) {
+            if (StringUtils.isEmpty(obj.getFileName().trim()) || obj.getDateOfDownload() == null) {
+                error.addMessage("File name and date of download should be specified");
                 return false;
             }
         }

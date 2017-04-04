@@ -34,7 +34,9 @@ span.onclick = function () {
     modalPhoto.style.display = "none";
 };
 savePhoneButton.onclick = function () {
-    saveChanges(inputPhoneID, form.countryCode.value, form.operatorCode.value, form.number.value, form.type.value, form.comment.value);
+    if (/^\d+$/.test(form.countryCode.value) && /^\d+$/.test(form.operatorCode.value) && /^\d+$/.test(form.number.value))
+        saveChanges(inputPhoneID, form.countryCode.value, form.operatorCode.value, form.number.value, form.type.value,
+            form.comment.value);
 };
 
 editContact.addEventListener("click", validateForm);
@@ -85,7 +87,7 @@ function addPhone() {
     object.number = form.number.value;
     object.type = form.type.value;
     object.comment = form.comment.value;
-    if (object.countryCode != "" || object.operatorCode != "" || object.number != "") {
+    if (/^\d+$/.test(object.countryCode) && /^\d+$/.test(object.operatorCode) && /^\d+$/.test(object.number)) {
         addPhoneInTable(object, i++);
     }
 }
@@ -390,7 +392,7 @@ function validateForm() {
     }
     if (validDate(element, date) && validate(element, form.thirdName, form.citizenship, form.status, form.webSite,
             form.job, form.country, form.city, form.address, form.index) && !isEmpty(element, form.name)
-        && !isEmpty(element, form.surname) && validEmail(element,form.email)) {
+        && !isEmpty(element, form.surname) && validEmail(element, form.email)) {
         form.submit();
     }
 }

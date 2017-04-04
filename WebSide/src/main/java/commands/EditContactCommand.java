@@ -109,7 +109,7 @@ public class EditContactCommand extends FrontCommand {
         UpdateEntityService service = new UpdateEntityService();
         try {
             formItems = upload.parseRequest(request);
-            if (!CollectionUtils.isEmpty(formItems)) {
+            if (CollectionUtils.isNotEmpty(formItems)) {
                 for (FileItem item : formItems) {
                     String field = item.getString("UTF-8");
                     if (item.isFormField()) {
@@ -121,7 +121,10 @@ public class EditContactCommand extends FrontCommand {
                                     address.setContactId(contact.getId());
                                 } catch (NumberFormatException e) {
                                     error.addMessage("Wrong id of contact");
+                                    request.getSession().setAttribute("messageList", error.getMessages());
+                                    response.sendRedirect("errorPage");
                                     LOG.error("error while parsing id {}", field);
+                                    return;
                                 }
                                 break;
                             }
@@ -138,10 +141,8 @@ public class EditContactCommand extends FrontCommand {
                                 break;
                             }
                             case "dateOfBirth": {
-                                if (StringUtils.isEmpty(field.trim())) {
-                                    contact.setDateOfBirth(null);
-                                } else {
-                                    DateTime dt = null;
+                                if (StringUtils.isNotEmpty(field.trim())) {
+                                    DateTime dt;
                                     DateTimeFormatter formatter = DateTimeFormat.forPattern("dd-MM-yyyy");
                                     try {
                                         dt = formatter.parseDateTime(field);
@@ -244,8 +245,12 @@ public class EditContactCommand extends FrontCommand {
                 response.sendRedirect("errorPage");
                 return;
             }
-        } catch (FileUploadException | GenericDAOException e) {
+        } catch (Exception e) {
+            error.addMessage("error while processing edit contact command, please, check if input data is correct");
+            request.getSession().setAttribute("messageList", error.getMessages());
+            forward("errorPage");
             LOG.error("error while uploading files or updating phones");
+            return;
         }
         if (validator.validAttachments(attachmentsForInsert) && validator.validPhones(numbersForInsert)) {
             phoneService.insertPhones(numbersForInsert, contact.getId());

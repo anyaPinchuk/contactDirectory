@@ -170,7 +170,7 @@ public class AddContactCommand extends FrontCommand {
                 response.sendRedirect("errorPage");
             } else response.sendRedirect("contacts");
         } catch (Exception e) {
-            error.addMessage("error while processing add contact command");
+            error.addMessage("error while processing add contact command, please, check input data if it is correct");
             request.getSession().setAttribute("messageList", error.getMessages());
             forward("errorPage");
             LOG.error(e.getMessage());

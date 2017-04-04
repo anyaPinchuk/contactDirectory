@@ -44,7 +44,7 @@ function addPhone() {
     object.number = form.number.value;
     object.type = form.type.value;
     object.comment = form.comment.value;
-    if (object.countryCode != "" || object.operatorCode != "" || object.number != "") {
+    if (/^\d+$/.test(object.countryCode) && /^\d+$/.test(object.operatorCode) && /^\d+$/.test(object.number)) {
         addPhoneInTable(object, i++);
     }
 }
