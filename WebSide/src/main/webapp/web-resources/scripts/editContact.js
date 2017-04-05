@@ -57,6 +57,15 @@ saveAttachmentBtn.onclick = function () {
 document.getElementsByClassName("close")[2].addEventListener("click", function () {
     document.getElementById("myModalAttachment").style.display = "none";
 });
+
+addAttachmentBtn.addEventListener("click", function () {
+    var attachment = document.getElementById("attachment" + indexOfFile);
+    if (attachment.files.length != 0){
+        tableAttach.style.visibility = "visible";
+        addAttachment();
+    }
+});
+
 btn.onclick = function () {
     modal.style.display = "block";
     form.countryCode.value = "";

@@ -213,7 +213,7 @@
             </div>
         </div>
         <div class="group_buttons">
-            <button id="addAttachmentBtn" type="button" class="button" onclick="addAttachment()">Add</button>
+            <button id="addAttachmentBtn" type="button" class="button">Add</button>
         </div>
     </div>
     <script src="${pageContext.request.contextPath}/web-resources/scripts/addContact.js">//script</script>

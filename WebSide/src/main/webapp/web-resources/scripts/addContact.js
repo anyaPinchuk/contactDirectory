@@ -14,7 +14,7 @@ var tableAttach = document.getElementById("attachments");
 var i = 0;
 var object = {};
 var addContact = document.getElementById("addContact");
-
+var addAttachmentBtn = document.querySelector("#addAttachmentBtn");
 //-------------Handlers--------//
 
 addContact.addEventListener("click", validateForm);
@@ -34,6 +34,14 @@ attachmentBtn.addEventListener("click", function () {
 });
 document.getElementsByClassName("close")[1].addEventListener("click", function () {
     document.getElementById("myModalAttachment").style.display = "none";
+});
+
+addAttachmentBtn.addEventListener("click", function () {
+    var attachment = document.getElementById("attachment" + indexOfFile);
+    if (attachment.files.length != 0){
+        tableAttach.style.visibility = "visible";
+        addAttachment();
+    }
 });
 
 //------ functions for work with phones --------//
@@ -116,10 +124,8 @@ function deletePhone() {
 
 //----------------function for work with Attachments--------//
 
-function addAttachment() {
-    tableAttach.style.visibility = "visible";
-    var attachment = document.getElementById("attachment" + indexOfFile);
-    console.log(attachment);
+function addAttachment(attachment) {
+
     var div = document.getElementById('forHiddenFiles');
     div.appendChild(attachment);
     var br = document.createElement('br');

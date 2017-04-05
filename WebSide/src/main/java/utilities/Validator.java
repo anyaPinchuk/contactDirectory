@@ -6,10 +6,10 @@ import entities.PhoneNumber;
 import exceptions.MessageError;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Validator {
     private MessageError error;
@@ -19,9 +19,9 @@ public class Validator {
     }
 
     public boolean validContact(Contact contact) {
-        if (StringUtils.isEmpty(contact.getEmail().trim()) || StringUtils.isEmpty(contact.getName().trim()) ||
+        if (validEmail(contact.getEmail()) || StringUtils.isEmpty(contact.getName().trim()) ||
                 StringUtils.isEmpty(contact.getSurname().trim())) {
-            error.addMessage("First name, second name and email can not be empty");
+            error.addMessage("First name, second name or email are wrong");
             return false;
         } else return true;
     }
@@ -53,6 +53,13 @@ public class Validator {
             }
         }
         return true;
+    }
+
+    private boolean validEmail(String email) {
+        Pattern pattern = Pattern.compile("^[_A-Za-z0-9-\\\\+]+(\\\\.[_A-Za-z0-9-]+)*\n" +
+                "      @[A-Za-z0-9-]+(\\\\.[A-Za-z0-9]+)*(\\\\.[A-Za-z]{2,})$");
+        Matcher matcher = pattern.matcher(email);
+        return StringUtils.isNotEmpty((email.trim())) && matcher.matches();
     }
 
     public MessageError getError() {
