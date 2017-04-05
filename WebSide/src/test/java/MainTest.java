@@ -7,8 +7,8 @@ import utilities.MailSender;
 
 public class MainTest {
 
-    @Test
-    public void testLoadProperties() throws SchedulerException {
+//    @Test
+//    public void testLoadProperties() throws SchedulerException {
 //        JobDetail job = JobBuilder.newJob(BirthdayJob.class)
 //                .withIdentity("birthdayJob", "group1").build();
 //        Trigger trigger = TriggerBuilder
@@ -22,6 +22,6 @@ public class MainTest {
 //        scheduler.start();
 //        scheduler.scheduleJob(job, trigger);
 
-    }
+//    }
 
 }

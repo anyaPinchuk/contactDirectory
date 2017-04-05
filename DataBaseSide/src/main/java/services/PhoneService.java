@@ -3,6 +3,7 @@ package services;
 import dao.PhoneDAO;
 import entities.PhoneNumber;
 import exceptions.GenericDAOException;
+import exceptions.ServiceException;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,11 +23,11 @@ public class PhoneService implements ServiceEntity {
             phoneDAO.setConnection(connection);
             return phoneDAO.findAllById(id);
         } catch (GenericDAOException e) {
-            LOG.error("error while processing get all phones by id in PhoneService");
+            LOG.error("error while processing get all phones by id");
+            throw new ServiceException();
         } finally {
             connectionAwareExecutor.closeConnection(connection);
         }
-        return null;
     }
 
     public void insertPhones(List<PhoneNumber> numbersForInsert, Long contactId) {
@@ -41,12 +42,14 @@ public class PhoneService implements ServiceEntity {
                 try {
                     phoneDAO.insert(obj);
                 } catch (GenericDAOException e) {
-                    LOG.error("error while processing insert phones in phoneService");
+                    LOG.error("error while processing insert phones");
                 }
             });
             connection.commit();
         } catch (GenericDAOException | SQLException e) {
             connectionAwareExecutor.rollbackConnection(connection);
+            LOG.error("error while processing insert phones");
+            throw new ServiceException();
         } finally {
             connectionAwareExecutor.closeConnection(connection);
         }
@@ -67,20 +70,21 @@ public class PhoneService implements ServiceEntity {
                         phoneDAO.updateById(obj.getId(), obj);
                     }
                 } catch (GenericDAOException e) {
-                    LOG.error("error while processing update phones in phoneService");
+                    LOG.error("error while processing update phones");
                 }
             });
             numbers.forEach(obj -> {
                 try {
                     phoneDAO.deleteById(obj.getId());
                 } catch (GenericDAOException e) {
-                    LOG.error("error while processing delete phone by id in phoneService");
+                    LOG.error("error while processing delete phone by id");
                 }
             });
             connection.commit();
         } catch (GenericDAOException | SQLException e) {
             connectionAwareExecutor.rollbackConnection(connection);
-            LOG.error("error while processing get phones in phoneService");
+            LOG.error("error while processing get phones");
+            throw new ServiceException();
         } finally {
             connectionAwareExecutor.closeConnection(connection);
         }

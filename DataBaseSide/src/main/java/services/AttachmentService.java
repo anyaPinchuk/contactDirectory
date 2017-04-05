@@ -3,6 +3,7 @@ package services;
 import dao.AttachmentDAO;
 import entities.Attachment;
 import exceptions.GenericDAOException;
+import exceptions.ServiceException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,11 +23,11 @@ public class AttachmentService implements ServiceEntity {
             attachmentDAO.setConnection(connection);
             return attachmentDAO.findAllById(id);
         } catch (GenericDAOException e) {
-            LOG.error("error while processing get all attachments by id in attachmentService");
+            LOG.error("error while processing get all attachments by id");
+            throw new ServiceException();
         }finally {
             connectionAwareExecutor.closeConnection(connection);
         }
-        return null;
     }
 
     public Long insertAttachment(Attachment attachment, Long contactId) {
@@ -40,12 +41,13 @@ public class AttachmentService implements ServiceEntity {
                 try {
                     id = attachmentDAO.insert(attachment);
                 } catch (GenericDAOException e) {
-                    LOG.error("error while processing insert attachment in AttachmentService");
+                    LOG.error("error while processing insert attachment");
                 }
             connection.commit();
         } catch (GenericDAOException | SQLException e) {
             connectionAwareExecutor.rollbackConnection(connection);
             LOG.error("insert attachment in attachmentService failed");
+            throw new ServiceException();
         } finally {
             connectionAwareExecutor.closeConnection(connection);
         }
@@ -62,7 +64,8 @@ public class AttachmentService implements ServiceEntity {
             connection.commit();
         } catch (GenericDAOException | SQLException e) {
             connectionAwareExecutor.rollbackConnection(connection);
-            LOG.error("error while processing delete attachment by id in attachmentService");
+            LOG.error("error while processing delete attachment by id ");
+            throw new ServiceException();
         } finally {
             connectionAwareExecutor.closeConnection(connection);
         }
@@ -75,11 +78,11 @@ public class AttachmentService implements ServiceEntity {
             attachmentDAO.setConnection(connection);
             return attachmentDAO.findById(id).isPresent() ? attachmentDAO.findById(id).get() : new Attachment();
         } catch (GenericDAOException e) {
-            LOG.error("error while processing get attachment by id in attachmentService");
+            LOG.error("error while processing get attachment by id");
+            throw new ServiceException();
         }finally {
             connectionAwareExecutor.closeConnection(connection);
         }
-        return null;
     }
 
     public void updateById(Long id, Attachment attachment) {
@@ -94,7 +97,8 @@ public class AttachmentService implements ServiceEntity {
             connection.commit();
         } catch (GenericDAOException | SQLException e) {
             connectionAwareExecutor.rollbackConnection(connection);
-            LOG.error("error while processing get attachment by id in attachmentService");
+            LOG.error("error while processing get attachment by id");
+            throw new ServiceException();
         } finally {
             connectionAwareExecutor.closeConnection(connection);
         }

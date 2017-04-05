@@ -52,13 +52,13 @@ CREATE TABLE IF NOT EXISTS `anya_pinchuk`.`attachment` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `date_of_download` DATETIME NULL DEFAULT NULL,
   `file_name` VARCHAR(45) NOT NULL,
-  `comment` VARCHAR(45) NULL DEFAULT NULL,
-  `contactId` INT(11) NOT NULL,
+  `comment` VARCHAR(500) NULL DEFAULT NULL,
+  contact_id INT(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC),
-  INDEX `fk_attachment_sontact1_idx` (`contactId` ASC),
+  INDEX `fk_attachment_sontact1_idx` (contact_id ASC),
   CONSTRAINT `fk_attachment_contact1`
-  FOREIGN KEY (`contactId`)
+  FOREIGN KEY (contact_id)
   REFERENCES `anya_pinchuk`.`contact` (`id`)
     ON DELETE CASCADE
     ON UPDATE NO ACTION)
@@ -71,16 +71,16 @@ CREATE TABLE IF NOT EXISTS `anya_pinchuk`.`attachment` (
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `anya_pinchuk`.`phone_number` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
-  `country_code` VARCHAR(45) NOT NULL,
-  `operator_code` VARCHAR(45) NOT NULL,
-  `number` VARCHAR(45) NOT NULL,
+  `country_code` VARCHAR(10) NOT NULL,
+  `operator_code` VARCHAR(10) NOT NULL,
+  `number` VARCHAR(10) NOT NULL,
   `phone_type` ENUM('mobile', 'home') NULL DEFAULT NULL,
-  `comment` VARCHAR(45) NULL DEFAULT NULL,
-  `contactId` INT(11) NOT NULL,
+  `comment` VARCHAR(500) NULL DEFAULT NULL,
+  contact_id INT(11) NOT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_phonenumber_contact1_idx` (`contactId` ASC),
+  INDEX `fk_phonenumber_contact1_idx` (contact_id ASC),
   CONSTRAINT `fk_phonenumber_contact1`
-  FOREIGN KEY (`contactId`)
+  FOREIGN KEY (contact_id)
   REFERENCES `anya_pinchuk`.`contact` (`id`)
     ON DELETE CASCADE
     ON UPDATE NO ACTION)
@@ -94,13 +94,13 @@ CREATE TABLE IF NOT EXISTS `anya_pinchuk`.`phone_number` (
 CREATE TABLE IF NOT EXISTS `anya_pinchuk`.`photo` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NOT NULL,
-  `contactId` INT(11) NOT NULL,
+  contact_id INT(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC),
   UNIQUE INDEX `photo_name_uindex` (`name` ASC),
-  INDEX `fk_photo_contact1_idx` (`contactId` ASC),
+  INDEX `fk_photo_contact1_idx` (contact_id ASC),
   CONSTRAINT `fk_photo_contact1`
-  FOREIGN KEY (`contactId`)
+  FOREIGN KEY (contact_id)
   REFERENCES `anya_pinchuk`.`contact` (`id`)
     ON DELETE CASCADE
     ON UPDATE NO ACTION)

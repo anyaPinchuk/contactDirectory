@@ -3,6 +3,7 @@ package services;
 import dao.AddressDAO;
 import entities.Address;
 import exceptions.GenericDAOException;
+import exceptions.ServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,11 +21,11 @@ public class AddressService implements ServiceEntity {
             addressDAO.setConnection(connection);
             return addressDAO.findById(id).isPresent() ? addressDAO.findById(id).get(): null;
         } catch (GenericDAOException e) {
-            LOG.error("error while processing get address by id in AddressService");
+            LOG.error("error while processing get address by id ");
+            throw new ServiceException();
         }finally {
             connectionAwareExecutor.closeConnection(connection);
         }
-        return null;
     }
 
     public void deleteById(Long address_id) {
@@ -36,8 +37,9 @@ public class AddressService implements ServiceEntity {
             addressDAO.deleteById(address_id);
             connection.commit();
         } catch (GenericDAOException | SQLException e) {
-            LOG.error("error while processing delete address by id in AddressService");
+            LOG.error("error while processing delete address by id");
             connectionAwareExecutor.rollbackConnection(connection);
+            throw new ServiceException();
         } finally {
             connectionAwareExecutor.closeConnection(connection);
         }

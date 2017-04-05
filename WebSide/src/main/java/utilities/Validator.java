@@ -4,6 +4,7 @@ import entities.Attachment;
 import entities.Contact;
 import entities.PhoneNumber;
 import exceptions.MessageError;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,8 +45,9 @@ public class Validator {
     }
 
     public boolean validAttachments(List<Attachment> attachments) {
+        if (CollectionUtils.isEmpty(attachments)) return true;
         for (Attachment obj : attachments) {
-            if (StringUtils.isEmpty(obj.getFileName().trim()) || obj.getDateOfDownload() == null) {
+            if (StringUtils.isEmpty(obj.getFileName().trim())) {
                 error.addMessage("File name and date of download should be specified");
                 return false;
             }

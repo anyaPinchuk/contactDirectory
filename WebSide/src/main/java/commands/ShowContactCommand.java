@@ -8,6 +8,8 @@ import dto.PhoneDTO;
 import dto.PhotoDTO;
 import entities.*;
 import exceptions.GenericDAOException;
+import exceptions.MessageError;
+import exceptions.ServiceException;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import services.*;
@@ -32,6 +34,7 @@ public class ShowContactCommand extends FrontCommand {
     @Override
     public void processGet() throws ServletException, IOException {
         ContactDTO contactDTO = null;
+        MessageError error = new MessageError();
         String paramId = request.getParameter("id");
         LOG.info("show contact starting with parameter id {}", paramId);
         if (StringUtils.isEmpty(paramId.trim())) forward("unknown");
@@ -56,12 +59,18 @@ public class ShowContactCommand extends FrontCommand {
                 List<Attachment> attachments = attachmentService.findAllById(contactDTO.getId());
                 request.setAttribute("attachments", attachments);
             }
-        } catch (NumberFormatException | GenericDAOException e) {
+            request.setAttribute("contact", contactDTO);
+            forward("showContact");
+        } catch (NumberFormatException  e) {
             forward("unknown");
-            LOG.error("error while processing show contact from ShowContactCommand");
+            LOG.error("error while processing show contact");
         }
-        request.setAttribute("contact", contactDTO);
-        forward("showContact");
+        catch (ServiceException | GenericDAOException e) {
+            error.addMessage("error while processing show contact, please, check input data if it is correct");
+            request.getSession().setAttribute("messageList", error.getMessages());
+            forward("errorPage");
+            LOG.error("error while processing show contact command");
+        }
     }
 
     @Override

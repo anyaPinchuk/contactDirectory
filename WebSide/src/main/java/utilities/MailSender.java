@@ -1,5 +1,6 @@
 package utilities;
 
+import exceptions.ServiceException;
 import org.apache.commons.mail.DefaultAuthenticator;
 import org.apache.commons.mail.Email;
 import org.apache.commons.mail.EmailException;
@@ -59,6 +60,7 @@ public class MailSender {
             email.send();
         } catch (EmailException e) {
             LOG.error("email was not sent to {}", emailAddress);
+            throw new ServiceException();
         }
     }
 

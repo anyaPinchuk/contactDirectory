@@ -2,6 +2,7 @@ package commands;
 
 import entities.Contact;
 import exceptions.MessageError;
+import exceptions.ServiceException;
 import org.apache.commons.collections4.CollectionUtils;
 import services.ContactService;
 import utilities.FileUploadDocuments;
@@ -36,7 +37,13 @@ public class DeleteContactCommand extends FrontCommand {
                 error.addMessage("Wrong ids of chosen contacts");
                 request.getSession().setAttribute("messageList", error.getMessages());
                 response.sendRedirect("errorPage");
-                LOG.info("Wrong ids values of chosen contacts");
+                LOG.error("Wrong ids values of chosen contacts");
+            }
+            catch(ServiceException e){
+                error.addMessage("error while processing delete contact, please, check input data if it is correct");
+                request.getSession().setAttribute("messageList", error.getMessages());
+                forward("errorPage");
+                LOG.error("error while processing delete contact command");
             }
         }
 

@@ -1,19 +1,13 @@
 package commands;
 
-import converters.AddressConverter;
-import converters.AttachmentConverter;
-import converters.ContactConverter;
-import converters.PhoneConverter;
-import dto.AttachmentDTO;
-import dto.ContactDTO;
-import dto.PhoneDTO;
-import dto.PhotoDTO;
+import converters.*;
+import dto.*;
 import entities.*;
 import exceptions.GenericDAOException;
 import exceptions.MessageError;
+import exceptions.ServiceException;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.lang3.StringUtils;
@@ -100,6 +94,7 @@ public class EditContactCommand extends FrontCommand {
         factory.setRepository(new File(System.getProperty("java.io.tmpdir")));
         ServletFileUpload upload = new ServletFileUpload(factory);
         upload.setHeaderEncoding("UTF-8");
+        upload.setFileSizeMax(1024 * 1024 * 15);
         List<FileItem> formItems, documents = new ArrayList<>();
         Contact contact = new Contact();
         List<PhoneNumber> numbersForUpdate = new ArrayList<>(), numbersForInsert = new ArrayList<>();
@@ -148,7 +143,8 @@ public class EditContactCommand extends FrontCommand {
                                         dt = formatter.parseDateTime(field);
                                     } catch (IllegalArgumentException e) {
                                         LOG.info("wrong date format");
-                                        error.addMessage("Wrong date format");
+                                        error.addMessage("Wrong date or date format");
+                                        request.getSession().setAttribute("messageList", error.getMessages());
                                         response.sendRedirect("errorPage");
                                         return;
                                     }
@@ -198,8 +194,8 @@ public class EditContactCommand extends FrontCommand {
                             }
                             case "hiddens": {
                                 String[] objects = field.split(";");
-                                String comment = objects.length == 4 ? "" : objects[4];
-                                numbersForInsert.add(new PhoneNumber(null, objects[0], objects[1], objects[2], objects[3], comment, null));
+                                String comment = objects.length == 5 ? "" : objects[5];
+                                numbersForInsert.add(new PhoneNumber(null, objects[1], objects[2], objects[3], objects[4], comment, null));
                                 break;
                             }
                             case "hiddensForUpdate": {
@@ -212,8 +208,7 @@ public class EditContactCommand extends FrontCommand {
                             case "hiddenInfoForInsert": {
                                 String[] objects = field.split(";");
                                 String comment = objects.length == 3 ? "" : objects[3];
-                                java.sql.Date date = java.sql.Date.valueOf(objects[2]);
-                                attachmentsForInsert.add(new Attachment(null, date, objects[1], comment, null));
+                                attachmentsForInsert.add(new Attachment(null, null, objects[1], comment, null));
                                 break;
                             }
                             case "hiddenInfoForUpdate": {
@@ -240,41 +235,44 @@ public class EditContactCommand extends FrontCommand {
                 phoneService.updatePhones(contact.getId(), numbersForUpdate);
                 service.updateAttachments(attachmentsForUpdate, contact.getId());
             }
-            if (CollectionUtils.isNotEmpty(error.getMessages())){
+            if (CollectionUtils.isNotEmpty(error.getMessages())) {
                 request.getSession().setAttribute("messageList", error.getMessages());
                 response.sendRedirect("errorPage");
                 return;
             }
-        } catch (Exception e) {
-            error.addMessage("error while processing edit contact command, please, check if input data is correct");
-            request.getSession().setAttribute("messageList", error.getMessages());
-            forward("errorPage");
-            LOG.error("error while uploading files or updating phones");
-            return;
-        }
-        if (validator.validAttachments(attachmentsForInsert) && validator.validPhones(numbersForInsert)) {
-            phoneService.insertPhones(numbersForInsert, contact.getId());
-            if (CollectionUtils.isNotEmpty(documents) && attachmentsForInsert.size() == documents.size()) {
-                for (int i = 0; i < documents.size(); i++) {
-                    if (StringUtils.isNotEmpty(documents.get(i).getName())) {
-                        String fileName = FileUploadDocuments.saveDocument(documents.get(i), contact.getId(), false);
-                        attachmentsForInsert.get(i).setFileName(fileName);
-                        attachmentService.insertAttachment(attachmentsForInsert.get(i), contact.getId());
+            if (validator.validAttachments(attachmentsForInsert) && validator.validPhones(numbersForInsert)) {
+                phoneService.insertPhones(numbersForInsert, contact.getId());
+                if (CollectionUtils.isNotEmpty(documents) && attachmentsForInsert.size() == documents.size()) {
+                    for (int i = 0; i < documents.size(); i++) {
+                        if (StringUtils.isNotEmpty(documents.get(i).getName())) {
+                            String fileName = FileUploadDocuments.saveDocument(documents.get(i), contact.getId(), false);
+                            attachmentsForInsert.get(i).setFileName(fileName);
+                            attachmentService.insertAttachment(attachmentsForInsert.get(i), contact.getId());
+                        }
                     }
                 }
             }
+            if (CollectionUtils.isNotEmpty(error.getMessages())) {
+                request.getSession().setAttribute("messageList", error.getMessages());
+                response.sendRedirect("errorPage");
+                return;
+            }
+            if (validator.validContact(contact)) {
+                contactService.updateContact(contact, address);
+            }
+            if (CollectionUtils.isNotEmpty(error.getMessages())) {
+                request.getSession().setAttribute("messageList", error.getMessages());
+                response.sendRedirect("errorPage");
+            } else response.sendRedirect("contacts");
         }
-        if (CollectionUtils.isNotEmpty(error.getMessages())){
+        catch(ServiceException e){
+            error.addMessage("error while processing edit contact, please, check input data if it is correct");
             request.getSession().setAttribute("messageList", error.getMessages());
-            response.sendRedirect("errorPage");
-            return;
+            forward("errorPage");
+            LOG.error("error while processing edit contact command");
         }
-        if (validator.validContact(contact)) {
-            contactService.updateContact(contact, address);
+        catch (Exception e) {
+            LOG.error("error while uploading files or updating phones");
         }
-        if (CollectionUtils.isNotEmpty(error.getMessages())) {
-            request.getSession().setAttribute("messageList", error.getMessages());
-            response.sendRedirect("errorPage");
-        } else response.sendRedirect("contacts");
     }
 }

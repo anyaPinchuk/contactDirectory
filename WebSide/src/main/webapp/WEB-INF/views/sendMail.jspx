@@ -23,7 +23,7 @@
                         </div>
                     </c:forEach>
                     <div class="form-group">
-                        <input class="form-control turnOFF" type="text" name="subject" placeholder="Input subject"/>
+                        <input maxlength="45" class="form-control turnOFF" type="text" name="subject" placeholder="Input subject"/>
                     </div>
                     <select class="form-control" name="template">
                         <option value="" label="" selected="selected">Choose template</option>

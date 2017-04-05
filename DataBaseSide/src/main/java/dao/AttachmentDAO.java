@@ -4,10 +4,7 @@ import entities.Attachment;
 import exceptions.GenericDAOException;
 import exceptions.UniqueDAOException;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -101,7 +98,7 @@ public class AttachmentDAO extends AbstractDAO<Attachment>{
         if (entity == null) return 0L;
             try (PreparedStatement statement = connection.prepareStatement("INSERT INTO attachment" +
                     " (date_of_download, file_name, comment, contact_id) VALUES (?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS)){
-                statement.setDate(1, entity.getDateOfDownload());
+                statement.setDate(1, new Date(new java.util.Date().getTime()));
                 statement.setString(2, entity.getFileName());
                 statement.setString(3, entity.getComment());
                 statement.setLong(4, entity.getContactId());

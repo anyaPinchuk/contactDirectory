@@ -3,6 +3,7 @@ package services;
 import entities.Attachment;
 import entities.Photo;
 import exceptions.GenericDAOException;
+import exceptions.ServiceException;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +15,7 @@ public class UpdateEntityService {
     private Logger LOG = LoggerFactory.getLogger(UpdateEntityService.class);
     private AttachmentService attachmentService = new AttachmentService();
 
-    public void updateAttachments(List<Attachment> listForUpdate, Long contactId) throws GenericDAOException {
+    public void updateAttachments(List<Attachment> listForUpdate, Long contactId) {
         LOG.info("update attachments by id {} starting", contactId);
         List<Attachment> attachments = attachmentService.findAllById(contactId);
         if (CollectionUtils.isEmpty(attachments)) return;
@@ -36,8 +37,8 @@ public class UpdateEntityService {
     }
 
 
-    public void updatePhoto(Long contactId, String fileName) throws GenericDAOException {
-        if (fileName == null) return;
+    public void updatePhoto(Long contactId, String fileName){
+        if (fileName == null || contactId == 0) return;
         PhotoService photoService = new PhotoService();
         Photo obj = photoService.findById(contactId);
         if (obj == null) {

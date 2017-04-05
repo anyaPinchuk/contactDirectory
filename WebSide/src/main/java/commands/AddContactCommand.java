@@ -2,6 +2,7 @@ package commands;
 
 import entities.*;
 import exceptions.MessageError;
+import exceptions.ServiceException;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
@@ -38,6 +39,7 @@ public class AddContactCommand extends FrontCommand {
         factory.setRepository(new File(System.getProperty("java.io.tmpdir")));
         ServletFileUpload upload = new ServletFileUpload(factory);
         upload.setHeaderEncoding("UTF-8");
+        upload.setFileSizeMax(1024 * 1024 * 15);
         List<FileItem> formItems, documents = new ArrayList<>();
         List<PhoneNumber> numbersForInsert = new ArrayList<>();
         Contact contact = new Contact();
@@ -70,8 +72,11 @@ public class AddContactCommand extends FrontCommand {
                                     try {
                                         dt = formatter.parseDateTime(field);
                                     } catch (IllegalArgumentException e) {
-                                        LOG.info("wrong date format");
-                                        error.addMessage("Wrong date format");
+                                        LOG.info("Wrong date");
+                                        error.addMessage("Wrong date or date format");
+                                        request.getSession().setAttribute("messageList", error.getMessages());
+                                        response.sendRedirect("errorPage");
+                                        return;
                                     }
                                     contact.setDateOfBirth(dt == null ? null : new Date(dt.toDate().getTime()));
                                 }
@@ -136,11 +141,6 @@ public class AddContactCommand extends FrontCommand {
                     }
                 }
             }
-            if (CollectionUtils.isNotEmpty(error.getMessages())) {
-                request.getSession().setAttribute("messageList", error.getMessages());
-                response.sendRedirect("errorPage");
-                return;
-            }
             ContactService contactService = new ContactService();
             AttachmentService attachmentService = new AttachmentService();
             PhoneService phoneService = new PhoneService();
@@ -169,11 +169,15 @@ public class AddContactCommand extends FrontCommand {
                 request.getSession().setAttribute("messageList", error.getMessages());
                 response.sendRedirect("errorPage");
             } else response.sendRedirect("contacts");
-        } catch (Exception e) {
-            error.addMessage("error while processing add contact command, please, check input data if it is correct");
+        }
+        catch(ServiceException e){
+            error.addMessage("error while processing add contact, please, check input data if it is correct");
             request.getSession().setAttribute("messageList", error.getMessages());
             forward("errorPage");
-            LOG.error(e.getMessage());
+            LOG.error("error while processing add contact command");
+        }
+        catch (Exception e) {
+            LOG.error("error while processing Add contact command");
         }
     }
 }

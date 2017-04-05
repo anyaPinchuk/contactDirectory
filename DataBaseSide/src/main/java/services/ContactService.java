@@ -5,6 +5,7 @@ import dao.ContactDAO;
 import entities.Address;
 import entities.Contact;
 import exceptions.GenericDAOException;
+import exceptions.ServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,7 +32,8 @@ public class ContactService implements ServiceEntity {
             contactDAO.setConnection(connection);
             contacts = contactDAO.findByParts(start, count);
         } catch (GenericDAOException e) {
-            LOG.error("error while processing get contacts in ContactService");
+            LOG.error("error while processing get contacts");
+            throw new ServiceException();
         }finally {
             connectionAwareExecutor.closeConnection(connection);
         }
@@ -45,11 +47,11 @@ public class ContactService implements ServiceEntity {
             contactDAO.setConnection(connection);
             return contactDAO.findById(contactId).isPresent() ? contactDAO.findById(contactId).get() : null;
         } catch (GenericDAOException e) {
-            LOG.error("error while processing get contact by id in ContactService");
+            LOG.error("error while processing get contact by id ");
+            throw new ServiceException();
         }finally {
             connectionAwareExecutor.closeConnection(connection);
         }
-        return null;
     }
 
     public int getCountRows() {
@@ -63,7 +65,8 @@ public class ContactService implements ServiceEntity {
             connection.commit();
         } catch (GenericDAOException | SQLException e) {
             connectionAwareExecutor.rollbackConnection(connection);
-            LOG.error("error while processing get count rows in ContactService");
+            LOG.error("error while processing get count rows");
+            throw new ServiceException();
         } finally {
             connectionAwareExecutor.closeConnection(connection);
         }
@@ -78,7 +81,8 @@ public class ContactService implements ServiceEntity {
             contactDAO.setConnection(connection);
             contacts = contactDAO.findByCriteria(contact, address, dateCriteria);
         } catch (GenericDAOException e) {
-            LOG.error("error while processing get contacts by criteria in ContactService");
+            LOG.error("error while processing get contacts by criteria");
+            throw new ServiceException();
         }finally {
             connectionAwareExecutor.closeConnection(connection);
         }
@@ -93,7 +97,8 @@ public class ContactService implements ServiceEntity {
             contactDAO.setConnection(connection);
             contacts = contactDAO.findByDate();
         } catch (GenericDAOException e) {
-            LOG.error("error while processing get contacts in ContactService");
+            LOG.error("error while processing get contacts ");
+            throw new ServiceException();
         }finally {
             connectionAwareExecutor.closeConnection(connection);
         }
@@ -110,7 +115,8 @@ public class ContactService implements ServiceEntity {
                 emails.add(contactDAO.findEmailById(id));
             }
         } catch (GenericDAOException e) {
-            LOG.error("error while processing get contact by id in ContactService");
+            LOG.error("error while processing get contact by id ");
+            throw new ServiceException();
         }finally {
             connectionAwareExecutor.closeConnection(connection);
         }
@@ -129,7 +135,8 @@ public class ContactService implements ServiceEntity {
             connection.commit();
         } catch (GenericDAOException | SQLException e) {
             connectionAwareExecutor.rollbackConnection(connection);
-            LOG.error("error while processing update Contact in ContactService");
+            LOG.error("error while processing update Contact");
+            throw new ServiceException();
         } finally {
             connectionAwareExecutor.closeConnection(connection);
         }
@@ -151,11 +158,11 @@ public class ContactService implements ServiceEntity {
             return id;
         } catch (GenericDAOException | SQLException e) {
             connectionAwareExecutor.rollbackConnection(connection);
-            LOG.error("error while processing insert Contact in ContactService");
+            LOG.error("error while processing insert Contact");
+            throw new ServiceException();
         } finally {
             connectionAwareExecutor.closeConnection(connection);
         }
-        return null;
     }
 
     public Contact findAndDeleteById(Long id) {
@@ -171,11 +178,11 @@ public class ContactService implements ServiceEntity {
             return contact;
         } catch (GenericDAOException | SQLException e) {
             connectionAwareExecutor.rollbackConnection(connection);
-            LOG.error("error while processing delete Contact in ContactService");
+            LOG.error("error while processing delete Contact");
+            throw new ServiceException();
         } finally {
             connectionAwareExecutor.closeConnection(connection);
         }
-        return null;
     }
 
     public ContactDAO getContactDAO() {
@@ -196,7 +203,8 @@ public class ContactService implements ServiceEntity {
                 names.add(contactDAO.findByEmail(email));
             }
         } catch (GenericDAOException e) {
-            LOG.error("error while processing get contact by id in ContactService");
+            LOG.error("error while processing get contact by id");
+            throw new ServiceException();
         }finally {
             connectionAwareExecutor.closeConnection(connection);
         }

@@ -100,22 +100,24 @@ function editPhone(input_id) {
     savePhoneButton.style.display = "block";
     console.log(editInput);
     var strings;
-    if (editInput.name === "hiddensForUpdate") {
+    // if (editInput.name === "hiddens") {
         strings = editInput.value.split(";");
+        console.log(strings);
         form.countryCode.value = strings[1];
         form.operatorCode.value = strings[2];
         form.number.value = strings[3];
         form.type.value = strings[4];
         form.comment.value = strings[5];
-    }
-    else {
-        strings = editInput.value.split(";");
-        form.countryCode.value = strings[0];
-        form.operatorCode.value = strings[1];
-        form.number.value = strings[2];
-        form.type.value = strings[3];
-        form.comment.value = strings[4];
-    }
+    // }
+    // else {
+    //     strings = editInput.value.split(";");
+    //     console.log(strings);
+    //     form.countryCode.value = strings[0];
+    //     form.operatorCode.value = strings[1];
+    //     form.number.value = strings[2];
+    //     form.type.value = strings[3];
+    //     form.comment.value = strings[4];
+    // }
 
 }
 
@@ -134,7 +136,7 @@ function addPhoneInTable(object, i) {
         else break;
     }
     tr.id = "row" + i;
-    input3.value = object.countryCode + ";" + object.operatorCode + ";" + object.number + ";" + object.type + ";" + object.comment;
+    input3.value = 0 + ";" + object.countryCode + ";" + object.operatorCode + ";" + object.number + ";" + object.type + ";" + object.comment;
     input3.name = "hiddens";
     input3.id = "hidden" + i;
     var td3 = document.createElement('td');

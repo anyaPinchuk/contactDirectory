@@ -31,21 +31,21 @@
                         <div class="form-group">
                             <label for="contactName">Enter name* </label>
                             <input class="form-control turnOFF" id="contactName" type="text" name="name"
-                                   placeholder="Input name"/>
+                                   maxlength="45" placeholder="Input name"/>
                         </div>
                         <div class="form-group">
                             <label for="contactSurname">Enter surname* </label>
                             <input class="form-control turnOFF" id="contactSurname" type="text"
-                                   name="surname" placeholder="Input surname"/>
+                                   maxlength="45" name="surname" placeholder="Input surname"/>
                         </div>
                         <div class="form-group">
                             <label for="contactThirdname">Enter third name </label>
                             <input class="form-control turnOFF" id="contactThirdname" type="text" name="thirdName"
-                                   placeholder="Input third name"/>
+                                   maxlength="45" placeholder="Input third name"/>
                         </div>
                         <div class="form-group">
                             <label for="contactEmail">Enter email address* </label>
-                            <input class="form-control turnOFF" id="contactEmail" type="email" name="email"
+                            <input class="form-control turnOFF" id="contactEmail" type="email" name="email" maxlength="45"
                                    pattern="^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$" placeholder="Input email"/>
                         </div>
                     </div>
@@ -65,35 +65,35 @@
                         <div class="form-group">
                             <label for="contactCitizenship">Enter citizenship </label>
                             <input class="form-control turnOFF" id="contactCitizenship" type="text" name="citizenship"
-                                   placeholder="Input citizenship"/>
+                                   maxlength="45" placeholder="Input citizenship"/>
                         </div>
                         <div class="form-group">
                             <label for="contactStatus">Enter marital status </label>
                             <input class="form-control  turnOFF" id="contactStatus" type="text" name="status"
-                                   placeholder="Input marital status"/>
+                                   maxlength="45" placeholder="Input marital status"/>
                         </div>
                         <div class="form-group">
                             <label for="contactSite">Enter web-site </label>
                             <input class="form-control turnOFF" id="contactSite" type="text" name="webSite"
-                                   placeholder="Input web-site"/>
+                                   maxlength="45" placeholder="Input web-site"/>
                         </div>
                         <div class="form-group">
                             <label for="contactJob">Enter company </label>
                             <input class="form-control turnOFF" id="contactJob" type="text" name="job"
-                                   placeholder="Input company"/>
+                                   maxlength="45" placeholder="Input company"/>
                         </div>
                     </div>
                     <div id="address_info" class="tab-pane fade">
                         <div class="form-group">
                             <label>Enter address </label>
                             <input class="form-control turnOFF" id="contactCountry" type="text" name="country"
-                                   placeholder="Input country"/><br/>
+                                   maxlength="45" placeholder="Input country"/><br/>
                             <input class="form-control turnOFF" id="contactCity" type="text" name="city"
-                                   placeholder="Input city"/><br/>
+                                   maxlength="45" placeholder="Input city"/><br/>
                             <input class="form-control turnOFF" id="contactAddress" type="text" name="address"
-                                   placeholder="Input address"/><br/>
+                                   maxlength="45" placeholder="Input address"/><br/>
                             <input class="form-control turnOFF" id="contactIndex" type="text" name="index"
-                                   placeholder="Input index"/><br/>
+                                   maxlength="45" placeholder="Input index"/><br/>
                         </div>
                     </div>
                     <div id="phone_info" class="tab-pane fade">
@@ -167,17 +167,17 @@
             <div class="form-group">
                 <label for="countryCode">Enter coutry code, for example: 375</label>
                 <input class="form-control" type="number" id="countryCode"
-                       placeholder="Input country code" name="countryCode"/>
+                       maxlength="10" placeholder="Input country code" name="countryCode"/>
             </div>
             <div class="form-group">
                 <label for="operatorCode">Enter operator code, for example: 29</label>
                 <input class="form-control" type="number" id="operatorCode"
-                       placeholder="Input operator code" name="operatorCode"/>
+                       maxlength="10" placeholder="Input operator code" name="operatorCode"/>
             </div>
             <div class="form-group">
                 <label for="number">Enter coutry code, for example: 1234567</label>
                 <input class="form-control" type="number" id="number"
-                       placeholder="Input number" name="number"/>
+                       maxlength="10" placeholder="Input number" name="number"/>
             </div>
             <div class="form-group">
                 <label for="type">Choose type of number</label>
@@ -188,7 +188,7 @@
             </div>
             <div class="form-group">
                 <label for="comment">Enter comment</label>
-                <input type="text" class="form-control" id="comment" placeholder="Input comment" name="comment"/>
+                <input type="text" maxlength="500" class="form-control" id="comment" placeholder="Input comment" name="comment"/>
             </div>
         </div>
         <div class="group_buttons">
@@ -208,7 +208,7 @@
                 <div class="form-group">
                     <label>Input comment</label>
                     <input type="text" class="form-control" id="commentFile" placeholder="Input comment"
-                           name="commentFile"/>
+                           maxlength="500" name="commentFile"/>
                 </div>
             </div>
         </div>

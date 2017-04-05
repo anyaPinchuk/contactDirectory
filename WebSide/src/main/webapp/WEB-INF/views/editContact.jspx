@@ -37,23 +37,23 @@
                         <div class="form-group">
                             <label for="contactName">Enter name* </label>
                             <input class="form-control input-lg" id="contactName" type="text" name="name"
-                                   value="${contact.name}" placeholder="Input name"/>
+                                   maxlength="45" value="${contact.name}" placeholder="Input name"/>
                         </div>
                         <div class="form-group">
                             <label for="contactSurname">Enter surname* </label>
                             <input class="form-control input-lg" id="contactSurname" type="text"
-                                   value="${contact.surname}" name="surname" placeholder="Input surname"/>
+                                   maxlength="45" value="${contact.surname}" name="surname" placeholder="Input surname"/>
                         </div>
                         <div class="form-group">
                             <label for="contactThirdname">Enter third name </label>
                             <input class="form-control input-lg" id="contactThirdname" type="text" name="thirdName"
-                                   value="${contact.thirdName}" placeholder="Input third name"/>
+                                   maxlength="45" value="${contact.thirdName}" placeholder="Input third name"/>
                         </div>
                         <div class="form-group">
                             <label for="contactEmail">Enter email address* </label>
                             <input class="form-control input-lg" id="contactEmail" type="email" name="email"
                                    pattern="^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$" value="${contact.email}"
-                                   placeholder="Input email"/>
+                                   maxlength="45" placeholder="Input email"/>
                         </div>
                     </div>
                     <div id="sub_info" class="tab-pane fade">
@@ -76,31 +76,31 @@
                             </select>
                             <label for="contactCitizenship">Enter citizenship </label>
                             <input class="form-control input-lg" id="contactCitizenship" type="text" name="citizenship"
-                                   value="${contact.citizenship}" placeholder="Input citizenship"/>
+                                   maxlength="45" value="${contact.citizenship}" placeholder="Input citizenship"/>
                         </div>
                         <div class="form-group">
                             <label for="contactStatus">Enter marital status </label>
                             <input class="form-control input-lg" id="contactStatus" type="text" name="status"
-                                   value="${contact.maritalStatus}" placeholder="Input marital status"/>
+                                   maxlength="45" value="${contact.maritalStatus}" placeholder="Input marital status"/>
                             <label for="contactSite">Enter web-site </label>
                             <input class="form-control input-lg" id="contactSite" type="text" name="webSite"
-                                   value="${contact.webSite}" placeholder="Input web-site"/>
+                                   maxlength="45" value="${contact.webSite}" placeholder="Input web-site"/>
                             <label for="contactJob">Enter company </label>
                             <input class="form-control input-lg" id="contactJob" type="text" name="job"
-                                   value="${contact.job}" placeholder="Input company"/>
+                                   maxlength="45" value="${contact.job}" placeholder="Input company"/>
                         </div>
                     </div>
                     <div id="address_info" class="tab-pane fade">
                         <div class="form-group">
                             <label>Enter address </label>
                             <input class="form-control input-lg" id="contactCountry" type="text" name="country"
-                                   value="${contact.address.country}" placeholder="Input country"/><br/>
+                                   maxlength="45" value="${contact.address.country}" placeholder="Input country"/><br/>
                             <input class="form-control input-lg" id="contactCity" type="text" name="city"
-                                   value="${contact.address.city}" placeholder="Input city"/><br/>
+                                   maxlength="45" value="${contact.address.city}" placeholder="Input city"/><br/>
                             <input class="form-control input-lg" id="contactAddress" type="text" name="address"
-                                   value="${contact.address.streetAddress}" placeholder="Input address"/><br/>
+                                   maxlength="45" value="${contact.address.streetAddress}" placeholder="Input address"/><br/>
                             <input class="form-control input-lg" id="contactIndex" type="text" name="index"
-                                   value="${contact.address.index}" placeholder="Input index"/><br/>
+                                   maxlength="45" value="${contact.address.index}" placeholder="Input index"/><br/>
                         </div>
                     </div>
                     <div id="phone_info" class="tab-pane fade">
@@ -221,17 +221,17 @@
                 <div class="form-group">
                     <label for="countryCode">Enter coutry code, for example: 375</label>
                     <input class="form-control" type="number" id="countryCode"
-                           placeholder="Input country code" name="countryCode"/>
+                           maxlength="10" placeholder="Input country code" name="countryCode"/>
                 </div>
                 <div class="form-group">
                     <label for="operatorCode">Enter operator code, for example: 29</label>
                     <input class="form-control" type="number" id="operatorCode"
-                           placeholder="Input operator code" name="operatorCode"/>
+                           maxlength="10" placeholder="Input operator code" name="operatorCode"/>
                 </div>
                 <div class="form-group">
                     <label for="number">Enter coutry code, for example: 1234567</label>
                     <input class="form-control" type="number" id="number"
-                           placeholder="Input number" name="number"/>
+                           maxlength="10" placeholder="Input number" name="number"/>
                 </div>
                 <div class="form-group">
                     <label for="type">Choose type of number</label>
@@ -242,7 +242,7 @@
                 </div>
                 <div class="form-group">
                     <label for="comment">Enter comment</label>
-                    <input type="text" class="form-control" id="comment" placeholder="Input comment" name="comment"/>
+                    <input type="text" maxlength="500" class="form-control" id="comment" placeholder="Input comment" name="comment"/>
                 </div>
             </div>
             <div class="group_buttons">
@@ -263,12 +263,12 @@
                 <div class="form-group" id="file_name" style="display:none;">
                     <label>Input file name</label>
                     <input type="text" class="form-control" id="nameFile" placeholder="Input file name"
-                           name="nameFile"/>
+                           maxlength="45" name="nameFile"/>
                 </div>
                 <div class="form-group">
                     <label>Input comment</label>
                     <input type="text" class="form-control" id="commentFile" placeholder="Input comment"
-                           name="commentFile"/>
+                           maxlength="500" name="commentFile"/>
                 </div>
             </div>
             <div class="group_buttons">

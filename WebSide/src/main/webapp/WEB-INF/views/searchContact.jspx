@@ -18,15 +18,15 @@
                 <div>
                     <div class="form-group">
                         <label>Name: </label>
-                        <input class="form-control" placeholder="Input name" type="text" name="firstName"/>
+                        <input maxlength="45" class="form-control" placeholder="Input name" type="text" name="firstName"/>
                     </div>
                     <div class="form-group">
                         <label>Surname: </label>
-                        <input class="form-control" type="text" name="surname" placeholder="Input surname"/>
+                        <input maxlength="45" class="form-control" type="text" name="surname" placeholder="Input surname"/>
                     </div>
                     <div class="form-group">
                         <label>Third name: </label>
-                        <input class="form-control" type="text" name="thirdName" placeholder="Input third name"/>
+                        <input maxlength="45" class="form-control" type="text" name="thirdName" placeholder="Input third name"/>
                     </div>
                     <div class="form-group">
                         <label>Date of birth: </label>
@@ -48,30 +48,30 @@
                     </div>
                     <div class="form-group">
                         <label>Citizenship </label>
-                        <input class="form-control" type="text" name="citizenship" placeholder="Input citizenship"/>
+                        <input maxlength="45"  class="form-control" type="text" name="citizenship" placeholder="Input citizenship"/>
                     </div>
                     <div class="form-group">
                         <label>Marital status: </label>
-                        <input class="form-control" type="text" name="status" placeholder="Input marital status"/>
+                        <input maxlength="45" class="form-control" type="text" name="status" placeholder="Input marital status"/>
                     </div>
                     <div class="form-group">
                         <label>Country: </label>
-                        <input class="form-control " type="text" name="country" placeholder="Input country"/><br/>
+                        <input maxlength="45" class="form-control " type="text" name="country" placeholder="Input country"/><br/>
                     </div>
                 </div>
                 <div>
                     <div class="form-group">
                         <label>Town: </label>
-                        <input class="form-control" type="text" name="city" placeholder="Input city"/><br/>
+                        <input maxlength="45" class="form-control" type="text" name="city" placeholder="Input city"/><br/>
                     </div>
                     <div class="form-group">
                         <label>Address: </label>
-                        <input class="form-control" type="text" name="address" placeholder="Input address"/><br/>
+                        <input maxlength="45" class="form-control" type="text" name="address" placeholder="Input address"/><br/>
                     </div>
                     <div class="form-group">
                         <label>Index: </label>
                         <input class="form-control input-lg" type="text" name="indexCode"
-                               placeholder="Input index"/><br/>
+                               maxlength="45" placeholder="Input index"/><br/>
                     </div>
                 </div>
             </div>

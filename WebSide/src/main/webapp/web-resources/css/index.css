@@ -132,8 +132,7 @@ input {
 .error_message {
     background: linear-gradient(to bottom, #cadcf4, #e4e4f8, #f1f3f3, #f7f9f9, #f1f3f3, #e4e4f8, #cadcf4);
     color: #000000;
-    width: 35%;
-    height: 30%;
+    height: 25%;
     padding: 10px;
     display: flex;
     justify-content: center;
