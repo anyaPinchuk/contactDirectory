@@ -21,9 +21,11 @@ addContact.addEventListener("click", validateForm);
 
 btn.addEventListener("click", function () {
     modal.style.display = "block";
+    modal.style.pointerEvents = "auto";
 });
 span.addEventListener("click", function () {
     modal.style.display = "none";
+    modal.style.pointerEvents = "none";
 });
 addPhoneButton.addEventListener("click", addPhone);
 deletePhoneBtn.addEventListener("click", deletePhone);

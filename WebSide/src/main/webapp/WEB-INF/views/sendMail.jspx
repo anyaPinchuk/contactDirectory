@@ -33,7 +33,7 @@
                     </select>
                     <div class="form-group">
                         <textarea rows="5" cols="40" class="form-control" name="content"
-                                  placeholder="Text">text</textarea>
+                                  placeholder="Text"><jsp:text/></textarea>
                     </div>
                 </div>
             </div>

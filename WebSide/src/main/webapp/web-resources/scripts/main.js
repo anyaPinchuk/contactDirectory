@@ -16,7 +16,7 @@ function validate() {
             flag = false;
         } else markInputAsRight(arguments[i]);
     }
-    if (!flag) showMessage(arguments[0], "Red field consists of spaces");
+    if (!flag) showMessage(arguments[0], "Field '" + arguments[i].name + "' consists of spaces");
     return flag;
 }
 
@@ -42,7 +42,7 @@ function validDate(element, date) {
 }
 
 function validEmail(element, email) {
-    if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email.value)) {
+    if (!/^\w+([\.-\\+]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email.value)) {
         markInputAsWrong(email);
         showMessage(element, "Wrong email, use right format<br> like address@example.com");
         return false;
@@ -53,6 +53,7 @@ function validEmail(element, email) {
 }
 
 function markInputAsWrong(input) {
+    input.style.border = "2px solid";
     input.style.borderColor = "rgba(238, 91, 91, 0.73)";
 }
 
@@ -69,13 +70,13 @@ function markInputAsRight(input) {
 
 function isEmpty(element, field) {
     if (field.value === "") {
-        showMessage(element, "This field can't be empty");
+        showMessage(element, "Field '" + field.name + "' can't be empty");
         markInputAsWrong(field);
         return true;
     }
     else {
         if (!checkFieldOnSpace(field.value)) {
-            showMessage(element, "Field consists of spaces");
+            showMessage(element, "Field '" + field.name + "' consists of spaces");
             markInputAsWrong(field);
             return true;
         } else {

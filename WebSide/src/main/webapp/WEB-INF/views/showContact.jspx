@@ -129,7 +129,6 @@
         </a>
     </div>
     <script type="text/javascript" src="${pageContext.request.contextPath}/web-resources/scripts/showContact.js">//script</script>
-    <script type="text/javascript" src="${pageContext.request.contextPath}/web-resources/bootstrap/js/bootstrap.min.js">//script</script>
     </body>
     </html>
 </jsp:root>

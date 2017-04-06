@@ -55,24 +55,39 @@ public class ContactDAO extends AbstractDAO<Contact> {
     private String buildQuery(Contact entity, Address address, String dateCriteria) {
         LOG.info("build query for search starting");
         StringBuilder builder = new StringBuilder("SELECT * FROM contact c ");
+        int flag = 0;
         if (address != null) {
             builder.append("inner join address a on c.id = a.contact_id ");
-            if (StringUtils.isNotEmpty(address.getCountry().trim()))
-                builder.append("and a.country = ? ");
-            if (StringUtils.isNotEmpty(address.getCity().trim()))
-                builder.append("and a.city = ? ");
-            if (StringUtils.isNotEmpty(address.getStreetAddress().trim()))
-                builder.append("and a.street_address = ? ");
-            if (StringUtils.isNotEmpty(address.getIndex().trim()))
-                builder.append("and a.index = ? ");
+            if (StringUtils.isNotEmpty(address.getCountry().trim())) {
+                flag++;
+                builder.append("and a.country LIKE ? ");
+            }
+            if (StringUtils.isNotEmpty(address.getCity().trim())) {
+                flag++;
+                builder.append("and a.city LIKE ? ");
+            }
+            if (StringUtils.isNotEmpty(address.getStreetAddress().trim())) {
+                flag++;
+                builder.append("and a.street_address LIKE ? ");
+            }
+            if (StringUtils.isNotEmpty(address.getIndex().trim())) {
+                flag++;
+                builder.append("and a.index LIKE ? ");
+            }
         }
         builder.append("where ");
-        if (StringUtils.isNotEmpty(entity.getName().trim()))
-            builder.append("c.name = ? and ");
-        if (StringUtils.isNotEmpty(entity.getSurname().trim()))
-            builder.append("c.surname = ? and ");
-        if (StringUtils.isNotEmpty(entity.getThirdName().trim()))
-            builder.append("c.third_name = ? and ");
+        if (StringUtils.isNotEmpty(entity.getName().trim())) {
+            flag++;
+            builder.append("c.name LIKE ? and ");
+        }
+        if (StringUtils.isNotEmpty(entity.getSurname().trim())) {
+            flag++;
+            builder.append("c.surname LIKE ? and ");
+        }
+        if (StringUtils.isNotEmpty(entity.getThirdName().trim())) {
+            flag++;
+            builder.append("c.third_name LIKE ? and ");
+        }
         if (entity.getDateOfBirth() != null && StringUtils.isNotEmpty(dateCriteria.trim())) {
             if (dateCriteria.equals("after")) {
                 builder.append("c.date_of_birth ");
@@ -81,14 +96,22 @@ public class ContactDAO extends AbstractDAO<Contact> {
                 builder.append("c.date_of_birth ");
                 builder.append(" <= ? and ");
             }
+            flag++;
         }
-        if (StringUtils.isNotEmpty(entity.getCitizenship().trim()))
-            builder.append("c.citizenship = ? and ");
-        if (StringUtils.isNotEmpty(entity.getGender().trim()))
-            builder.append("c.gender = ? and ");
-        if (StringUtils.isNotEmpty(entity.getMaritalStatus().trim()))
-            builder.append("c.marital_status = ? and ");
-        builder.setLength(builder.length() - 4);
+        if (StringUtils.isNotEmpty(entity.getCitizenship().trim())) {
+            flag++;
+            builder.append("c.citizenship LIKE ? and ");
+        }
+        if (StringUtils.isNotEmpty(entity.getGender().trim())) {
+            flag++;
+            builder.append("c.gender LIKE ? and ");
+        }
+        if (StringUtils.isNotEmpty(entity.getMaritalStatus().trim())) {
+            flag++;
+            builder.append("c.marital_status LIKE ? and ");
+        }
+        if (flag > 0) builder.setLength(builder.length() - 6);
+        else builder.setLength(builder.length() - 4);
         return builder.toString();
     }
 
@@ -119,7 +142,7 @@ public class ContactDAO extends AbstractDAO<Contact> {
                 i++;
             } else if (arg instanceof String) {
                 if (StringUtils.isNotEmpty(((String) arg).trim())) {
-                    statement.setString(i, (String) arg);
+                    statement.setString(i, "%" + ((String) arg).trim() + "%");
                     i++;
                 }
             }
@@ -324,7 +347,7 @@ public class ContactDAO extends AbstractDAO<Contact> {
         ResultSet resultSet = null;
         List<Contact> contacts = new LinkedList<>();
         try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM contact " +
-                "WHERE month(date_of_birth) = month(curdate()) and day(date_of_birth) = day(curdate())")) {
+                "WHERE month(date_of_birth) = month(curdate()) AND day(date_of_birth) = day(curdate())")) {
             resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 buildEntityFromResult(resultSet).ifPresent(contacts::add);

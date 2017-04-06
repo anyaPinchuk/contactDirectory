@@ -11,6 +11,7 @@
 <jsp:directive.page contentType="text/html" pageEncoding="UTF-8"/>
 <jsp:output omit-xml-declaration="yes"/>
 <body>
+<jsp:include page="${pageContext.request.contextPath}/WEB-INF/views/header.jspx"/>
 <div>
     <c:forEach var="message" items="${sessionScope.messageList}">
         <div class="error_message"><img src="${pageContext.request.contextPath}/web-resources/img/error.png"/>

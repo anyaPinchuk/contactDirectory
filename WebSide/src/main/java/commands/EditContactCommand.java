@@ -138,17 +138,21 @@ public class EditContactCommand extends FrontCommand {
                             case "dateOfBirth": {
                                 if (StringUtils.isNotEmpty(field.trim())) {
                                     DateTime dt;
+                                    DateTime today = new DateTime();
                                     DateTimeFormatter formatter = DateTimeFormat.forPattern("dd-MM-yyyy");
                                     try {
                                         dt = formatter.parseDateTime(field);
+                                        if (dt.compareTo(today) > 0) {
+                                            throw new IllegalArgumentException();
+                                        }
                                     } catch (IllegalArgumentException e) {
-                                        LOG.info("wrong date format");
+                                        LOG.info("Wrong date format");
                                         error.addMessage("Wrong date or date format");
                                         request.getSession().setAttribute("messageList", error.getMessages());
                                         response.sendRedirect("errorPage");
                                         return;
                                     }
-                                    contact.setDateOfBirth(dt == null ? null : new Date(dt.toDate().getTime()));
+                                    contact.setDateOfBirth(new Date(dt.toDate().getTime()));
                                 }
                                 break;
                             }
@@ -264,14 +268,12 @@ public class EditContactCommand extends FrontCommand {
                 request.getSession().setAttribute("messageList", error.getMessages());
                 response.sendRedirect("errorPage");
             } else response.sendRedirect("contacts");
-        }
-        catch(ServiceException e){
+        } catch (ServiceException e) {
             error.addMessage("error while processing edit contact, please, check input data if it is correct");
             request.getSession().setAttribute("messageList", error.getMessages());
             forward("errorPage");
             LOG.error("error while processing edit contact command");
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             LOG.error("error while uploading files or updating phones");
         }
     }

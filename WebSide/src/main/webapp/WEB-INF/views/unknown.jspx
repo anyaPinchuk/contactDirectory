@@ -9,6 +9,7 @@
 <jsp:directive.page contentType="text/html" pageEncoding="UTF-8"/>
 <jsp:output omit-xml-declaration="yes"/>
 <body>
+
 <h1 class="text-danger">This page doesn't exist<br/>
     You passed the wrong <abbr>URL</abbr></h1>
 </body>

@@ -42,7 +42,8 @@
                         <div class="form-group">
                             <label for="contactSurname">Enter surname* </label>
                             <input class="form-control input-lg" id="contactSurname" type="text"
-                                   maxlength="45" value="${contact.surname}" name="surname" placeholder="Input surname"/>
+                                   maxlength="45" value="${contact.surname}" name="surname"
+                                   placeholder="Input surname"/>
                         </div>
                         <div class="form-group">
                             <label for="contactThirdname">Enter third name </label>
@@ -202,88 +203,94 @@
                 </a>
             </div>
         </div>
-        <div id="myModalPhoto" class="modal-content">
+        <div class="modals" id="myModalPhoto">
+            <div class="modal-content">
             <span class="close">Cancel<img
                     src="${pageContext.request.contextPath}/web-resources/img/cross.png"/></span>
-            <div class="addPhoto">
-                <label for="contactPhoto">Choose photo </label>
-                <input accept="image/gif, image/jpeg, image/png" class="form-control turnOFF" id="contactPhoto"
-                       type="file" name="photo"/>
-            </div>
-            <div class="group_buttons">
-                <button id="savePhotoBtn" type="button" class="button" onclick="savePhoto(photo)">Save</button>
+                <div class="addPhoto">
+                    <label for="contactPhoto">Choose photo </label>
+                    <input accept="image/gif, image/jpeg, image/png" class="form-control turnOFF" id="contactPhoto"
+                           type="file" name="photo"/>
+                </div>
+                <div class="group_buttons">
+                    <button id="savePhotoBtn" type="button" class="button" onclick="savePhoto(photo)">Save</button>
+                </div>
             </div>
         </div>
-        <div id="myModal" class="modal-content">
+        <div class="modals" id="myModal">
+            <div class="modal-content">
             <span class="close">Cancel<img
                     src="${pageContext.request.contextPath}/web-resources/img/cross.png"/></span>
-            <div class="addPhone">
-                <div class="form-group">
-                    <label for="countryCode">Enter coutry code, for example: 375</label>
-                    <input class="form-control" type="number" id="countryCode"
-                           maxlength="10" placeholder="Input country code" name="countryCode"/>
+                <div class="addPhone">
+                    <div class="form-group">
+                        <label for="countryCode">Enter coutry code, for example: 375</label>
+                        <input class="form-control" type="number" id="countryCode"
+                               maxlength="10" placeholder="Input country code" name="countryCode"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="operatorCode">Enter operator code, for example: 29</label>
+                        <input class="form-control" type="number" id="operatorCode"
+                               maxlength="10" placeholder="Input operator code" name="operatorCode"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="number">Enter coutry code, for example: 1234567</label>
+                        <input class="form-control" type="number" id="number"
+                               maxlength="10" placeholder="Input number" name="number"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="type">Choose type of number</label>
+                        <select id="type" class="form-control" name="type">
+                            <option value="mobile">Mobile</option>
+                            <option value="home">Home</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="comment">Enter comment</label>
+                        <input type="text" maxlength="500" class="form-control" id="comment" placeholder="Input comment"
+                               name="comment"/>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="operatorCode">Enter operator code, for example: 29</label>
-                    <input class="form-control" type="number" id="operatorCode"
-                           maxlength="10" placeholder="Input operator code" name="operatorCode"/>
+                <div class="group_buttons">
+                    <button type="button" class="button" id="addPhone">Add phone</button>
+                    <button type="button" class="button" id="savePhone">Save phone</button>
                 </div>
-                <div class="form-group">
-                    <label for="number">Enter coutry code, for example: 1234567</label>
-                    <input class="form-control" type="number" id="number"
-                           maxlength="10" placeholder="Input number" name="number"/>
-                </div>
-                <div class="form-group">
-                    <label for="type">Choose type of number</label>
-                    <select id="type" class="form-control" name="type">
-                        <option value="mobile">Mobile</option>
-                        <option value="home">Home</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="comment">Enter comment</label>
-                    <input type="text" maxlength="500" class="form-control" id="comment" placeholder="Input comment" name="comment"/>
-                </div>
-            </div>
-            <div class="group_buttons">
-                <button type="button" class="button" id="addPhone">Add phone</button>
-                <button type="button" class="button" id="savePhone">Save phone</button>
             </div>
         </div>
-        <div id="myModalAttachment" class="modal-content">
+        <div class="modals" id="myModalAttachment">
+            <div class="modal-content">
                 <span class="close">Cancel<img
                         src="${pageContext.request.contextPath}/web-resources/img/cross.png"/></span>
-            <div class="addAttachment">
-                <div class="form-group" id="file">
-                    <label id="labelFile">Choose file </label>
-                    <input accept="application/msword, text/plain, application/pdf, application/xml, .docx, image/*"
-                           class="form-control"
-                           type="file" name="attachment-0" id="attachment0"/>
+                <div class="addAttachment">
+                    <div class="form-group" id="file">
+                        <label id="labelFile">Choose file </label>
+                        <input accept="application/msword, text/plain, application/pdf, application/xml, .docx, image/*"
+                               class="form-control"
+                               type="file" name="attachment-0" id="attachment0"/>
+                    </div>
+                    <div class="form-group" id="file_name" style="display:none;">
+                        <label>Input file name</label>
+                        <input type="text" class="form-control" id="nameFile" placeholder="Input file name"
+                               maxlength="45" name="nameFile"/>
+                    </div>
+                    <div class="form-group">
+                        <label>Input comment</label>
+                        <input type="text" class="form-control" id="commentFile" placeholder="Input comment"
+                               maxlength="500" name="commentFile"/>
+                    </div>
                 </div>
-                <div class="form-group" id="file_name" style="display:none;">
-                    <label>Input file name</label>
-                    <input type="text" class="form-control" id="nameFile" placeholder="Input file name"
-                           maxlength="45" name="nameFile"/>
+                <div class="group_buttons">
+                    <button id="addAttachmentBtn" type="button" class="button">Add</button>
+                    <button id="saveAttachmentBtn" type="button" class="button">Save</button>
                 </div>
-                <div class="form-group">
-                    <label>Input comment</label>
-                    <input type="text" class="form-control" id="commentFile" placeholder="Input comment"
-                           maxlength="500" name="commentFile"/>
-                </div>
-            </div>
-            <div class="group_buttons">
-                <button id="addAttachmentBtn" type="button" class="button">Add</button>
-                <button id="saveAttachmentBtn" type="button" class="button">Save</button>
             </div>
         </div>
-
     </form>
     <div id="notifyDiv" class="notifier">
         <img src="${pageContext.request.contextPath}/web-resources/img/exclaim.png"/>
         <div class="message">message</div>
     </div>
-    <script type="text/javascript" src="${pageContext.request.contextPath}/web-resources/scripts/editContact.js">//script</script>
-    <script type="text/javascript" src="${pageContext.request.contextPath}/web-resources/bootstrap/js/bootstrap.min.js">//script</script>
+    <script type="text/javascript"
+            src="${pageContext.request.contextPath}/web-resources/scripts/editContact.js">//script</script>
     <script src="${pageContext.request.contextPath}/web-resources/scripts/main.js">//script</script>
     </body>
     </html>

@@ -67,10 +67,14 @@ public class AddContactCommand extends FrontCommand {
                             }
                             case "dateOfBirth": {
                                 if (StringUtils.isNotEmpty(field.trim())) {
-                                    DateTime dt = null;
+                                    DateTime dt;
+                                    DateTime today = new DateTime();
                                     DateTimeFormatter formatter = DateTimeFormat.forPattern("dd-MM-yyyy");
                                     try {
                                         dt = formatter.parseDateTime(field);
+                                        if (dt.compareTo(today) > 0) {
+                                            throw new IllegalArgumentException();
+                                        }
                                     } catch (IllegalArgumentException e) {
                                         LOG.info("Wrong date");
                                         error.addMessage("Wrong date or date format");
@@ -78,7 +82,7 @@ public class AddContactCommand extends FrontCommand {
                                         response.sendRedirect("errorPage");
                                         return;
                                     }
-                                    contact.setDateOfBirth(dt == null ? null : new Date(dt.toDate().getTime()));
+                                    contact.setDateOfBirth(new Date(dt.toDate().getTime()));
                                 }
                                 break;
                             }
@@ -169,14 +173,12 @@ public class AddContactCommand extends FrontCommand {
                 request.getSession().setAttribute("messageList", error.getMessages());
                 response.sendRedirect("errorPage");
             } else response.sendRedirect("contacts");
-        }
-        catch(ServiceException e){
+        } catch (ServiceException e) {
             error.addMessage("error while processing add contact, please, check input data if it is correct");
             request.getSession().setAttribute("messageList", error.getMessages());
             forward("errorPage");
             LOG.error("error while processing add contact command");
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             LOG.error("error while processing Add contact command");
         }
     }
