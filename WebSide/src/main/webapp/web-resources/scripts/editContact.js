@@ -107,7 +107,6 @@ function editPhone(input_id) {
     savePhoneButton.style.display = "block";
     console.log(editInput);
     var strings;
-    // if (editInput.name === "hiddens") {
     strings = editInput.value.split(";");
     console.log(strings);
     form.countryCode.value = strings[1];
@@ -115,17 +114,6 @@ function editPhone(input_id) {
     form.number.value = strings[3];
     form.type.value = strings[4];
     form.comment.value = strings[5];
-    // }
-    // else {
-    //     strings = editInput.value.split(";");
-    //     console.log(strings);
-    //     form.countryCode.value = strings[0];
-    //     form.operatorCode.value = strings[1];
-    //     form.number.value = strings[2];
-    //     form.type.value = strings[3];
-    //     form.comment.value = strings[4];
-    // }
-
 }
 
 function addPhoneInTable(object, i) {

@@ -46,7 +46,7 @@ function validEmail(element, email) {
         markInputAsWrong(email);
         showMessage(element, "Wrong email, use right format<br> like address@example.com");
         return false;
-    } else if(email.value === ""){
+    } else if (email.value === "") {
         markInputAsWrong(email);
         showMessage(element, "Email can't be null");
     } else return true;

@@ -10,7 +10,7 @@ function fillContent() {
 var sendMail = document.getElementById("sendMail");
 sendMail.addEventListener("click", function () {
     var element = document.getElementById("notifyDiv");
-    if(validate(element,form.subject) && !isEmpty(element,form.content)){
+    if (validate(element, form.subject) && !isEmpty(element, form.content)) {
         var inputs = document.getElementsByName("emails");
         for (var i = 0; i < inputs.length; i++) {
             inputs[i].disabled = false;

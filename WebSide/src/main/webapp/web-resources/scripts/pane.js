@@ -6,8 +6,8 @@
 function showPane(pane) {
     var div;
     pane.className = "active";
-    switch (pane.id){
-        case "main":{
+    switch (pane.id) {
+        case "main": {
             document.getElementById("sub").className = "";
             document.getElementById("address").className = "";
             document.getElementById("phone").className = "";
@@ -20,7 +20,7 @@ function showPane(pane) {
             document.getElementById("attachment_info").className = "tab-pane fade";
             break;
         }
-        case "sub":{
+        case "sub": {
             document.getElementById("main").className = "";
             document.getElementById("address").className = "";
             document.getElementById("phone").className = "";
@@ -33,7 +33,7 @@ function showPane(pane) {
             document.getElementById("attachment_info").className = "tab-pane fade";
             break;
         }
-        case "address":{
+        case "address": {
             document.getElementById("sub").className = "";
             document.getElementById("main").className = "";
             document.getElementById("phone").className = "";
@@ -46,7 +46,7 @@ function showPane(pane) {
             document.getElementById("attachment_info").className = "tab-pane fade";
             break;
         }
-        case "phone":{
+        case "phone": {
             document.getElementById("sub").className = "";
             document.getElementById("address").className = "";
             document.getElementById("main").className = "";
@@ -59,7 +59,7 @@ function showPane(pane) {
             document.getElementById("attachment_info").className = "tab-pane fade";
             break;
         }
-        case "attachment":{
+        case "attachment": {
             document.getElementById("sub").className = "";
             document.getElementById("address").className = "";
             document.getElementById("phone").className = "";

@@ -40,7 +40,7 @@ document.getElementsByClassName("close")[1].addEventListener("click", function (
 
 addAttachmentBtn.addEventListener("click", function () {
     var attachment = document.getElementById("attachment" + indexOfFile);
-    if (attachment.files.length != 0){
+    if (attachment.files.length != 0) {
         tableAttach.style.visibility = "visible";
         addAttachment();
     }

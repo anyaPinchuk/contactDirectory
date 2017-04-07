@@ -5,7 +5,6 @@ import converters.ContactConverter;
 import dto.ContactDTO;
 import entities.Address;
 import entities.Contact;
-import exceptions.GenericDAOException;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
@@ -16,6 +15,14 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class SearchService {
+    /**
+     * finds contacts with given condition
+     *
+     * @param contactDTO That is contact suitable for condition
+     * @param fromDate   That is initial date
+     * @param toDate     That is finite date
+     * @return list of found contacts
+     */
     public List<ContactDTO> searchContacts(ContactDTO contactDTO, DateTime fromDate, DateTime toDate) {
         ContactService contactService = new ContactService();
         AddressService addressService = new AddressService();

@@ -11,6 +11,11 @@ import java.util.List;
 
 public class BirthdayJob implements Job {
 
+    /**
+     * Find contacts with today's date of birth and sends found contacts to a system administrator
+     * @param jobExecutionContext
+     * @throws JobExecutionException
+     */
     @Override
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
         ContactService contactService = new ContactService();

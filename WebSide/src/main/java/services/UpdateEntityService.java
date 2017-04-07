@@ -36,8 +36,13 @@ public class UpdateEntityService {
         });
     }
 
-
-    public void updatePhoto(Long contactId, String fileName){
+    /**
+     * update or add photo to contact by his id
+     *
+     * @param contactId
+     * @param fileName  Tha is the name of photo
+     */
+    public void updatePhoto(Long contactId, String fileName) {
         if (fileName == null || contactId == 0) return;
         PhotoService photoService = new PhotoService();
         Photo obj = photoService.findById(contactId);
