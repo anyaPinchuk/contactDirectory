@@ -28,13 +28,22 @@ function validate() {
  */
 
 function validDate(element, date) {
+    var today = new Date();
     if (date.value === "") {
         markInputAsRight(date);
         return true;
-    } else if (date.value.trim().match(/^(0?[1-9]|[12][0-9]|3[01])[\-](0?[1-9]|1[012])[\-]\d{4}$/)) {
-        markInputAsRight(date);
-        return true;
-    } else if (!date.value.trim().match(/^(0?[1-9]|[12][0-9]|3[01])[\-](0?[1-9]|1[012])[\-]\d{4}$/)) {
+    } else if (date.value.match(/^(0?[1-9]|[12][0-9]|3[01])[\-](0?[1-9]|1[012])[\-]\d{4}$/)) {
+        var myDate = date.value.split("-");
+        if(myDate[2] === today.getFullYear() && myDate[1] === today.getMonth() && myDate[0] === today.getDate()) {
+            markInputAsRight(date);
+            return true;
+        } else {
+            markInputAsWrong(date);
+            showMessage(element, "Such date doesn't exist");
+            return false;
+        }
+
+    } else if (!date.value.match(/^(0?[1-9]|[12][0-9]|3[01])[\-](0?[1-9]|1[012])[\-]\d{4}$/)) {
         markInputAsWrong(date);
         showMessage(element, "Wrong date, please,<br> use right format like DD-MM-YYYY");
         return false;
