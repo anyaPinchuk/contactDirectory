@@ -119,16 +119,16 @@ INSERT INTO `anya_pinchuk`.`contact` (`name`, `surname`, `gender`, `marital_stat
 INSERT INTO `anya_pinchuk`.`contact` (`name`, `surname`, `gender`, `marital_status`, `email`, `job`) VALUES ('Матвей', 'Жартун', 'man', 'single', 'matvey123@gmail.com', 'itechart');
 INSERT INTO `anya_pinchuk`.`contact` (`name`, `surname`, `gender`, `marital_status`, `email`) VALUES ('Lina', 'Bober', 'woman', 'single', 'lina.bober96@mail.ru');
 INSERT INTO `anya_pinchuk`.`contact` (`name`, `surname`, `date_of_birth`, `gender`, `marital_status`, `email`, `job`) VALUES ('Владимир', 'Голышев', '1993-12-20', 'man', 'married', 'wanted65@gmail.com', 'peleng');
-INSERT INTO `anya_pinchuk`.`address` (`id`, `contact_id`) VALUES ('1', '22');
-INSERT INTO `anya_pinchuk`.`address` (`id`, `contact_id`) VALUES ('2', '23');
-INSERT INTO `anya_pinchuk`.`address` (`id`, `contact_id`) VALUES ('3', '24');
-INSERT INTO `anya_pinchuk`.`address` (`id`, `contact_id`) VALUES ('4', '25');
-INSERT INTO `anya_pinchuk`.`address` (`id`, `contact_id`) VALUES ('5', '26');
-INSERT INTO `anya_pinchuk`.`address` (`id`, `contact_id`) VALUES ('6', '27');
-INSERT INTO `anya_pinchuk`.`address` (`id`, `contact_id`) VALUES ('7', '28');
-INSERT INTO `anya_pinchuk`.`address` (`id`, `contact_id`) VALUES ('8', '29');
-INSERT INTO `anya_pinchuk`.`address` (`id`, `contact_id`) VALUES ('9', '30');
-INSERT INTO `anya_pinchuk`.`address` (`id`, `contact_id`) VALUES ('10', '31');
-INSERT INTO `anya_pinchuk`.`address` (`id`, `contact_id`) VALUES ('11', '32');
-INSERT INTO `anya_pinchuk`.`address` (`id`, `contact_id`) VALUES ('12', '33');
+INSERT INTO `anya_pinchuk`.`address` (`id`, `contact_id`) VALUES ('1', '1');
+INSERT INTO `anya_pinchuk`.`address` (`id`, `contact_id`) VALUES ('2', '2');
+INSERT INTO `anya_pinchuk`.`address` (`id`, `contact_id`) VALUES ('3', '3');
+INSERT INTO `anya_pinchuk`.`address` (`id`, `contact_id`) VALUES ('4', '4');
+INSERT INTO `anya_pinchuk`.`address` (`id`, `contact_id`) VALUES ('5', '5');
+INSERT INTO `anya_pinchuk`.`address` (`id`, `contact_id`) VALUES ('6', '6');
+INSERT INTO `anya_pinchuk`.`address` (`id`, `contact_id`) VALUES ('7', '7');
+INSERT INTO `anya_pinchuk`.`address` (`id`, `contact_id`) VALUES ('8', '8');
+INSERT INTO `anya_pinchuk`.`address` (`id`, `contact_id`) VALUES ('9', '9');
+INSERT INTO `anya_pinchuk`.`address` (`id`, `contact_id`) VALUES ('10', '10');
+INSERT INTO `anya_pinchuk`.`address` (`id`, `contact_id`) VALUES ('11', '11');
+INSERT INTO `anya_pinchuk`.`address` (`id`, `contact_id`) VALUES ('12', '12');
 
