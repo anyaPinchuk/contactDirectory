@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS `anya_pinchuk`.`contact` (
   `date_of_birth` DATE NULL DEFAULT NULL,
   `gender` ENUM('man', 'woman') NULL DEFAULT NULL,
   `citizenship` VARCHAR(45) NULL DEFAULT NULL,
-  `marital_status` VARCHAR(45) NULL DEFAULT NULL,
+  `marital_status` ENUM('single', 'married') NULL DEFAULT NULL,
   `web_site` VARCHAR(45) NULL DEFAULT NULL,
   `email` VARCHAR(45) NOT NULL,
   `job` VARCHAR(45) NULL DEFAULT NULL,
@@ -106,4 +106,29 @@ CREATE TABLE IF NOT EXISTS `anya_pinchuk`.`photo` (
     ON UPDATE NO ACTION)
   ENGINE = InnoDB
   DEFAULT CHARACTER SET = utf8;
+
+INSERT INTO `anya_pinchuk`.`contact` (`name`, `surname`, `third_name`, `date_of_birth`, `gender`, `marital_status`, `email`, `job`) VALUES ('Анна', 'Пинчук', 'Александровна', '1996-09-30', 'woman', 'married', 'anyapinchuk3@gmail.com', 'itechart');
+INSERT INTO `anya_pinchuk`.`contact` (`name`, `surname`, `date_of_birth`, `gender`, `marital_status`, `email`) VALUES ('Марина', 'Иванкина', '1996-04-03', 'woman', 'married', 'marina_ivankina@gmail.com');
+INSERT INTO `anya_pinchuk`.`contact` (`name`, `surname`, `gender`, `marital_status`, `email`, `job`) VALUES ('Кирилл', 'Зюсько', 'man', 'single', 'kira1996@mail.ru', 'itechart');
+INSERT INTO `anya_pinchuk`.`contact` (`name`, `surname`, `date_of_birth`, `gender`, `citizenship`, `marital_status`, `email`, `job`) VALUES ('Алексей', 'Ващабрович', '1997-11-07', 'man', 'belorussian', 'single', 'alexey_ale@gmail.com', 'Sam Solutions');
+INSERT INTO `anya_pinchuk`.`contact` (`name`, `surname`, `third_name`, `gender`, `marital_status`, `email`, `job`) VALUES ('Кристина', 'Качан', 'Юрьевна', 'woman', 'married', 'kris+kachan@gmail.com', 'EPAM');
+INSERT INTO `anya_pinchuk`.`contact` (`name`, `surname`, `gender`, `marital_status`, `email`, `job`) VALUES ('Ann', 'Pinchuk', 'woman', 'married', 'nutaanuta-30.10.30@mail.ru', 'itechart');
+INSERT INTO `anya_pinchuk`.`contact` (`name`, `surname`, `date_of_birth`, `gender`, `marital_status`, `email`) VALUES ('Hanna', 'Abbott', '1993-12-10', 'woman', 'single', 'hanna_abb@gmail.com');
+INSERT INTO `anya_pinchuk`.`contact` (`name`, `surname`, `gender`, `citizenship`, `marital_status`, `email`, `job`) VALUES ('Karina', 'Avetisyan', 'woman', 'russian', 'married', 'karina_av12@mail.ru', 'itransition');
+INSERT INTO `anya_pinchuk`.`contact` (`name`, `surname`, `gender`, `marital_status`, `email`, `job`) VALUES ('Галина', 'Куташ', 'woman', 'married', 'galina.kutash@mail.ru', 'itechart');
+INSERT INTO `anya_pinchuk`.`contact` (`name`, `surname`, `gender`, `marital_status`, `email`, `job`) VALUES ('Матвей', 'Жартун', 'man', 'single', 'matvey123@gmail.com', 'itechart');
+INSERT INTO `anya_pinchuk`.`contact` (`name`, `surname`, `gender`, `marital_status`, `email`) VALUES ('Lina', 'Bober', 'woman', 'single', 'lina.bober96@mail.ru');
+INSERT INTO `anya_pinchuk`.`contact` (`name`, `surname`, `date_of_birth`, `gender`, `marital_status`, `email`, `job`) VALUES ('Владимир', 'Голышев', '1993-12-20', 'man', 'married', 'wanted65@gmail.com', 'peleng');
+INSERT INTO `anya_pinchuk`.`address` (`id`, `contact_id`) VALUES ('1', '22');
+INSERT INTO `anya_pinchuk`.`address` (`id`, `contact_id`) VALUES ('2', '23');
+INSERT INTO `anya_pinchuk`.`address` (`id`, `contact_id`) VALUES ('3', '24');
+INSERT INTO `anya_pinchuk`.`address` (`id`, `contact_id`) VALUES ('4', '25');
+INSERT INTO `anya_pinchuk`.`address` (`id`, `contact_id`) VALUES ('5', '26');
+INSERT INTO `anya_pinchuk`.`address` (`id`, `contact_id`) VALUES ('6', '27');
+INSERT INTO `anya_pinchuk`.`address` (`id`, `contact_id`) VALUES ('7', '28');
+INSERT INTO `anya_pinchuk`.`address` (`id`, `contact_id`) VALUES ('8', '29');
+INSERT INTO `anya_pinchuk`.`address` (`id`, `contact_id`) VALUES ('9', '30');
+INSERT INTO `anya_pinchuk`.`address` (`id`, `contact_id`) VALUES ('10', '31');
+INSERT INTO `anya_pinchuk`.`address` (`id`, `contact_id`) VALUES ('11', '32');
+INSERT INTO `anya_pinchuk`.`address` (`id`, `contact_id`) VALUES ('12', '33');
 

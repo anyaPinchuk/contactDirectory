@@ -81,8 +81,18 @@
                         </div>
                         <div class="form-group">
                             <label for="contactStatus">Enter marital status </label>
-                            <input class="form-control input-lg" id="contactStatus" type="text" name="status"
-                                   maxlength="45" value="${contact.maritalStatus}" placeholder="Input marital status"/>
+                            <select class="form-control turnOFF" id="contactStatus" name="status">
+                                <c:choose>
+                                    <c:when test="${contact.maritalStatus == 'single'}">
+                                        <option value="single" selected="selected">Single</option>
+                                        <option value="married">Married</option>
+                                    </c:when>
+                                    <c:when test="${contact.maritalStatus == 'married'}">
+                                        <option value="single">Single</option>
+                                        <option selected="selected" value="married">Married</option>
+                                    </c:when>
+                                </c:choose>
+                            </select>
                             <label for="contactSite">Enter web-site </label>
                             <input class="form-control input-lg" id="contactSite" type="text" name="webSite"
                                    maxlength="45" value="${contact.webSite}" placeholder="Input web-site"/>
@@ -175,7 +185,7 @@
                                             </button>
                                             <input value="${attachment.id}" type="checkbox"/></td>
                                         <td>
-                                            <a href="document?name=${attachment.fileName};${contact.id}">${attachment.fileName}</a>
+                                            <a target="_blank" href="document?name=${attachment.fileName};${contact.id}">${attachment.fileName}</a>
                                         </td>
                                         <td><p><joda:format value="${attachment.dateOfDownload}" pattern="dd-MM-yyyy"/>
                                         </p></td>

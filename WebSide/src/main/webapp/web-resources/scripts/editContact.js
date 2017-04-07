@@ -60,7 +60,7 @@ document.getElementsByClassName("close")[2].addEventListener("click", function (
 
 addAttachmentBtn.addEventListener("click", function () {
     var attachment = document.getElementById("attachment" + indexOfFile);
-    if (attachment.files.length != 0){
+    if (attachment.files.length != 0) {
         tableAttach.style.visibility = "visible";
         addAttachment();
     }
@@ -88,15 +88,13 @@ if (document.querySelectorAll(".rows").length === 0) {
 }
 
 function addPhone() {
-    if (document.querySelectorAll(".rows").length === 0) {
-        table.style.display = "block";
-    }
     object.countryCode = form.countryCode.value;
     object.operatorCode = form.operatorCode.value;
     object.number = form.number.value;
     object.type = form.type.value;
     object.comment = form.comment.value;
     if (/^\d+$/.test(object.countryCode) && /^\d+$/.test(object.operatorCode) && /^\d+$/.test(object.number)) {
+        table.style.display = "block";
         addPhoneInTable(object, i++);
     }
 }
@@ -110,13 +108,13 @@ function editPhone(input_id) {
     console.log(editInput);
     var strings;
     // if (editInput.name === "hiddens") {
-        strings = editInput.value.split(";");
-        console.log(strings);
-        form.countryCode.value = strings[1];
-        form.operatorCode.value = strings[2];
-        form.number.value = strings[3];
-        form.type.value = strings[4];
-        form.comment.value = strings[5];
+    strings = editInput.value.split(";");
+    console.log(strings);
+    form.countryCode.value = strings[1];
+    form.operatorCode.value = strings[2];
+    form.number.value = strings[3];
+    form.type.value = strings[4];
+    form.comment.value = strings[5];
     // }
     // else {
     //     strings = editInput.value.split(";");

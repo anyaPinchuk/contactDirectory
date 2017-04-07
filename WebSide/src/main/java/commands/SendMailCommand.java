@@ -57,7 +57,7 @@ public class SendMailCommand extends FrontCommand {
             String templateName = request.getParameter("template");
             String content = request.getParameter("content");
             MailService mailService = new MailService();
-            if (CollectionUtils.isNotEmpty(Arrays.asList(emails)) && StringUtils.isNotEmpty(content.trim())) {
+            if (CollectionUtils.isNotEmpty(Arrays.asList(emails))) {
                 try {
                     mailService.sendEmail(emails, subject, templateName, content);
                     response.sendRedirect("Contacts");

@@ -109,7 +109,7 @@
                             <c:forEach items="${requestScope.attachments}" var="attachment">
                                 <tr class="rows_attach">
                                     <td>
-                                        <a href="document?name=${attachment.fileName};${contact.id}">${attachment.fileName}</a>
+                                        <a target="_blank" href="document?name=${attachment.fileName};${contact.id}">${attachment.fileName}</a>
                                     </td>
                                     <td><p><fmt:formatDate value="${attachment.dateOfDownload}" pattern="dd.MM.yyyy"/>
                                     </p></td>

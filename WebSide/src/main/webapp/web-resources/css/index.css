@@ -67,14 +67,6 @@ p {
     to {top: 0; opacity: 1}
 }
 
-/*.modal-content > div {*/
-    /*width: 400px;*/
-    /*position: relative;*/
-    /*margin: 10% auto;*/
-    /*padding: 5px 20px 13px 20px;*/
-    /*border-radius: 10px;*/
-    /*background: -o-linear-gradient(#fff, #999);*/
-/*}*/
 
 .div_row {
     display: flex;

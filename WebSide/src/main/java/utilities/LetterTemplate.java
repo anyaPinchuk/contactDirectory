@@ -34,11 +34,8 @@ public class LetterTemplate {
                         case "name":
                             template.add("name", "<name>");
                             break;
-                        case "date":
-                            template.add("date", "<date>");
-                            break;
-                        case "time":
-                            template.add("time", "<time>");
+                        case "surname":
+                            template.add("surname", "<surname>");
                             break;
                     }
                 });

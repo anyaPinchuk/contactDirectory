@@ -8,6 +8,7 @@ import entities.Contact;
 import exceptions.GenericDAOException;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +16,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class SearchService {
-    public List<ContactDTO> searchContacts(ContactDTO contactDTO, String dateCriteria) {
+    public List<ContactDTO> searchContacts(ContactDTO contactDTO, DateTime fromDate, DateTime toDate) {
         ContactService contactService = new ContactService();
         AddressService addressService = new AddressService();
         List<Contact> contacts;
@@ -25,8 +26,8 @@ public class SearchService {
         Address address = addressConverter.toEntitySearch(contactDTO.getAddress()).get();
         if (StringUtils.isNotEmpty(address.getCountry()) && StringUtils.isNotEmpty(address.getCity()) &&
                 StringUtils.isNotEmpty(address.getStreetAddress()) && StringUtils.isNotEmpty(address.getIndex())) {
-            contacts = contactService.findByCriteria(contact, null, dateCriteria);
-        } else contacts = contactService.findByCriteria(contact, address, dateCriteria);
+            contacts = contactService.findByCriteria(contact, null, fromDate, toDate);
+        } else contacts = contactService.findByCriteria(contact, address, fromDate, toDate);
         List<ContactDTO> contactDTOList = contacts.stream().map(obj -> {
             ContactDTO dto = contactConverter.toDTO(Optional.of(obj)).get();
             Address addressObj = addressService.findById(obj.getId());

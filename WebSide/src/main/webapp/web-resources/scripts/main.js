@@ -31,10 +31,10 @@ function validDate(element, date) {
     if (date.value === "") {
         markInputAsRight(date);
         return true;
-    } else if (date.value.match(/^(0?[1-9]|[12][0-9]|3[01])[\-](0?[1-9]|1[012])[\-]\d{4}$/)) {
+    } else if (date.value.trim().match(/^(0?[1-9]|[12][0-9]|3[01])[\-](0?[1-9]|1[012])[\-]\d{4}$/)) {
         markInputAsRight(date);
         return true;
-    } else if (!date.value.match(/^(0?[1-9]|[12][0-9]|3[01])[\-](0?[1-9]|1[012])[\-]\d{4}$/)) {
+    } else if (!date.value.trim().match(/^(0?[1-9]|[12][0-9]|3[01])[\-](0?[1-9]|1[012])[\-]\d{4}$/)) {
         markInputAsWrong(date);
         showMessage(element, "Wrong date, please,<br> use right format like DD-MM-YYYY");
         return false;
@@ -42,7 +42,7 @@ function validDate(element, date) {
 }
 
 function validEmail(element, email) {
-    if (!/^\w+([\.-\\+]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email.value)) {
+    if (!/^\w+([\.-\\+]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email.value.trim())) {
         markInputAsWrong(email);
         showMessage(element, "Wrong email, use right format<br> like address@example.com");
         return false;

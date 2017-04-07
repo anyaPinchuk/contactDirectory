@@ -124,15 +124,15 @@ public class EditContactCommand extends FrontCommand {
                                 break;
                             }
                             case "name": {
-                                contact.setName(field);
+                                contact.setName(field.trim());
                                 break;
                             }
                             case "surname": {
-                                contact.setSurname(field);
+                                contact.setSurname(field.trim());
                                 break;
                             }
                             case "thirdName": {
-                                contact.setThirdName(field);
+                                contact.setThirdName(field.trim());
                                 break;
                             }
                             case "dateOfBirth": {
@@ -141,7 +141,7 @@ public class EditContactCommand extends FrontCommand {
                                     DateTime today = new DateTime();
                                     DateTimeFormatter formatter = DateTimeFormat.forPattern("dd-MM-yyyy");
                                     try {
-                                        dt = formatter.parseDateTime(field);
+                                        dt = formatter.parseDateTime(field.trim());
                                         if (dt.compareTo(today) > 0) {
                                             throw new IllegalArgumentException();
                                         }
@@ -161,7 +161,7 @@ public class EditContactCommand extends FrontCommand {
                                 break;
                             }
                             case "citizenship": {
-                                contact.setCitizenship(field);
+                                contact.setCitizenship(field.trim());
                                 break;
                             }
                             case "status": {
@@ -169,31 +169,31 @@ public class EditContactCommand extends FrontCommand {
                                 break;
                             }
                             case "webSite": {
-                                contact.setWebSite(field);
+                                contact.setWebSite(field.trim());
                                 break;
                             }
                             case "email": {
-                                contact.setEmail(field);
+                                contact.setEmail(field.trim());
                                 break;
                             }
                             case "job": {
-                                contact.setJob(field);
+                                contact.setJob(field.trim());
                                 break;
                             }
                             case "country": {
-                                address.setCountry(field);
+                                address.setCountry(field.trim());
                                 break;
                             }
                             case "city": {
-                                address.setCity(field);
+                                address.setCity(field.trim());
                                 break;
                             }
                             case "address": {
-                                address.setStreetAddress(field);
+                                address.setStreetAddress(field.trim());
                                 break;
                             }
                             case "index": {
-                                address.setIndex(field);
+                                address.setIndex(field.trim());
                                 break;
                             }
                             case "hiddens": {

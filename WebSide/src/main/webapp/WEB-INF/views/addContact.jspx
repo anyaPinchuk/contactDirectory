@@ -69,8 +69,10 @@
                         </div>
                         <div class="form-group">
                             <label for="contactStatus">Enter marital status </label>
-                            <input class="form-control  turnOFF" id="contactStatus" type="text" name="status"
-                                   maxlength="45" placeholder="Input marital status"/>
+                            <select class="form-control turnOFF" id="contactStatus" name="status">
+                                <option value="single">Single</option>
+                                <option value="married">Married</option>
+                            </select>
                         </div>
                         <div class="form-group">
                             <label for="contactSite">Enter web-site </label>

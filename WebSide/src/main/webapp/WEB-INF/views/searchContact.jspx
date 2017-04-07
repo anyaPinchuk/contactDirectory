@@ -18,56 +18,67 @@
                 <div>
                     <div class="form-group">
                         <label>Name: </label>
-                        <input maxlength="45" class="form-control" placeholder="Input name" type="text" name="firstName"/>
+                        <input maxlength="45" class="form-control" placeholder="Input name" type="text"
+                               name="firstName"/>
                     </div>
                     <div class="form-group">
                         <label>Surname: </label>
-                        <input maxlength="45" class="form-control" type="text" name="surname" placeholder="Input surname"/>
+                        <input maxlength="45" class="form-control" type="text" name="surname"
+                               placeholder="Input surname"/>
                     </div>
                     <div class="form-group">
                         <label>Third name: </label>
-                        <input maxlength="45" class="form-control" type="text" name="thirdName" placeholder="Input third name"/>
+                        <input maxlength="45" class="form-control" type="text" name="thirdName"
+                               placeholder="Input third name"/>
                     </div>
-                    <div class="form-group">
-                        <label>Date of birth: </label>
-                        <input class="form-control" type="text" placeholder="DD-MM-YYYY" name="dateOfBirth"/>
-                        <div class="div_row">
-                            <label class="radio-inline"><input checked="checked" type="radio" name="dateCriteria"
-                                                               value="after"/>After date</label>
-                            <label class="radio-inline"><input type="radio" name="dateCriteria"
-                                                               value="before"/>Before date</label></div>
-                    </div>
-                </div>
-                <div>
                     <div class="form-group">
                         <label>Gender: </label>
                         <select class="form-control" name="gender">
-                            <option value=""><jsp:text/></option>
+                            <option value="">
+                                <jsp:text/>
+                            </option>
                             <option value="man">Male</option>
                             <option value="woman">Female</option>
                         </select>
                     </div>
-                    <div class="form-group">
-                        <label>Citizenship </label>
-                        <input maxlength="45"  class="form-control" type="text" name="citizenship" placeholder="Input citizenship"/>
-                    </div>
-                    <div class="form-group">
-                        <label>Marital status: </label>
-                        <input maxlength="45" class="form-control" type="text" name="status" placeholder="Input marital status"/>
-                    </div>
-                    <div class="form-group">
-                        <label>Country: </label>
-                        <input maxlength="45" class="form-control " type="text" name="country" placeholder="Input country"/><br/>
-                    </div>
                 </div>
                 <div>
                     <div class="form-group">
+                        <label>Date of birth: </label>
+                        <div>Since: <input class="form-control" type="text" placeholder="DD-MM-YYYY" name="dateFrom"/></div>
+                        <div>Until: <input class="form-control" type="text" placeholder="DD-MM-YYYY" name="dateTo"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Citizenship </label>
+                        <input maxlength="45" class="form-control" type="text" name="citizenship"
+                               placeholder="Input citizenship"/>
+                    </div>
+                    <div class="form-group">
+                        <label>Marital status: </label>
+                        <select class="form-control turnOFF" name="status">
+                            <option value="">
+                                <jsp:text/>
+                            </option>
+                            <option value="single">Single</option>
+                            <option value="married">Married</option>
+                        </select></div>
+                </div>
+                <div>
+                    <div class="form-group">
+                        <label>Country: </label>
+                        <input maxlength="45" class="form-control " type="text" name="country"
+                               placeholder="Input country"/><br/>
+                    </div>
+                    <div class="form-group">
                         <label>Town: </label>
-                        <input maxlength="45" class="form-control" type="text" name="city" placeholder="Input city"/><br/>
+                        <input maxlength="45" class="form-control" type="text" name="city"
+                               placeholder="Input city"/><br/>
                     </div>
                     <div class="form-group">
                         <label>Address: </label>
-                        <input maxlength="45" class="form-control" type="text" name="address" placeholder="Input address"/><br/>
+                        <input maxlength="45" class="form-control" type="text" name="address"
+                               placeholder="Input address"/><br/>
                     </div>
                     <div class="form-group">
                         <label>Index: </label>

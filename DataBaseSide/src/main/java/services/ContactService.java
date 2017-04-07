@@ -6,6 +6,7 @@ import entities.Address;
 import entities.Contact;
 import exceptions.GenericDAOException;
 import exceptions.ServiceException;
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -73,13 +74,13 @@ public class ContactService implements ServiceEntity {
         return count;
     }
 
-    public List<Contact> findByCriteria(Contact contact, Address address, String dateCriteria) {
+    public List<Contact> findByCriteria(Contact contact, Address address, DateTime fromDate, DateTime toDate) {
         List<Contact> contacts = new ArrayList<>();
         Connection connection = null;
         try {
             connection = connectionAwareExecutor.connect();
             contactDAO.setConnection(connection);
-            contacts = contactDAO.findByCriteria(contact, address, dateCriteria);
+            contacts = contactDAO.findByCriteria(contact, address, fromDate, toDate);
         } catch (GenericDAOException e) {
             LOG.error("error while processing get contacts by criteria");
             throw new ServiceException();
@@ -193,21 +194,24 @@ public class ContactService implements ServiceEntity {
         this.contactDAO = contactDAO;
     }
 
-    public List<String> findNamesByEmails(String[] emails) {
-        List<String> names = new ArrayList<>();
+    public List<Contact> findContactsByEmails(String[] emails) {
+        List<Contact> contacts = new ArrayList<>();
+        Contact contact;
         Connection connection = null;
         try {
             connection = connectionAwareExecutor.connect();
             contactDAO.setConnection(connection);
             for (String email : emails) {
-                names.add(contactDAO.findByEmail(email));
+                if((contact = contactDAO.findByEmail(email)) != null){
+                    contacts.add(contact);
+                }
             }
         } catch (GenericDAOException e) {
-            LOG.error("error while processing get contact by id");
+            LOG.error("error while processing get contacts by emails");
             throw new ServiceException();
         }finally {
             connectionAwareExecutor.closeConnection(connection);
         }
-        return names;
+        return contacts;
     }
 }

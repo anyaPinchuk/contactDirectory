@@ -6,6 +6,7 @@ import entities.Contact;
 import exceptions.GenericDAOException;
 import exceptions.UniqueDAOException;
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
 
 import java.sql.*;
 import java.sql.Date;
@@ -32,13 +33,13 @@ public class ContactDAO extends AbstractDAO<Contact> {
         }
     }
 
-    public List<Contact> findByCriteria(Contact entity, Address address, String dateCriteria) throws GenericDAOException {
+    public List<Contact> findByCriteria(Contact entity, Address address, DateTime fromDate, DateTime toDate) throws GenericDAOException {
         LOG.info("findAll Contact starting");
         ResultSet resultSet = null;
         List<Contact> contacts = new LinkedList<>();
         String builder;
-        builder = buildQuery(entity, address, dateCriteria);
-        try (PreparedStatement statement = setParametersForSearch(connection, builder, entity, address)) {
+        builder = buildQuery(entity, address, fromDate, toDate);
+        try (PreparedStatement statement = setParametersForSearch(connection, builder, entity, address, fromDate, toDate)) {
             resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 buildEntityFromResult(resultSet).ifPresent(contacts::add);
@@ -52,26 +53,22 @@ public class ContactDAO extends AbstractDAO<Contact> {
         }
     }
 
-    private String buildQuery(Contact entity, Address address, String dateCriteria) {
+    private String buildQuery(Contact entity, Address address, DateTime fromDate, DateTime toDate) {
         LOG.info("build query for search starting");
         StringBuilder builder = new StringBuilder("SELECT * FROM contact c ");
         int flag = 0;
         if (address != null) {
             builder.append("inner join address a on c.id = a.contact_id ");
             if (StringUtils.isNotEmpty(address.getCountry().trim())) {
-                flag++;
                 builder.append("and a.country LIKE ? ");
             }
             if (StringUtils.isNotEmpty(address.getCity().trim())) {
-                flag++;
                 builder.append("and a.city LIKE ? ");
             }
             if (StringUtils.isNotEmpty(address.getStreetAddress().trim())) {
-                flag++;
                 builder.append("and a.street_address LIKE ? ");
             }
             if (StringUtils.isNotEmpty(address.getIndex().trim())) {
-                flag++;
                 builder.append("and a.index LIKE ? ");
             }
         }
@@ -88,15 +85,13 @@ public class ContactDAO extends AbstractDAO<Contact> {
             flag++;
             builder.append("c.third_name LIKE ? and ");
         }
-        if (entity.getDateOfBirth() != null && StringUtils.isNotEmpty(dateCriteria.trim())) {
-            if (dateCriteria.equals("after")) {
-                builder.append("c.date_of_birth ");
-                builder.append(" >= ? and ");
-            } else {
-                builder.append("c.date_of_birth ");
-                builder.append(" <= ? and ");
-            }
+        if (fromDate!=null) {
             flag++;
+            builder.append("c.date_of_birth >= ? and ");
+        }
+        if (toDate!=null) {
+            flag++;
+            builder.append("c.date_of_birth <= ? and ");
         }
         if (StringUtils.isNotEmpty(entity.getCitizenship().trim())) {
             flag++;
@@ -110,13 +105,13 @@ public class ContactDAO extends AbstractDAO<Contact> {
             flag++;
             builder.append("c.marital_status LIKE ? and ");
         }
-        if (flag > 0) builder.setLength(builder.length() - 6);
-        else builder.setLength(builder.length() - 4);
+        if (flag > 0) builder.setLength(builder.length() - 4);
+        else builder.setLength(builder.length() - 6);
         return builder.toString();
     }
 
     private PreparedStatement setParametersForSearch(Connection connection, String builder, Contact entity,
-                                                     Address address) throws SQLException {
+                                                     Address address, DateTime fromDate, DateTime toDate) throws SQLException {
         LOG.info("set parameters for search starting");
         PreparedStatement statement = connection.prepareStatement(builder);
         List<Object> parameters = new ArrayList<>();
@@ -129,16 +124,20 @@ public class ContactDAO extends AbstractDAO<Contact> {
         parameters.add(entity.getName());
         parameters.add(entity.getSurname());
         parameters.add(entity.getThirdName());
-        if (entity.getDateOfBirth() != null) {
-            parameters.add(entity.getDateOfBirth());
+        if (fromDate != null) {
+            parameters.add(fromDate);
+        }
+        if (toDate != null) {
+            parameters.add(toDate);
         }
         parameters.add(entity.getCitizenship());
         parameters.add(entity.getGender());
         parameters.add(entity.getMaritalStatus());
         int i = 1;
         for (Object arg : parameters) {
-            if (arg instanceof Date) {
-                statement.setDate(i, (Date) arg);
+            if (arg instanceof DateTime) {
+                Date date = new Date(((DateTime) arg).toDate().getTime());
+                statement.setDate(i, date);
                 i++;
             } else if (arg instanceof String) {
                 if (StringUtils.isNotEmpty(((String) arg).trim())) {
@@ -323,17 +322,17 @@ public class ContactDAO extends AbstractDAO<Contact> {
         }
     }
 
-    public String findByEmail(String email) throws GenericDAOException {
+    public Contact findByEmail(String email) throws GenericDAOException {
         LOG.info("find by email {} starting", email);
-        String name = "";
+        Contact contact = new Contact();
         ResultSet resultSet = null;
-        try (PreparedStatement statement = connection.prepareStatement("SELECT name FROM contact WHERE email = ? LIMIT 1")) {
+        try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM contact WHERE email = ? LIMIT 1")) {
             statement.setString(1, email);
             resultSet = statement.executeQuery();
             if (resultSet.next()) {
-                name = resultSet.getString("name");
+               contact = buildEntityFromResult(resultSet).get();
             }
-            return name;
+            return contact;
         } catch (SQLException e) {
             LOG.error("email was not found");
             throw new GenericDAOException(e);

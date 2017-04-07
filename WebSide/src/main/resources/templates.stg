@@ -1,7 +1,7 @@
-birthday(name) ::= <<Dear <name>. Happy birthday to you! Have a great time, with memories to last you throughout the whole year.
+birthday(name) ::= <<Dear <name> <surname>. Happy birthday to you! Have a great time, with memories to last you throughout the whole year.
 >>
-meeting(name, time) ::= <<Hi, <name>! Don't you mind going to the cinema with me tonight?
+meeting(name) ::= <<Hi, <name>! Don't you mind going to the cinema with me tonight?
 >>
-survey(name) ::= <<Hello, <name>! Could you please answer social quiz on page https://ru.surveymonkey.com/r/KCYDBW3
+survey(name, surname) ::= <<Hello, <name> <surname>! Could you please answer social quiz on page https://ru.surveymonkey.com/r/KCYDBW3
 Thanks!
 >>

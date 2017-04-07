@@ -28,21 +28,23 @@ public class SearchContactCommand extends FrontCommand {
         contactDTO.setName(request.getParameter("firstName"));
         contactDTO.setSurname(request.getParameter("surname"));
         contactDTO.setThirdName(request.getParameter("thirdName"));
-        String date = request.getParameter("dateOfBirth");
-        DateTime dt = null;
+        String dateFrom = request.getParameter("dateFrom");
+        String dateTo = request.getParameter("dateTo");
+        DateTime fromDate = null;
+        DateTime toDate = null;
         DateTimeFormatter formatter = DateTimeFormat.forPattern("dd-MM-yyyy");
-        if (StringUtils.isNotEmpty(date.trim())){
-            try {
-                dt = formatter.parseDateTime(date);
-            } catch (IllegalArgumentException e) {
-                error.addMessage("Wrong date format");
-                request.getSession().setAttribute("messageList", error.getMessages());
-                response.sendRedirect("errorPage");
-                LOG.info("wrong date format");
-                return;
-            }
+        try {
+            if (StringUtils.isNotEmpty(dateFrom.trim()))
+                fromDate = formatter.parseDateTime(dateFrom.trim());
+            if (StringUtils.isNotEmpty(dateTo.trim()))
+                toDate = formatter.parseDateTime(dateTo.trim());
+        } catch (IllegalArgumentException e) {
+            error.addMessage("Wrong date format");
+            request.getSession().setAttribute("messageList", error.getMessages());
+            response.sendRedirect("errorPage");
+            LOG.info("wrong date format");
+            return;
         }
-        contactDTO.setDateOfBirth(dt);
         contactDTO.setCitizenship(request.getParameter("citizenship"));
         contactDTO.setGender(request.getParameter("gender"));
         contactDTO.setMaritalStatus(request.getParameter("status"));
@@ -52,9 +54,8 @@ public class SearchContactCommand extends FrontCommand {
         address.setStreetAddress(request.getParameter("address"));
         address.setIndex(request.getParameter("indexCode"));
         contactDTO.setAddress(address);
-        String dateCriteria = request.getParameter("dateCriteria");
         SearchService searchService = new SearchService();
-        List<ContactDTO> contactList = searchService.searchContacts(contactDTO, dateCriteria);
+        List<ContactDTO> contactList = searchService.searchContacts(contactDTO, fromDate, toDate);
         List<Integer> pageList = new ArrayList<>();
         int pageCount = contactList.size() % 10 == 0 ? contactList.size() / 10 : contactList.size() / 10 + 1;
         for (int i = 1; i <= pageCount; i++) {
