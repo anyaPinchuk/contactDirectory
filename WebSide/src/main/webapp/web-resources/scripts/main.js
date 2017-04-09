@@ -28,12 +28,16 @@ function validate() {
  */
 
 function validDate(element, date) {
-    var today = new Date();
     if (date.value === "") {
         markInputAsRight(date);
         return true;
     } else if (date.value.match(/^(0?[1-9]|[12][0-9]|3[01])[\-](0?[1-9]|1[012])[\-]\d{4}$/)) {
+        var today = new Date();
         var myDate = date.value.split("-");
+        today.setYear(myDate[2]);
+        today.setMonth(myDate[1] - 1);
+        today.setDate(myDate[0]);
+        console.log(today);
         if(myDate[2] === today.getFullYear() && myDate[1] === today.getMonth() && myDate[0] === today.getDate()) {
             markInputAsRight(date);
             return true;
