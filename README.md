@@ -6,10 +6,13 @@
 
 To launch the application you should:
  + paste WebSide.war in the directory
-  _**webapps**_ on Tomcat,
- + also in server.xml
+  _**webapps**_ on Tomcat;
+ + in server.xml
 configuration file add the following tag:
 
   <Context docBase="WebSide" path="" debug="0"
         reloadable="true"/>
-        
+  
+ + in the directory for storing photos add the 
+ no_avatar.png file which is located in WebSide 
+ resources directory
