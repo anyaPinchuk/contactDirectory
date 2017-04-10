@@ -1,4 +1,4 @@
-birthday(name) ::= <<Dear <name> <surname>. Happy birthday to you! Have a great time, with memories to last you throughout the whole year.
+birthday(name, surname) ::= <<Dear <name> <surname>. Happy birthday to you! Have a great time, with memories to last you throughout the whole year.
 >>
 meeting(name) ::= <<Hi, <name>! Don't you mind going to the cinema with me tonight?
 >>
